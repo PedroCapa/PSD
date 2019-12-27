@@ -14,6 +14,9 @@ Dropwizard/Rest
 	Deverá ser feita com o dropwizard, ver se da para autenticar se n faz-se na???????
 
 Tarefas sem o dropwizard:
-	Fazer a autenticação do cliente na parte do java
 	Guardar o estado dos clientes/ negociações no erlang
+		- Talvez fazer primeiro so com o erlang em ambos os lados
+		- Ver como será melhor realizar a estrutura do erlang
+	Fazer a autenticação do cliente na parte do java
+		- Basta ter dois input enviar para o protobuf e verificar no servidor
 	Utilizar o protobuf para fazer a conversão entre linguagens
