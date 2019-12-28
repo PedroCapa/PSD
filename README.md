@@ -2,6 +2,8 @@ Erlang
 	Na parte do Erlang, que é o servidor, criar uma forma de guardar o estado do sistema
 	Talvez enviar as coisas para o ProtoBuffer para ele traduzir o erlang para java.
 
+	Na parte do cliente colocar a porta deve chegar para conectar com o servidor
+
 Java
 	Fazer a parte do cliente
 	Na parte do cliente utilizar o dropwiazrd para receber as coisas do cliente enviar para o ProtoBuffer
@@ -20,3 +22,9 @@ Tarefas sem o dropwizard:
 	Fazer a autenticação do cliente na parte do java
 		- Basta ter dois input enviar para o protobuf e verificar no servidor
 	Utilizar o protobuf para fazer a conversão entre linguagens
+
+
+Criar ficheiros:
+	server.erl
+	file.proto
+	#Para compilar o file.proto utilizar o comando /gdp/bin/protoc-erl -I. x.proto
