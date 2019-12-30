@@ -15,8 +15,8 @@ acceptor(LSock, Room) ->
 room(Users) ->
 		receive
 			{enter, Pid} ->
-				io:format("userentered ~n", []),
-				Pid ! {tcp, "", ""},
+				io:format("userentered ~w~n", [Pid]),
+				gen_tcp:send(Pid, "You entered in the server"),
 				room(Users);
 			{aut, {Username, Password}, PID}  ->
 				CheckUsername = containsUsername(Username, Users),

@@ -28,3 +28,9 @@ Criar ficheiros:
 	server.erl
 	file.proto
 	#Para compilar o file.proto utilizar o comando /gdp/bin/protoc-erl -I. x.proto
+
+
+Para correr o programa para já é preciso fazer:
+epmd &
+mvnc
+mvnj -Dexec.mainClass=Test
