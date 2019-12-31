@@ -19,7 +19,7 @@ message Production{
 	required string client_name = 2;
 	required int32 min = 3;
 	required int32 max = 4;
-	required float price = 5;
+	required int32 price = 5;
 	required Timestamp time = 6;
 	repeated Negotiations = 7;
 }
