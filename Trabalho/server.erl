@@ -17,32 +17,33 @@ acceptor(LSock, Room) ->
 %Dependendo daquilo que será feito talvez seja para guardar os PID para realizar notificações
 
 room(Importadores, Fabricantes, Produtos, Negocios) ->
-		io:format("Trattei da situação~p~n", [Produtos]),
 		receive
-			{enter, Pid} ->
-				io:format("userentered ~p~n", [Pid]),
+			{enter, _} ->
+				io:format("userentered~n", []),
 				room(Importadores, Fabricantes, Produtos, Negocios);
 			{aut, {Username, Password}, PID}  ->
+				%Verifica se existe algum fabricante ou Importador com esse nome
 				Fab = checkUsername(Username, Password, Fabricantes),
 				Imp = checkUsername(Username, Password, Importadores),
 				if
-					%Mudar para o caso de ser Fabricante ou Importador
+					%No caso do Utilizador ser um Importador
 					Imp =:= true ->
 						PID ! {imp, {Username, Password}},
 						room(Importadores, Fabricantes, Produtos, Negocios);
+					%No caso do Utilizador ser um Fabricante
 					Fab =:= true ->
 						PID ! {fab, {Username, Password}},
 						room(Importadores, Fabricantes, Produtos, Negocios);
+					%No caso do Utilizador não existitgegen_tcpn_tcp
 					Fab =:= false, Imp =:= false ->
-						%Enviar a dizer que precisa de indicar se é Importador ou Fabricante
 						PID ! {type, {Username, Password}},
 						room(Importadores, Fabricantes, Produtos, Negocios);
+					%No caso de errar a palavra-passe
 					true ->
-						io:format("Acertou miseravel"),
 						PID ! {tcp, "", ""},
 						room(Importadores, Fabricantes, Produtos, Negocios)
 				end;
-			%Adicionar outro pq ele colocou a dizer se era Fabricante ou Importador
+			%Acrescentar a lista de Fabricante/Importador no caso de não existir
 			{type, {Username, Password}, Type, PID} ->
 				T = checkType(Type),
 				if 
@@ -57,15 +58,14 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 				end;
 			{new, Username, Prod, Min, Max, Price, Time, PID} ->
 				Contains = findUserProd(Username, Prod, Produtos),
-				io:format("Entrei Ca dentro do Room e ja tem algum produto? ~p ~n", [Contains]),
 				if
 					Contains =:= true ->
 						io:format("Ja encontrei esse produto a venda ~p ~n", [Contains]),
-						Msg = "Ja contem esse produto a venda",
+						Msg = "Ja contem esse produto a venda\n",
 						PID ! {res, list_to_binary(Msg)},
 						room(Importadores, Fabricantes, Produtos, Negocios);
 					true ->
-						Msg = "Adicionado com sucesso",
+						Msg = "Adicionado com sucesso\n",
 						PID ! {res, list_to_binary(Msg)},
 						io:format("Produto adicionado ~p ~n", [Contains]),
 						room(Importadores, Fabricantes, [{Username, Prod, Min, Max, Price, Time} | Produtos], Negocios)
@@ -74,16 +74,16 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 				Contains = findUserProd(Fab, Prod, Produtos),
 				if
 					Contains =:= true ->
-						io:format("Esse fabricante não tem esse produto ~p ~n", [Contains]),
-						Msg = "Esse fabricante não tem esse produto",
+						io:format("Esse fabricante tem esse produto ~p ~n", [Contains]),
+						Msg = "Esse fabricante tem esse produto\n",
 						PID ! {res, list_to_binary(Msg)},
-						room(Importadores, Fabricantes, Produtos, Negocios);
+						room(Importadores, Fabricantes, Produtos, [{Username, Fab, Prod, Price, Quant}|Negocios]);
 					true ->
-						Msg = "Oferta realizada com sucesso",
+						Msg = "Oferta não foi realizada com sucesso\n",
 						PID ! {res, list_to_binary(Msg)},
-						room(Importadores, Fabricantes, Produtos, [{Username, Fab, Prod, Price, Quant}|Negocios])
+						room(Importadores, Fabricantes, Produtos, Negocios)
 				end;
-			{leave} ->
+			{leave, _} ->
 				io:format("userleft ~n", []),
 				room(Importadores, Fabricantes, Produtos, Negocios);
 				_ -> 
@@ -96,12 +96,12 @@ user(Sock, Room) ->
 			gen_tcp:send(Sock, Data),
 			user(Sock, Room);
 		{tcp, _, _} ->
-			gen_tcp:send(Sock, "Put the Credentials"),
+			gen_tcp:send(Sock, "Put the Credentials\n"),
 			Person = authentication(),
 			Room ! {aut, Person, self()},
 			user(Sock, Room);
 		{type, {Username, Password}} ->
-			gen_tcp:send(Sock, "Put the type 0 for Importadores or something else to Fabricantes"),
+			gen_tcp:send(Sock, "Put the type 0 for Importadores or something else to Fabricantes\n"),
 			receive
 			{tcp, _, T} ->
 				Type = binary_to_list(T)
@@ -109,10 +109,10 @@ user(Sock, Room) ->
 			Room ! {type, {Username, Password}, Type, self()},
 			user(Sock, Room);
 		{imp, Person} -> 
-			gen_tcp:send(Sock, "authenticated with sucess Importador"),
+			gen_tcp:send(Sock, "authenticated with sucess Importador\nNow you can make offers\n"),
 			importador(Sock, Room, Person);
 		{fab, Person} -> 
-			gen_tcp:send(Sock, "authenticated with sucess Fabricante"),
+			gen_tcp:send(Sock, "authenticated with sucess Fabricante\nNow you can add Products\n"),
 			fabricante(Sock, Room, Person);
 		{tcp_closed, _} ->
 			Room ! {leave};
@@ -124,11 +124,13 @@ user(Sock, Room) ->
 authentication() ->
 		receive
 			{tcp, _, User} ->
-				Username = binary_to_list(User)
+				U = binary_to_list(User),
+				Username = string:trim(U)
 		end,
 		receive
 			{tcp, _, Pass} ->
-				Password = binary_to_list(Pass),
+				P = binary_to_list(Pass),
+				Password = string:trim(P),
 				{Username, Password}
 		end.
 
@@ -138,6 +140,10 @@ importador(Sock, Room, {Username, Password}) ->
 			{line, Data} ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				importador(Sock, Room, {Username, Password});
+			{res, Data} ->
+				io:format("Recebi a resposta~p~n", [Data]),
+				gen_tcp:send(Sock, binary_to_list(Data)),
+				fabricante(Sock, Room, {Username, Password});
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
 				io:format("Recebi ~p ~n", [List]),
@@ -153,22 +159,20 @@ importador(Sock, Room, {Username, Password}) ->
 handleImportador([H | T], Username, Room, Sock) ->
 	if 
 		H =:= "offer"->
-			Res = newOffer(T, Username, Room, Sock);
+			Res = newOffer(T, Username, Room);
 		true -> 
 			Res = false
 	end,
 	if
 		Res =:= false ->
-			io:format("Cheguei ao if~p~n", [Res]),
-			Msg = "Invalido",
+			Msg = "Invalido\n",
 			gen_tcp:send(Sock, list_to_binary(Msg));
 		true ->
-			io:format("A resposta não é false")
+			io:format("Colocou os argumentos certos~n")
 	end.
 
-newOffer(List, Username, Room, Sock) ->
+newOffer(List, Username, Room) ->
 	Size = length([X || X <- List]),
-	io:format("Size: ~p ~n", [Size]),
 	if 
 		Size >= 4 ->
 			Fab = lists:nth(1, List),
@@ -221,11 +225,10 @@ handleFabricante([H | T], Username, Room, Sock) ->
 	end,
 	if
 		Res =:= false ->
-			io:format("Cheguei ao if~p~n", [Res]),
-			Msg = "Invalido",
+			Msg = "Invalido\n",
 			gen_tcp:send(Sock, list_to_binary(Msg));
 		true ->
-			io:format("A resposta não é false")
+			io:format("Colocou os argumentos certos~n")
 	end.
 
 newProduct(List, Username, Room) ->
@@ -241,8 +244,6 @@ newProduct(List, Username, Room) ->
 			MinNumber = [Char || Char <- Min, Char < $0 orelse Char > $9] == [],
 			MaxNumber = [Char || Char <- Max, Char < $0 orelse Char > $9] == [],
 			PriceNumber = [Char || Char <- Price, Char < $0 orelse Char > $9] == [],
-			io:format("Prod: ~p Min: ~p Max: ~p Price: ~p Time: ~p MinNumber:~p MaxNumber: ~p PriceNumber: ~p ~n", 
-				[Prod, Min, Max, Price, Time, MinNumber, MaxNumber, PriceNumber]),
 			if 
 				MinNumber =:= true, MaxNumber =:= true, PriceNumber =:= true ->
 					Room ! {new, Username, Prod, Min, Max, Price, Time, self()},
@@ -257,7 +258,6 @@ newProduct(List, Username, Room) ->
 
 checkUsername(Username, Password, Map) ->
 	User = maps:is_key(Username, Map),
-	io:format("O User e: ~p ~n", [Username]),
 	if
 		User =:= true ->
 			Res = checkPassword(Username, Password, Map),
@@ -268,7 +268,6 @@ checkUsername(Username, Password, Map) ->
 
 checkPassword(Username, Password, Map)  ->
 	{ok, P} = maps:find(Username, Map),
-	io:format("A pass e: ~p ~n", [P]),
 	if
 		P =:= Password ->
 			true;
@@ -277,7 +276,6 @@ checkPassword(Username, Password, Map)  ->
 	end.
 
 checkType(Type) ->
-	io:format("Type: ~p ~n", [Type]),
 	if
 		Type =:= "0\n" ->
 			true;

@@ -1,70 +1,36 @@
 import com.ericsson.otp.erlang.*;
 
-public class Test
-{
+import java.net.*;
+import java.io.*;
 
-    public static void main(String[] args) throws Exception
+public class Test{
 
-         {
+    public static void main(String[] args) throws IOException, InterruptedException, SocketException{
+        Socket cs = new Socket("127.0.0.1", 9999);
+        PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
+        BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+        try{
+            LeitorCliente l = new LeitorCliente(cs);
+            Thread t = new Thread(l);
+            t.start();
 
-                OtpNode myNode = new OtpNode("server");
+            String current = "Enviei uma mensagen";
 
-                OtpMbox myMbox = myNode.createMbox("countserver");
-
-                OtpErlangObject myObject;
-
-                OtpErlangTuple myMsg;
-
-                OtpErlangPid from;
-
-                OtpErlangString command;
-
-                Integer counter = 0;
-
-           OtpErlangAtom myAtom = new OtpErlangAtom("ok");
-
-           while(counter >= 0) try
-
-                {
-                        System.out.println("Vou enviar " + myMbox.self());
-
-
-                        //myMsg = (OtpErlangTuple) myObject;
-
-                        //from = (OtpErlangPid) myMsg.elementAt(0);
-
-                        //command = (OtpErlangString) myMsg.elementAt(1);
-
-                        // here you may want to check the value of command
-
-                        OtpErlangObject[] reply = new OtpErlangObject[2];
-
-                        reply[0] = myAtom;
-
-                        reply[1] = new OtpErlangInt(counter);
-
-                        OtpErlangTuple myTuple = new OtpErlangTuple(reply);
-
-                        myMbox.send("client@pedro", myTuple);
-
-                        System.out.println("Vou receber");
-                        
-                        myObject = myMbox.receive();
-                        
-                        counter++;
-
-        } catch(OtpErlangExit e)
-
-                  {
-
-                        break;
-
-                  }
+            while((current = teclado.readLine()) != null){
+                out.println(current);
+            }
 
         }
+        catch(Exception e){
+            System.out.println("Deu merda\n");
+            System.out.println(e.getMessage());
+        }
+        finally{
+            System.out.println("Shutdown Output");
 
+            cs.shutdownOutput();
+            teclado.close();
+            out.close();
+        }
+    }
 }
-
-/*
-
-*/

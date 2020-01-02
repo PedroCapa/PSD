@@ -1,7 +1,6 @@
 Erlang
 	Na parte do Erlang, que é o servidor, criar uma forma de guardar o estado do sistema
 	Talvez enviar as coisas para o ProtoBuffer para ele traduzir o erlang para java.
-
 	Na parte do cliente colocar a porta deve chegar para conectar com o servidor
 
 Java
@@ -24,3 +23,12 @@ Tarefas
 	Erlang
 		Mudar o tipo dos numeros
 		Verificar as ofertas
+
+Acrescentar um Produto
+
+	new,Prod,50,100,500,31/12/2020,
+	
+	
+Acrescentar um Negocio
+	
+	offer,Pedro,Prod,20,500,
