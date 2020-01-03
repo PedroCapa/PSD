@@ -74,7 +74,6 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 				Contains = findUserProd(Fab, Prod, Produtos),
 				if
 					Contains =:= true ->
-						io:format("Esse fabricante tem esse produto ~p ~n", [Contains]),
 						Msg = "Esse fabricante tem esse produto\n",
 						PID ! {res, list_to_binary(Msg)},
 						room(Importadores, Fabricantes, Produtos, [{Username, Fab, Prod, Price, Quant}|Negocios]);
@@ -83,21 +82,63 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 						PID ! {res, list_to_binary(Msg)},
 						room(Importadores, Fabricantes, Produtos, Negocios)
 				end;
-			{negotiations, Fab, Prod, PID} ->
-				%Ir buscar as negociações desse produto
-				io:format("Peguie nas negociações do produto~n"),
 			{imp, Imp, PID} ->
 				%Ir buscar o importador
-				io:format("Chegeui ao Imp~n"),
-			{produtores, Fab, self()} ->
+				Res = getImp(Imp, Negocios),
+				PID ! {res, Res},
+				io:format("Chegeui ao Imp~n");
+			{negotiations, Fab, PID} ->
+				Res = getNegotiations(Fab, Negocios),
+				PID ! {res, Res},
+				io:format("Peguie nas negociações do produto~n");
+			{produtores, Fab, PID} ->
 				%Ir buscar o Fabricante
-				io:format("Chegeu ao Fab~n"),
+				Res = getProdutos(Fab, Produtos),
+				PID ! {res, Res},
+				io:format("Chegeu ao Fab~n");
 			{leave, _} ->
 				io:format("userleft ~n", []),
 				room(Importadores, Fabricantes, Produtos, Negocios);
 				_ -> 
 				io:format("Sai ~n", [])
 		end.
+
+getImp(_, []) -> [];
+getImp(Imp, [{Username, Fab, Prod, Price, Quant} | T]) ->
+	Rest = getImp(Imp, T),
+	if
+		Imp =:= Username ->
+			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",",
+			Res = lists:append(Rest, [I]);
+		true ->
+			Res = Rest
+	end,
+	Res.
+
+getProdutos(_, []) -> [];
+getProdutos(Fab, [{Username, Prod, Min, Max, Price, Time} | T]) ->
+	Rest = getProdutos(Fab, T),
+	if
+		Fab =:= Username ->
+			P = Username ++ "," ++ Prod ++ "," ++ Min ++ "," ++ Max ++ "," ++ Price ++ "," ++ Time ++ ",",
+			Res = lists:append(Rest, [P]);
+		true ->
+			Res = Rest
+	end,
+	Res.
+
+getNegotiations(_, []) -> [];
+getNegotiations(Fab, [{Username, Fabr, Prod, Price, Quant} | T]) ->
+	Rest = getNegotiations(Fab, T),
+	if
+		Fab =:= Fabr ->
+			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",",
+			Res = lists:append(Rest, [I]);
+		true ->
+			Res = Rest
+	end,
+	Res.
+
 
 user(Sock, Room) ->
 	receive
@@ -163,16 +204,14 @@ dropwizard(Sock, Room) ->
 				dropwizard(Sock, Room);
 			{res, Data} ->
 				io:format("Recebi a resposta~p~n", [Data]),
-				gen_tcp:send(Sock, binary_to_list(Data)),
-				dropwizard(Sock, Room);
+				sendRes(Sock, Data),
+				gen_tcp:send(Sock, "\n");
+				%dropwizard(Sock, Room);
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
 				io:format("Recebi ~p ~n", [List]),
 				handleDropwizard(List, Room, Sock),
 				dropwizard(Sock, Room);
-			{res, Data} ->
-				%Vai-se enviar uma coisa de cada vez e por fim vai ser enviado apenas um \n para indicar que ja acabou de ser enviado
-
 			{tcp_closed, _} ->
 				Room ! {leave, self()};
 			{tcp_error, _, _} ->
@@ -208,22 +247,21 @@ produtores(List, Room) ->
 			Room ! {produtores, Fab, self()},
 			Res = true;
 		true ->
-			Res = false;
+			Res = false
 	end,
-	Res;
+	Res.
 
 negotiations(List, Room) ->
 	Size = length([X || X <- List]),
 	if
-		Size >= 2 ->
+		Size >= 1 ->
 			Fab = lists:nth(1, List),
-			Prod = lists:nth(2, List),
-			Room ! {negotiations, Fab, Prod, self()},
+			Room ! {negotiations, Fab, self()},
 			Res = true;
 		true ->
-			Res = false;
+			Res = false
 	end,
-	Res;
+	Res.
 
 imp(List, Room) ->
 	Size = length([X || X <- List]),
@@ -233,9 +271,15 @@ imp(List, Room) ->
 			Room ! {imp, Imp, self()},
 			Res = true;
 		true ->
-			Res = false;
+			Res = false
 	end,
-	Res;
+	Res.
+
+sendRes(_, []) -> 
+	io:format("");
+sendRes(Sock, [H |T]) ->
+	gen_tcp:send(Sock, binary_to_list(H)),
+	sendRes(Sock, T).
 
 %Depois de serem verificadas as credenciais o utilizador esta nesta parte
 importador(Sock, Room, {Username, Password}) ->

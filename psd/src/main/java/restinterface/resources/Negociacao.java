@@ -23,21 +23,15 @@ import java.util.ArrayList;
 @Produces(MediaType.APPLICATION_JSON)
 public class Negociacao {
     private String negociador;
-    private String product;
     private List<Negocio> negotiations;
 
-    public Negociacao(String negociador, String product, List<Negocio> negotiations) {
+    public Negociacao(String negociador, List<Negocio> negotiations) {
         this.negociador = negociador;
-        this.product = product;
         this.negotiations = negotiations;
     }
 
     public String getNegociador(){
         return this.negociador;
-    }
-
-    public String getProduct(){
-        return this.product;
     }
 
     public List<Negocio> getNegotiations(){

@@ -32,11 +32,17 @@ public class Importadores {
     @GET
     @Path("/{name}")
     public Response getImportador(@PathParam("name") String name){
-        //Mudar o Saying pq n é so name e description        
-        
-        //Criar outro Saying para ter uma lista de String
+        try{
+            AskServerImportador ask = new AskServerImportador();
+            Importador i = ask.askServer(name);      
+            //Criar outro Saying para ter uma lista de String
+            Saying s = new Saying("name", "description");
+            return Response.ok(s).build();
+        }
+        catch(Exception e){
+            e.getMessage();
+        }
         Saying s = new Saying("name", "description");
-        
-        return Response.ok(s).build();
+        return Response.ok(s).build();     
     }
 }

@@ -37,4 +37,8 @@ public class Importador {
     public List<Negocio> getNegotiations(){
         return this.negotiations;
     }
+
+    public void addNegotiation(Negocio neg){
+        this.negotiations.add(neg);
+    }
 }
