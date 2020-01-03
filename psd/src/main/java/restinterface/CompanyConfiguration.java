@@ -1,4 +1,4 @@
-package production;
+package restinterface;
 
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.NotEmpty;

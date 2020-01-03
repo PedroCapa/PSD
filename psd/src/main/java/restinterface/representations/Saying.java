@@ -1,4 +1,4 @@
-package production.representations;
+package restinterface.representations;
 
 import com.fasterxml.jackson.annotation.*;
 

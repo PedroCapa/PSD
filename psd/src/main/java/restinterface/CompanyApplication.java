@@ -1,11 +1,10 @@
-package production;
+package restinterface;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-import production.resources.Production;
-import production.health.TemplateHealthCheck;
+import restinterface.health.TemplateHealthCheck;
 
 public class CompanyApplication extends Application<CompanyConfiguration> {
     public static void main(String[] args) throws Exception {

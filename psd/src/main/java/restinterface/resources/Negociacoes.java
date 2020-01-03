@@ -1,6 +1,6 @@
-package production.resources;
+package restinterface.resources;
 
-import production.representations.Saying;
+import restinterface.representations.Saying;
 
 import com.google.common.base.Optional;
 
@@ -19,24 +19,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-@Path("/production")
+@Path("/negociacoes")
 @Produces(MediaType.APPLICATION_JSON)
-public class Production {
-
+public class Negociacoes{
+    /*
     @GET
     public List<Saying> getAll() {
         //Pedir ao servidor todos os produtos disponiveis
         return new ArrayList<>();
     }
-
+    */
     @GET
     @Path("/{name}")
-    public Response getProduction(@PathParam("name") String name){
-        //if(!production.containsKey(name)){
-        //    return Response.status(Response.Status.NOT_FOUND).build();
-        //}
-        //Production prod = get(name);
-        //Colocar no Saying as informações. Depois mudar tambem o Saying
+    public Response getNegocios(@PathParam("name") String name){
+        //Mudar o Saying pq n é so name e description        
+        
+        //Criar outro Saying para ter uma lista de String
         Saying s = new Saying("name", "description");
         
         return Response.ok(s).build();

@@ -1,4 +1,4 @@
-package production.health;
+package restinterface.health;
 
 import com.codahale.metrics.health.HealthCheck;
 
