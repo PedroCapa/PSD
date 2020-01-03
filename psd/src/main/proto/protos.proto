@@ -3,8 +3,8 @@ syntax = "proto2";
 package Trabalho;
 
 message Sys {
-    required map<string,Negotiators> negotiator = 1;
-    required map<string,Importer> importer = 2;
+    required Negotiators negotiator = 1;
+    required Importer importer = 2;
     repeated Production production = 3;
 }
 
