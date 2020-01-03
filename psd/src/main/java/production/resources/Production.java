@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-@Path("/departments")
+@Path("/production")
 @Produces(MediaType.APPLICATION_JSON)
 public class Production {
 

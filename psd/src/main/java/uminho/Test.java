@@ -1,5 +1,3 @@
-import com.ericsson.otp.erlang.*;
-
 import java.net.*;
 import java.io.*;
 

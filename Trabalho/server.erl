@@ -83,6 +83,15 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 						PID ! {res, list_to_binary(Msg)},
 						room(Importadores, Fabricantes, Produtos, Negocios)
 				end;
+			{negotiations, Fab, Prod, PID} ->
+				%Ir buscar as negociações desse produto
+				io:format("Peguie nas negociações do produto~n"),
+			{imp, Imp, PID} ->
+				%Ir buscar o importador
+				io:format("Chegeui ao Imp~n"),
+			{produtores, Fab, self()} ->
+				%Ir buscar o Fabricante
+				io:format("Chegeu ao Fab~n"),
 			{leave, _} ->
 				io:format("userleft ~n", []),
 				room(Importadores, Fabricantes, Produtos, Negocios);
@@ -95,10 +104,8 @@ user(Sock, Room) ->
 		{line, Data} ->
 			gen_tcp:send(Sock, Data),
 			user(Sock, Room);
-		{tcp, _, _} ->
-			gen_tcp:send(Sock, "Put the Credentials\n"),
-			Person = authentication(),
-			Room ! {aut, Person, self()},
+		{tcp, _, Data} ->
+			checkInterface(Data, Sock, Room),
 			user(Sock, Room);
 		{type, {Username, Password}} ->
 			gen_tcp:send(Sock, "Put the type 0 for Importadores or something else to Fabricantes\n"),
@@ -120,8 +127,22 @@ user(Sock, Room) ->
 			Room ! {leave}
 	end.
 
+checkInterface(Data, Sock, Room) ->
+	D = binary_to_list(Data),
+	if
+		D =:= "0\n" ->
+			dropwizard(Sock, Room);
+		D =:= "1\n" ->
+			Person = authentication(Sock),
+			Room ! {aut, Person, self()};
+		true ->
+			gen_tcp:send("Errado\n")
+	end.
+
+
 %Nesta parte o utilizador coloca as credenciais
-authentication() ->
+authentication(Sock) ->
+		gen_tcp:send(Sock, "Put the Credentials\n"),
 		receive
 			{tcp, _, User} ->
 				U = binary_to_list(User),
@@ -133,6 +154,88 @@ authentication() ->
 				Password = string:trim(P),
 				{Username, Password}
 		end.
+
+%Criar aqui o dropwizard
+dropwizard(Sock, Room) ->
+	receive
+			{line, Data} ->
+				gen_tcp:send(Sock, binary_to_list(Data)),
+				dropwizard(Sock, Room);
+			{res, Data} ->
+				io:format("Recebi a resposta~p~n", [Data]),
+				gen_tcp:send(Sock, binary_to_list(Data)),
+				dropwizard(Sock, Room);
+			{tcp, _, Data} ->
+				List = string: tokens(binary_to_list(Data), ","),
+				io:format("Recebi ~p ~n", [List]),
+				handleDropwizard(List, Room, Sock),
+				dropwizard(Sock, Room);
+			{res, Data} ->
+				%Vai-se enviar uma coisa de cada vez e por fim vai ser enviado apenas um \n para indicar que ja acabou de ser enviado
+
+			{tcp_closed, _} ->
+				Room ! {leave, self()};
+			{tcp_error, _, _} ->
+				Room ! {leave, self()}
+		end.
+
+handleDropwizard([H|T], Room, Sock) ->
+	if 
+		H =:= "produtores" ->
+			Res = produtores(T, Room);
+		H =:= "negotiations" -> 
+			Res = negotiations(T, Room);
+		H =:= "imp" ->
+			Res = imp(T, Room);
+		true ->
+			Res = false
+	end,
+	if
+		Res =:= false ->
+			Msg = "Invalido\n",
+			gen_tcp:send(Sock, list_to_binary(Msg));
+		true ->
+			io:format("Colocou os argumentos certos~n")
+	end.
+
+%Verificar em todos eles se ele pediu um argumento
+
+produtores(List, Room) ->
+	Size = length([X || X <- List]),
+	if
+		Size >= 1 ->
+			Fab = lists:nth(1, List),
+			Room ! {produtores, Fab, self()},
+			Res = true;
+		true ->
+			Res = false;
+	end,
+	Res;
+
+negotiations(List, Room) ->
+	Size = length([X || X <- List]),
+	if
+		Size >= 2 ->
+			Fab = lists:nth(1, List),
+			Prod = lists:nth(2, List),
+			Room ! {negotiations, Fab, Prod, self()},
+			Res = true;
+		true ->
+			Res = false;
+	end,
+	Res;
+
+imp(List, Room) ->
+	Size = length([X || X <- List]),
+	if
+		Size >= 1 ->
+			Imp = lists:nth(1, List),
+			Room ! {imp, Imp, self()},
+			Res = true;
+		true ->
+			Res = false;
+	end,
+	Res;
 
 %Depois de serem verificadas as credenciais o utilizador esta nesta parte
 importador(Sock, Room, {Username, Password}) ->
@@ -233,7 +336,6 @@ handleFabricante([H | T], Username, Room, Sock) ->
 
 newProduct(List, Username, Room) ->
 	Size = length([X || X <- List]),
-	io:format("Size: ~p ~n", [Size]),
 	if 
 		Size >= 5 ->
 			Prod = lists:nth(1, List),

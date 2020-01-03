@@ -20,13 +20,6 @@ public class Client{
 			out.println(current);
 		}
 
-		try{
-			Thread.sleep(100000);
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-		}
-
 		System.out.println("Shutdown Output");
 
 		cs.shutdownOutput();

@@ -3,20 +3,25 @@ syntax = "proto2";
 package Trabalho;
 
 message Sys {
-    repeated Person person = 1;
-    repeated Production production = 2;
+    required map<string,Negotiators> negotiator = 1;
+    required map<string,Importer> importer = 2;
+    repeated Production production = 3;
 }
 
-message Person {
+message Negotiators {
     required string name = 1;
     required string pass = 2;
-    required bool 	type = 3;
-    repeated Production productions = 4;
+    repeated Production productions = 3;
+}
+
+message Importer {
+    required string name = 1;
+    required string pass = 2;
 }
 
 message Production{
 	required string product_name = 1;
-	required string client_name = 2;
+	required string negotiator_name = 2;
 	required int32 min = 3;
 	required int32 max = 4;
 	required float price = 5;
