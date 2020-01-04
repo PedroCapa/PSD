@@ -22,6 +22,10 @@ import java.util.ArrayList;
 @Path("/produtores")
 @Produces(MediaType.APPLICATION_JSON)
 public class Produtores{
+    
+    public Produtores(){
+
+    }
     /*
     @GET
     public List<Saying> getAll() {
@@ -32,11 +36,19 @@ public class Produtores{
     @GET
     @Path("/{name}")
     public Response getProdutor(@PathParam("name") String name){
-        //Mudar o Saying pq n é so name e description        
+        try{
+            AskServerProdutor ask = new AskServerProdutor();
+            Produtor p = ask.askServer(name);
+            
+            //Criar outro Saying para ter uma lista de String
+            Saying s = new Saying("name", "description");
+            return Response.ok(s).build();
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
         
-        //Criar outro Saying para ter uma lista de String
         Saying s = new Saying("name", "description");
-        
         return Response.ok(s).build();
     }
 }
