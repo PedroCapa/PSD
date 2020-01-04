@@ -4,7 +4,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-import restinterface.resources.Produtores;
+import restinterface.resources.Catalogos;
 import restinterface.health.TemplateHealthCheck;
 
 public class CompanyApplication extends Application<CompanyConfiguration> {
@@ -23,7 +23,7 @@ public class CompanyApplication extends Application<CompanyConfiguration> {
                     Environment environment) {
         //Colocar ai em vez de Departments as Productions
         environment.jersey().register(
-            new Produtores());
+            new Catalogos());
         environment.healthChecks().register("template",
             new TemplateHealthCheck(configuration.template));
     }

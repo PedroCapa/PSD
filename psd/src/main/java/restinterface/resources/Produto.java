@@ -14,4 +14,24 @@ public class Produto{
 		this.max = max;
 		this.price = price;
 	}
+
+	public String getProduct_name(){
+		return this.product_name;
+	}
+
+	public String getNegotiator_name(){
+		return this.negotiator_name;
+	}
+
+	public int getMin(){
+		return this.min;
+	}
+
+	public int getMax(){
+		return this.max;
+	}
+
+	public int getPrice(){
+		return this.price;
+	}
 }

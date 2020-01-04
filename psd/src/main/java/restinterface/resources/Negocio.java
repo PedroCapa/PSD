@@ -14,4 +14,24 @@ public class Negocio{
 		this.price = price;
 		this.amount = amount;
 	}
+
+	public String getFab(){
+		return this.fab;
+	}
+
+	public String getClient_offer(){
+		return this.client_offer;
+	}
+
+	public String getProd(){
+		return this.prod;
+	}
+
+	public int getPrice(){
+		return this.price;
+	}
+
+	public int getAmount(){
+		return this.amount;
+	}
 }

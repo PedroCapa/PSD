@@ -1,7 +1,5 @@
 package restinterface.resources;
 
-import restinterface.representations.Saying;
-
 import com.google.common.base.Optional;
 
 import javax.ws.rs.GET;
@@ -19,22 +17,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-@Path("/negociacao")
+@Path("/catalogo")
 @Produces(MediaType.APPLICATION_JSON)
-public class Negociacao {
-    private String negociador;
-    private List<Negocio> negotiations;
+public class Catalogo {
+    private String nome;
+    private List<Object> collection;
 
-    public Negociacao(String negociador, List<Negocio> negotiations) {
-        this.negociador = negociador;
-        this.negotiations = negotiations;
+    public Catalogo(String nome, List<Object> collection) {
+        this.nome = nome;
+        this.collection = collection;
     }
 
-    public String getNegociador(){
-        return this.negociador;
+    public String getNome(){
+        return this.nome;
     }
 
-    public List<Negocio> getNegotiations(){
-        return this.negotiations;
+    public List<Object> getCollection(){
+        return this.collection;
     }    
 }
