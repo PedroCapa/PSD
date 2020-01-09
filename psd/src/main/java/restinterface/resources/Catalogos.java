@@ -33,6 +33,7 @@ public class Catalogos{
     @GET
     @Path("/importador/{name}")
     public List<Neg> getImportador(@PathParam("name") String name){
+        System.out.println("Pediu um pedido de um importador");
         List<Neg> n = new ArrayList<>();
         try{
             //Mudar o Saying pq n é so name e description
@@ -54,12 +55,15 @@ public class Catalogos{
     @GET
     @Path("/produtor/{name}")
     public List<Prod> getProdutor(@PathParam("name") String name){
+        System.out.println("Pediu um pedido de um produto");
         List<Prod> p = new ArrayList<>();
         try{
             //Mudar o Saying pq n é so name e description
             AskServer ask = new AskServer();
             List<Produto> prod = ask.askServerProduto(name, "produtores");        
             
+            System.out.println("Recebi tudo");
+
             for(Produto pro: prod){
                 p.add(new Prod(pro.getProduct_name(), pro.getNegotiator_name(), pro.getMin(), 
                                                       pro.getMax(), pro.getPrice()));
@@ -76,6 +80,7 @@ public class Catalogos{
     @GET
     @Path("/negocio/{name}")
     public List<Neg> getNegocio(@PathParam("name") String name){
+        System.out.println("Pediu um pedido de um negocio");
         List<Neg> n = new ArrayList<>();
         try{
             //Mudar o Saying pq n é so name e description

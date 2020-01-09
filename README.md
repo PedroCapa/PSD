@@ -29,6 +29,9 @@ Acrescentar um Produto
 	new,Prod,50,100,500,31/12/2020,
 	
 	
-Acrescentar um Negocio
+Realizar uma Negociacao
 	
 	offer,Pedro,Prod,20,500,
+
+Para o dropwizard
+	http://localhost:12345/catalogos/produtor/Pedro

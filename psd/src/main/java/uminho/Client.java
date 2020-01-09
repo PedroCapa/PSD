@@ -5,7 +5,7 @@ public class Client{
 
 	public static void main(String[] args) throws IOException, InterruptedException, SocketException{
 		int port = Integer.parseInt(args[0]);
-		Socket cs = new Socket("127.0.0.1", 9999);
+		Socket cs = new Socket("127.0.0.1", port);
 
 		PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
@@ -13,6 +13,7 @@ public class Client{
 		LeitorCliente l = new LeitorCliente(cs);
 		Thread t = new Thread(l);
 		t.start();
+		out.println("1");
 
 		String current;
 

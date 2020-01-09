@@ -41,6 +41,7 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 					%No caso de errar a palavra-passe
 					true ->
 						PID ! {tcp, "", ""},
+						io:format("Enganou-se na palavra-passe~n"),
 						room(Importadores, Fabricantes, Produtos, Negocios)
 				end;
 			%Acrescentar a lista de Fabricante/Importador no caso de não existir
@@ -86,21 +87,26 @@ room(Importadores, Fabricantes, Produtos, Negocios) ->
 				%Ir buscar o importador
 				Res = getImp(Imp, Negocios),
 				PID ! {res, Res},
-				io:format("Chegeui ao Imp~n");
+				io:format("Chegeui ao Imp~n"),
+				room(Importadores, Fabricantes, Produtos, Negocios);
 			{negotiations, Fab, PID} ->
 				Res = getNegotiations(Fab, Negocios),
 				PID ! {res, Res},
-				io:format("Peguie nas negociações do produto~n");
+				io:format("Peguie nas negociações do produto~n"),
+				room(Importadores, Fabricantes, Produtos, Negocios);
 			{produtores, Fab, PID} ->
 				%Ir buscar o Fabricante
+				io:format("O Fabricante é: ~p~n", [Fab]),
 				Res = getProdutos(Fab, Produtos),
 				PID ! {res, Res},
-				io:format("Chegeu ao Fab~n");
+				io:format("Chegeu ao Fab~n"),
+				room(Importadores, Fabricantes, Produtos, Negocios);
 			{leave, _} ->
 				io:format("userleft ~n", []),
 				room(Importadores, Fabricantes, Produtos, Negocios);
 				_ -> 
-				io:format("Sai ~n", [])
+				io:format("Sai ~n", []),
+				room(Importadores, Fabricantes, Produtos, Negocios)
 		end.
 
 getImp(_, []) -> [];
@@ -108,7 +114,7 @@ getImp(Imp, [{Username, Fab, Prod, Price, Quant} | T]) ->
 	Rest = getImp(Imp, T),
 	if
 		Imp =:= Username ->
-			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",",
+			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",\n",
 			Res = lists:append(Rest, [I]);
 		true ->
 			Res = Rest
@@ -118,9 +124,10 @@ getImp(Imp, [{Username, Fab, Prod, Price, Quant} | T]) ->
 getProdutos(_, []) -> [];
 getProdutos(Fab, [{Username, Prod, Min, Max, Price, Time} | T]) ->
 	Rest = getProdutos(Fab, T),
+	io:format("Username: ~p~n",[Username]),
 	if
 		Fab =:= Username ->
-			P = Username ++ "," ++ Prod ++ "," ++ Min ++ "," ++ Max ++ "," ++ Price ++ "," ++ Time ++ ",",
+			P = Username ++ "," ++ Prod ++ "," ++ Min ++ "," ++ Max ++ "," ++ Price ++ "," ++ Time ++ ",\n",
 			Res = lists:append(Rest, [P]);
 		true ->
 			Res = Rest
@@ -132,7 +139,7 @@ getNegotiations(Fab, [{Username, Fabr, Prod, Price, Quant} | T]) ->
 	Rest = getNegotiations(Fab, T),
 	if
 		Fab =:= Fabr ->
-			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",",
+			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",\n",
 			Res = lists:append(Rest, [I]);
 		true ->
 			Res = Rest
@@ -170,10 +177,13 @@ user(Sock, Room) ->
 
 checkInterface(Data, Sock, Room) ->
 	D = binary_to_list(Data),
+	io:format("O valor do que se recebeu em primeiro e ~p ~n", [D]),
 	if
 		D =:= "0\n" ->
+			io:format("Entrei no dropwizard~n"),
 			dropwizard(Sock, Room);
 		D =:= "1\n" ->
+			io:format("Entrou um utilizador pelo terminal"),
 			Person = authentication(Sock),
 			Room ! {aut, Person, self()};
 		true ->
@@ -187,7 +197,9 @@ authentication(Sock) ->
 		receive
 			{tcp, _, User} ->
 				U = binary_to_list(User),
-				Username = string:trim(U)
+				Username = string:trim(U),
+				io:format("O valor do User e ~p ~n", [Username]),
+				gen_tcp:send(Sock, "Coloque a palavra-passe\n")
 		end,
 		receive
 			{tcp, _, Pass} ->
@@ -203,10 +215,11 @@ dropwizard(Sock, Room) ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				dropwizard(Sock, Room);
 			{res, Data} ->
-				io:format("Recebi a resposta~p~n", [Data]),
+				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
 				sendRes(Sock, Data),
-				gen_tcp:send(Sock, "\n");
+				io:format("Enviei tudo");
 				%dropwizard(Sock, Room);
+				%Aqui acabar com a thread???
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
 				io:format("Recebi ~p ~n", [List]),
@@ -219,6 +232,7 @@ dropwizard(Sock, Room) ->
 		end.
 
 handleDropwizard([H|T], Room, Sock) ->
+	io:format("O pedido foi ~p ~n", [H]),
 	if 
 		H =:= "produtores" ->
 			Res = produtores(T, Room);
@@ -244,6 +258,7 @@ produtores(List, Room) ->
 	if
 		Size >= 1 ->
 			Fab = lists:nth(1, List),
+			io:format("Enviei ao master para que diga quais são os produtos do ~p~n", [Fab]),
 			Room ! {produtores, Fab, self()},
 			Res = true;
 		true ->
@@ -275,10 +290,12 @@ imp(List, Room) ->
 	end,
 	Res.
 
-sendRes(_, []) -> 
-	io:format("");
+sendRes(Sock, []) -> 
+	io:format("Enviei o \n"),
+	gen_tcp:send(Sock, "\n");
 sendRes(Sock, [H |T]) ->
-	gen_tcp:send(Sock, binary_to_list(H)),
+ 	io:format("O valor de H e: ~p~n", [H]),
+	gen_tcp:send(Sock, H),
 	sendRes(Sock, T).
 
 %Depois de serem verificadas as credenciais o utilizador esta nesta parte

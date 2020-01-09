@@ -17,31 +17,45 @@ public class AskServer{
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
-		out.println("0\n");
-		out.println("request" + "," + "name");
+		out.println("0");
+		out.println(request + "," + name + ",");
 
 		List<String> elementos = new ArrayList<>();
 
-		String eco = "\n";
+		String eco = "--";
 		try{
-			while(!eco.equals("")){
+			while(!eco.equals("") && !eco.equals("\n")){
 				eco = in.readLine();
-				if(eco != null)
+				if(!eco.equals("") && !eco.equals("\n")){
 					elementos.add(eco);
+					System.out.println(!eco.equals("\n") + " Adicionei um " + eco);
+				}
+				System.out.println(eco);
 			}
-			System.out.println("Fechei");
+			System.out.println("Fechei com tamanho" + elementos.size());
+
+			List<Produto> lst = handleRequestProduto(name, elementos);
+
+			System.out.println("Shutdown Output" + lst.size());
+
+			cs.shutdownOutput();
+			teclado.close();
+			out.close();
+
+			return lst;
 		}
 		catch(Exception e){
-			System.out.println();
+			System.out.println("Deu merda " + e.getMessage());
 		}
 
 		List<Produto> lst = handleRequestProduto(name, elementos);
 
-		System.out.println("Shutdown Output");
+		System.out.println("Shutdown Output" + lst.size());
 
 		cs.shutdownOutput();
 		teclado.close();
 		out.close();
+
 		return lst;
 	}
 
@@ -49,6 +63,7 @@ public class AskServer{
 		List<Produto> lst = new ArrayList<>();
 		for(String str: elementos){
 			String[] s = str.split(",");
+			System.out.println("Tratei de um produto" + str);
 			Produto p = new Produto(s[0], s[1], Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]));
 			lst.add(p);
 		}
