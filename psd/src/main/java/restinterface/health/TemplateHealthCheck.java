@@ -1,4 +1,4 @@
-package restinterface.health;
+package main.java.restinterface.health;
 
 import com.codahale.metrics.health.HealthCheck;
 

@@ -1,11 +1,11 @@
-package restinterface;
+package main.java.restinterface;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-import restinterface.resources.Catalogos;
-import restinterface.health.TemplateHealthCheck;
+import main.java.restinterface.resources.Catalogos;
+import main.java.restinterface.health.TemplateHealthCheck;
 
 public class CompanyApplication extends Application<CompanyConfiguration> {
     public static void main(String[] args) throws Exception {

@@ -1,17 +1,20 @@
 -module(user).
 -export([user/2]).
 
+%-include ("protos.hrl").
+
 user(Sock, Room) ->
 	receive
 		{line, Data} ->
 			gen_tcp:send(Sock, Data),
 			user(Sock, Room);
 		{tcp, _, Data} ->
-			L = protos:decode_msg(Data, 'Login'),
-			io:format("Recebi a mensagem ~p~n", [L]),
-			checkInterface(L, Sock, Room),
+			checkInterface(Data, Sock, Room),
 			user(Sock, Room);
-		%Provavelmete para tirar esta parte porque pode enviar pela mensagem
+
+		%Criar um no caso da palavra-passe estar incorreta
+
+		%Tirar esta parte porque pode enviar pela mensagem inicial
 		{type, {Username, Password}} ->
 			gen_tcp:send(Sock, "Put the type 0 for Importadores or something else to Fabricantes\n"),
 			receive
@@ -20,9 +23,12 @@ user(Sock, Room) ->
 			end,
 			Room ! {type, {Username, Password}, Type, self()},
 			user(Sock, Room);
+		%Pode ficar na mesma pq ele vai enviar qual o tipo
+		%Para as duas abaixo mudar apenas o que é enviado, pois envia aquele request que esta no request
 		{imp, Person} -> 
 			gen_tcp:send(Sock, "authenticated with sucess Importador\nNow you can make offers\n"),
 			importador:importador(Sock, Room, Person);
+		%Pode ficar na mesma pq ele envia qual o tipo
 		{fab, Person} -> 
 			gen_tcp:send(Sock, "authenticated with sucess Fabricante\nNow you can add Products\n"),
 			fabricante:fabricante(Sock, Room, Person);
@@ -33,23 +39,22 @@ user(Sock, Room) ->
 	end.
 
 
-checkInterface({C, U, P, T}, Sock, Room) ->
-	io:format("O valor do que se recebeu em primeiro e ~p ~n", [T]),
+checkInterface(Data, Sock, Room) ->
+	D = binary_to_list(Data),
 	%Substituir aqui pelo tipo de pedido se o pedido for Importador/Negociador ou aqueles request
-	%Em vez de 0 e 1 verificar o tipo
+	%Em vez de 0 e 1 verificar o tipo é importador/negociador/rest
 	if
-		T =:= "0\n" ->
+		D =:= "0\n" ->
 			io:format("Entrei no dropwizard~n"),
 			dropwizard:dropwizard(Sock, Room);
-		T =:= "1\n" ->
-			io:format("Entrou um utilizador pelo terminal"),
+		D =:= "1\n" ->
 			Person = authentication(Sock),
 			Room ! {aut, Person, self()};
 		true ->
 			gen_tcp:send("Errado\n")
 	end.
 
-
+%Mudar esta função para que apenas envia a mensagem para o Room e não esteja à espera do utilizador
 authentication(Sock) ->
 		gen_tcp:send(Sock, "Put the Credentials\n"),
 		receive

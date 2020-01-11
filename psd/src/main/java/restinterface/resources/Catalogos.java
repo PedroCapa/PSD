@@ -1,7 +1,7 @@
-package restinterface.resources;
+package main.java.restinterface.resources;
 
-import restinterface.representations.Prod;
-import restinterface.representations.Neg;
+import main.java.restinterface.representations.Prod;
+import main.java.restinterface.representations.Neg;
 
 import com.google.common.base.Optional;
 
@@ -23,20 +23,13 @@ import java.util.ArrayList;
 @Path("/catalogos")
 @Produces(MediaType.APPLICATION_JSON)
 public class Catalogos{
-    /*
-    @GET
-    public List<Saying> getAll() {
-        //Pedir ao servidor todos os produtos disponiveis
-        return new ArrayList<>();
-    }
-    */
+
     @GET
     @Path("/importador/{name}")
     public List<Neg> getImportador(@PathParam("name") String name){
         System.out.println("Pediu um pedido de um importador");
         List<Neg> n = new ArrayList<>();
         try{
-            //Mudar o Saying pq n é so name e description
             AskServer ask = new AskServer();
             List<Negocio> prod = ask.askServerNegocio(name, "imp");        
             
@@ -58,7 +51,6 @@ public class Catalogos{
         System.out.println("Pediu um pedido de um produto");
         List<Prod> p = new ArrayList<>();
         try{
-            //Mudar o Saying pq n é so name e description
             AskServer ask = new AskServer();
             List<Produto> prod = ask.askServerProduto(name, "produtores");        
             
@@ -83,7 +75,6 @@ public class Catalogos{
         System.out.println("Pediu um pedido de um negocio");
         List<Neg> n = new ArrayList<>();
         try{
-            //Mudar o Saying pq n é so name e description
             AskServer ask = new AskServer();
             List<Negocio> prod = ask.askServerNegocio(name, "negotiations");        
             

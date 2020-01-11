@@ -1,22 +1,22 @@
-syntax = "proto2";
+syntax="proto2";
 
-package Trabalho;
+package main.proto;
 
-message Sys {
-    repeated Negotiators negotiator = 1;
-    repeated Importer importer = 2;
-    repeated Production production = 3;
-}
-
-message Negotiators {
+message Login {
     required string name = 1;
     required string pass = 2;
-    repeated Production productions = 3;
+	required string type = 3;
 }
 
-message Importer {
-    required string name = 1;
-    required string pass = 2;
+message Confirmation{
+	required bool request = 1;
+	required string name = 2;
+	required string data = 3;
+}
+
+message Request{
+	required string request = 1;
+	required string name = 2;
 }
 
 message Production{
@@ -25,12 +25,12 @@ message Production{
 	required int32 min = 3;
 	required int32 max = 4;
 	required float price = 5;
-	repeated Negotiations negotiations = 6;
 }
 
 message Negotiations{
-	required string client_offer = 1;
-	required float price = 2;
-	required int32 amount = 3;
-	required int32 state = 4;
+	required string importer_offer = 1;
+	required string negotiator_offer = 2;
+	required string product_name = 3;
+	required float price = 4;
+	required int32 amount = 5;
 }

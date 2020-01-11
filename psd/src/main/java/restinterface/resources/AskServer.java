@@ -1,13 +1,15 @@
-package restinterface.resources;
+package main.java.restinterface.resources;
 
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+	//Copiar as coisas do askServerProduto para o askServerNegocio pq ainda n verifiquei os negocios
+	//Em vez de estar a enviar desta forma colocar em binario 
+	//Quando receber tranformar em bytes para o Objeto
+
 public class AskServer{
-	//Colocar nos argumentos que tipo de request e qual é o utilizador
-	//Alterar para retornar uma lista de Collection
 	public List<Produto> askServerProduto(String name, String request) 
 	throws IOException, InterruptedException, SocketException{
 
@@ -17,7 +19,8 @@ public class AskServer{
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
-		out.println("0");
+		//Criar aqui a estrutura que será enviada
+
 		out.println(request + "," + name + ",");
 
 		List<String> elementos = new ArrayList<>();

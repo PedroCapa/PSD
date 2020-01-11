@@ -1,4 +1,4 @@
-package restinterface.representations;
+package main.java.restinterface.representations;
 
 import com.fasterxml.jackson.annotation.*;
 

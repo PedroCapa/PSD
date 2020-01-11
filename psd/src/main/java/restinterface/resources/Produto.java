@@ -1,4 +1,4 @@
-package restinterface.resources;
+package main.java.restinterface.resources;
 
 public class Produto{
 	private String product_name;

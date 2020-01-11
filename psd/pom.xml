@@ -6,7 +6,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <dropwizard.version>0.7.1</dropwizard.version>
     <protobuf.input.directory>${project.basedir}/src/main/proto</protobuf.input.directory>
-    <protobuf.output.directory>${project.build.directory}/generated-sources</protobuf.output.directory>
+    <protobuf.output.directory>${project.basedir}/src</protobuf.output.directory>
     <build-helper-maven-plugin.version>1.9.1</build-helper-maven-plugin.version>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
     <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
@@ -41,6 +41,12 @@
       <groupId>io.dropwizard</groupId>
         <artifactId>dropwizard-core</artifactId>
       <version>${dropwizard.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.zeromq</groupId>
+      <artifactId>jeromq</artifactId>
+      <version>0.5.1</version>
     </dependency>
   </dependencies>
 

@@ -1,4 +1,4 @@
-package restinterface.resources;
+package main.java.restinterface.resources;
 
 public class Negocio{
 	private String client_offer;

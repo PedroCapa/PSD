@@ -2,20 +2,20 @@
 <project name="maven-antrun-" default="main"  >
 <target name="main">
   <property name="protoc.filename" value="protoc-3.0.0-beta-1-${os.detected.classifier}.exe"/>
-  <property name="protoc.filepath" value="/home/luis/Documentos/4ºano/SD/PSD/PSD/psd/target/${protoc.filename}"/>
+  <property name="protoc.filepath" value="/home/pedro/Documents/4ºAno/PSD/Trabalho/psd/target/${protoc.filename}"/>
   <chmod file="${protoc.filepath}" perm="ugo+rx"/>
-  <mkdir dir="/home/luis/Documentos/4ºano/SD/PSD/PSD/psd/target/generated-sources"/>
+  <mkdir dir="/home/pedro/Documents/4ºAno/PSD/Trabalho/psd/src"/>
   <path id="protobuf.input.filepaths.path">
-    <fileset dir="/home/luis/Documentos/4ºano/SD/PSD/PSD/psd/src/main/proto">
+    <fileset dir="/home/pedro/Documents/4ºAno/PSD/Trabalho/psd/src/main/proto">
       <include name="**/*.proto"/>
     </fileset>
   </path>
   <pathconvert property="protobuf.input.filepaths" pathsep=" " refid="protobuf.input.filepaths.path"/>
   <exec failonerror="true" executable="${protoc.filepath}">
     <arg value="-I"/>
-    <arg value="/home/luis/Documentos/4ºano/SD/PSD/PSD/psd/src/main/proto"/>
+    <arg value="/home/pedro/Documents/4ºAno/PSD/Trabalho/psd/src/main/proto"/>
     <arg value="--java_out"/>
-    <arg value="/home/luis/Documentos/4ºano/SD/PSD/PSD/psd/target/generated-sources"/>
+    <arg value="/home/pedro/Documents/4ºAno/PSD/Trabalho/psd/src"/>
     <arg line="${protobuf.input.filepaths}"/>
   </exec>
 </target>
