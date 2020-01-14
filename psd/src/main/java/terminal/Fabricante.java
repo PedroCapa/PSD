@@ -16,29 +16,27 @@ public class Fabricante{
 	public static void main(String[] args) throws IOException, InterruptedException, SocketException{
 		int port = Integer.parseInt(args[0]);
 		Socket cs = new Socket("127.0.0.1", port);
-
 		PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
-		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		Scanner scanner = new Scanner(System.in);
 
-		//Aqui começa as notificações do ZeroMQ
-		Notifications n = new Notifications(out);
+
+		out.println("1");
+		out.println("fab");
+		String user = authentication(scanner, teclado, out);
+
+
+		Notifications n = new Notifications(out, false, user);
 		Thread not = new Thread(n);
 		not.start();
 		
-		//Aqui começa o leitor cliente
+
 		LeitorFabricante l = new LeitorFabricante(cs, n);
 		Thread t = new Thread(l);
 		t.start();
 
-		//Aqui vai verificar as credenciais do utilizador
-		//Login user = authentication(out, teclado);
 
-		//Mudar para System.Scanner pq esta merda N FUNCIONA
-		//Aqui envia coisas para o servidor Erlang
-		out.println("1");
-		
 		String current;
-		Scanner scanner = new Scanner(System.in);
 		while(scanner.hasNextLine()){
 			current = scanner.nextLine();
 			//Criar os objetos deste lado para depois encriptar
@@ -53,45 +51,41 @@ public class Fabricante{
 		out.close();
 	}
 
-/*
-	public static Login authentication(PrintWriter out, BufferedReader teclado){
+
+	public static String authentication(Scanner scanner, BufferedReader teclado, PrintWriter out){
 		try{
-            //Ler do teclado nome e pass
+            //Ler do scanner nome e pass
             System.out.println("Username");
-            String username = teclado.readLine();
+            String username = scanner.nextLine();
+            out.println(username);
 
             System.out.println("Password");
-            String password = teclado.readLine();
-            
+            String password = scanner.nextLine();
+            out.println(password);
+
             //Enviar para servidor a autenticação
-            Login login = Login.newBuilder()
-                                .setName(username)
-                                .setPass(password)
-                                .setType("importador")
-                                .build();
-            
-            byte [] ba = login.toByteArray();
-            out.println(ba);
-            //Processar o resultado e saltar para a próxima fase
-            //Talvez deva substituir por um método a parte de receber do servidor
+            String response = teclado.readLine();
+			String[] arrOfStr = response.split(",");
 
-            int x = 0;
-
-            if(x == -1){
+            if(arrOfStr[0].equals("-1\n")){
                 System.out.println("Palavra passe incorreta");
-                return authentication(out, teclado);
+                return authentication(scanner, teclado, out);
             }
-            else if(x == 0)
+            else if(arrOfStr[0].equals("1\n")){
                 System.out.println("Conta criada com sucesso");
-            else 
+            	return arrOfStr[1];
+            }
+            else{
                 System.out.println("Sessão iniciada com sucesso");
-            return login;
+            	return arrOfStr[1];
+            }
         }
-        catch(IOException exc){}
+        catch(IOException exc){
+        	System.out.println("Deu asneira");
+        }
         
         return null;
 	}
-*/
 }
 
 
@@ -140,10 +134,14 @@ class Notifications implements Runnable{
 	private ZContext zcont = new ZContext();
 	private ZMQ.Socket subscriber;
 	private PrintWriter out;
+	private boolean importador;
+	private String username;
 
-	public Notifications(PrintWriter out){
+	public Notifications(PrintWriter out, boolean importador, String username){
     	this.subscriber = zcont.createSocket(SocketType.SUB);
     	this.out = out;
+    	this.importador = importador;
+    	this.username = username;
 	}
 
 	public void run(){
@@ -154,7 +152,10 @@ class Notifications implements Runnable{
         while(!Thread.currentThread().isInterrupted()){
         	String channel = subscriber.recvStr();
         	System.out.println("Acabou o tempo do produto " + channel);
-        	out.println("over," + channel + ",");
+        	if(importador)	
+        		out.println("over," + channel + "," + username);
+        	else
+        		out.println("over," + channel + ",");
         }
     }
     //Mudar o tipo de subscrição

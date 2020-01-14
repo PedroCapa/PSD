@@ -23,41 +23,48 @@ room(Importadores, Fabricantes) ->
 				room(Importadores, Fabricantes);
 			%Vai ser so para verificar se existe ou não o utilizador no caso de a palavra passe estar incorreta apenas enviar resposta de erro 
 			%Acrescentar qual foi o tipo que ele colocou
-			{aut, {Username, Password}, PID}  ->
+			{imp, {Username, Password}, PID}  ->
 				%Verifica se existe algum fabricante ou Importador com esse nome
 				Fab = checkUsername(Username, Password, Fabricantes),
 				Imp = checkUsername(Username, Password, Importadores),
 				if
 					%No caso do Utilizador ser um Importador
 					Imp =:= true ->
-						PID ! {imp, {Username, Password}},
-						room(Importadores, Fabricantes);
-					%No caso do Utilizador ser um Fabricante
-					Fab =:= true ->
-						PID ! {fab, {Username, Password}},
+						Result = "login",
+						PID ! {aut, {Username, Result}},
 						room(Importadores, Fabricantes);
 					%No caso do Utilizador não existir
 					Fab =:= false, Imp =:= false ->
-						PID ! {type, {Username, Password}},
-						room(Importadores, Fabricantes);
+						Result = "1",
+						PID ! {aut, {Username, Result}},
+						room(maps:merge(#{Username => {Password, []}}, Importadores), Fabricantes);
 					%No caso de errar a palavra-passe
-					%Mudar para outro sem ser tcp para que no caso de se ter enganado 
 					true ->
-						PID ! {tcp, "", ""},
-						io:format("Enganou-se na palavra-passe~n"),
+						Result = "erro",
+						PID ! {aut, {Username, Result}},
 						room(Importadores, Fabricantes)
 				end;
-			%Acrescentar a lista de Fabricante/Importador no caso de não existir
-			%Será para tirar esta parte porque ele ja vai dizer logo no inicio qual dos tipos é que ele escolheu
-			{type, {Username, Password}, Type, PID} ->
-				T = checkType(Type),
-				if 
-					T =:= true->
-						PID ! {imp, {Username, Password}},
-						room(maps:merge(#{Username => {Password, []}}, Importadores), Fabricantes);
+			{fab, {Username, Password}, PID}  ->
+				io:format("Server: Username: ~p Password: ~p~n", [Username, Password]),
+				%Verifica se existe algum fabricante ou Importador com esse nome
+				Fab = checkUsername(Username, Password, Fabricantes),
+				Imp = checkUsername(Username, Password, Importadores),
+				if
+					%No caso do Utilizador ser um Fabricante
+					Fab =:= true ->
+						Result = "login",
+						PID ! {aut, {Username, Result}},
+						room(Importadores, Fabricantes);
+					%No caso do Utilizador não existir
+					Fab =:= false, Imp =:= false ->
+						Result = "1",
+						PID ! {aut, {Username, Result}},
+						room(Importadores, maps:merge(#{Username => {Password, []}}, Fabricantes));
+					%No caso de errar a palavra-passe
 					true ->
-						PID ! {fab, {Username, Password}},
-						room(Importadores, maps:merge(#{Username => {Password, []}}, Fabricantes))
+						Result = "erro",
+						PID ! {aut, {Username, Result}},
+						room(Importadores, Fabricantes)
 				end;
 			%Em principio vai ser para manter pq é so para colocar um produto
 			{new, Fab, Prod, Min, Max, Price, Time, PID} ->
@@ -176,15 +183,8 @@ checkPassword(Username, Password, Map)  ->
 			untrue
 	end.
 
-checkType(Type) ->
-	if
-		Type =:= "0\n" ->
-			true;
-		true ->
-			false
-	end.
-
 findUserProd(Fab, Product, Map) ->
+	io:format("Server: Map: ~p~n", [Map]),
 	{ok, P} = maps:find(Fab, Map),
 	findProd(P, Product).
 

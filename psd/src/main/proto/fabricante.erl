@@ -1,30 +1,57 @@
 -module(fabricante).
--export([fabricante/3]).
+-export([fabricante/2]).
 
 %Mudar apenas os send para aquele tipo especifico e encode
 %Mudar a parte de receber em que é preciso fazer decode
 
-fabricante(Sock, Room, {Username, Password}) ->
+fabricante(Sock, Room) ->
+	receive
+		{tcp, _, Name} ->
+			U = binary_to_list(Name),
+			Id = string:trim(U),
+			io:format("Fabricante O valor do Name e ~p ~n", [Id])
+	end,
+	receive
+		{tcp, _, Pass} ->
+			P = binary_to_list(Pass),
+			Password = string:trim(P),
+			Room ! {fab, {Id, Password}, self()}
+	end,
+	receive
+		{aut, {Username, Result}} ->
+			Send = Result ++ "," ++ Username ++ ",\n",
+			if
+				Result =:= "erro" ->
+					gen_tcp:send(Sock, "-1\n"),
+					fabricante(Sock, Room);
+				true ->
+					gen_tcp:send(Sock, Send),
+					handleFabricante(Sock, Room, Username)
+			end
+	end.
+
+handleFabricante(Sock, Room, Username) ->
 		receive
 			{line, Data} ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
-				fabricante(Sock, Room, {Username, Password});
+				handleFabricante(Sock, Room, Username);
 			{res, Data} ->
 				io:format("Fabricante: Recebi a resposta do servidor ~p~n", [binary_to_list(Data)]),
 				gen_tcp:send(Sock, binary_to_list(Data)),
-				fabricante(Sock, Room, {Username, Password});
+				handleFabricante(Sock, Room, Username);
+			%{deal, Data}		%Recebe a resposta do Room por causa do ZeroMQ
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
 				io:format("Fabricante: Recebi do fabricante ~p ~n", [List]),
-				handleFabricante(List, Username, Room, Sock),
-				fabricante(Sock, Room, {Username, Password});
+				handleRequest(List, Username, Room, Sock),
+				handleFabricante(Sock, Room, Username);
 			{tcp_closed, _} ->
 				Room ! {leave, self()};
 			{tcp_error, _, _} ->
 				Room ! {leave, self()}
 		end.
 
-handleFabricante([H | T], Username, Room, Sock) ->
+handleRequest([H | T], Username, Room, Sock) ->
 	if 
 		H =:= "new"->
 			Res = newProduct(T, Username, Room);
