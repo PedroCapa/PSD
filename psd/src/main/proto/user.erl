@@ -45,7 +45,7 @@ checkInterface(Data, Sock, Room) ->
 	%Em vez de 0 e 1 verificar o tipo é importador/negociador/rest
 	if
 		D =:= "0\n" ->
-			io:format("Entrei no dropwizard~n"),
+			io:format("User: Entrei no dropwizard~n"),
 			dropwizard:dropwizard(Sock, Room);
 		D =:= "1\n" ->
 			Person = authentication(Sock),
@@ -61,7 +61,7 @@ authentication(Sock) ->
 			{tcp, _, User} ->
 				U = binary_to_list(User),
 				Username = string:trim(U),
-				io:format("O valor do User e ~p ~n", [Username]),
+				io:format("User: O valor do User e ~p ~n", [Username]),
 				gen_tcp:send(Sock, "Coloque a palavra-passe\n")
 		end,
 		receive

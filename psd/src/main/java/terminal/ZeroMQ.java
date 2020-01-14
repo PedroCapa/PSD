@@ -50,7 +50,7 @@ class AlertSubscriber implements Runnable{
             ZonedDateTime zdt = this.tempo.atZone(ZoneId.of("Europe/Lisbon"));
             long falta = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
             System.out.println("Daqui a uns segundos vou enviar para todos os subscritores");
-            Thread.sleep(10000);
+            Thread.sleep(10000000);
             System.out.println("Ja enviei para todos os subscritores");
             //Enviar qual o topico que vai escrever
             publisher.send(this.channel);

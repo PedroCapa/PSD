@@ -10,12 +10,12 @@ fabricante(Sock, Room, {Username, Password}) ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				fabricante(Sock, Room, {Username, Password});
 			{res, Data} ->
-				io:format("Recebi a resposta do servidor ~p~n", [binary_to_list(Data)]),
+				io:format("Fabricante: Recebi a resposta do servidor ~p~n", [binary_to_list(Data)]),
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				fabricante(Sock, Room, {Username, Password});
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
-				io:format("Recebi do cliente ~p ~n", [List]),
+				io:format("Fabricante: Recebi do fabricante ~p ~n", [List]),
 				handleFabricante(List, Username, Room, Sock),
 				fabricante(Sock, Room, {Username, Password});
 			{tcp_closed, _} ->
@@ -25,7 +25,6 @@ fabricante(Sock, Room, {Username, Password}) ->
 		end.
 
 handleFabricante([H | T], Username, Room, Sock) ->
-	io:format("Vou tratar do pedido~p~n", [H]),
 	if 
 		H =:= "new"->
 			Res = newProduct(T, Username, Room);
@@ -44,7 +43,7 @@ handleFabricante([H | T], Username, Room, Sock) ->
 
 %Colocar aqui o pedido para verificar quais são os negocios validos
 negocios(List, Username, Room) -> 
-	io:format("A lista que recebi foi ~p~n", [List]), 
+	io:format("Fabricante: A lista que recebi foi ~p~n", [List]), 
 	Res = true,
 	Res.
 

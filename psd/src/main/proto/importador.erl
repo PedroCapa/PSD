@@ -10,12 +10,12 @@ importador(Sock, Room, {Username, Password}) ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				importador(Sock, Room, {Username, Password});
 			{res, Data} ->
-				io:format("Recebi a resposta~p~n", [Data]),
+				io:format("Importador: Recebi a resposta ~p~n", [Data]),
 				gen_tcp:send(Sock, binary_to_list(Data)),
-				fabricante:fabricante(Sock, Room, {Username, Password});
+				importador(Sock, Room, {Username, Password});
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
-				io:format("Recebi do importador ~p ~n", [List]),
+				io:format("Importador: Recebi do importador ~p ~n", [List]),
 				handleImportador(List, Username, Room, Sock),
 				importador(Sock, Room, {Username, Password});
 			{tcp_closed, _} ->
@@ -43,7 +43,7 @@ handleImportador([H | T], Username, Room, Sock) ->
 	end.
 
 neg(List, Username, Room) -> 
-	io:format("A lista que recebi foi ~p~n", [List]), 
+	io:format("Importador: A lista que recebi foi ~p~n", [List]), 
 	Res = true,
 	Res.
 
