@@ -98,6 +98,20 @@ room(Importadores, Fabricantes) ->
 						PID ! {res, list_to_binary(Msg)},
 						room(Importadores, Fabricantes)
 				end;
+			{finish, {Fabricante, Produto, Negociador}, PID} ->
+				io:format("ServerFINISH: Recebi o fim do ZeroMQ~n"),
+				Msg = "Mensagem\n",
+				%Colocar Função que verifica se o produto já foi verificado
+				%Verificar se o utilizador consegui fechar negocio
+				PID ! {deal, Msg},
+				room(Importadores, Fabricantes);
+			{over, {Fabricante, Produto}, PID} ->
+				io:format("Server: Recebi o fim do ZeroMQ~n"),
+				%Colocar função que verifica se o produto já foi verificado
+				%Enviar os negocios que foram aceites
+				Msg = "Mensagem\n",
+				PID ! {deal, Msg},
+				room(Importadores, Fabricantes);
 			{imp, Imp, PID} ->
 				%Ir buscar o importador e quais são as ofertas que realizaou
 				Res = getImp(Imp, Importadores),

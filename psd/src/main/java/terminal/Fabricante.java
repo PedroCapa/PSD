@@ -152,8 +152,8 @@ class Notifications implements Runnable{
         while(!Thread.currentThread().isInterrupted()){
         	String channel = subscriber.recvStr();
         	System.out.println("Acabou o tempo do produto " + channel);
-        	if(importador)	
-        		out.println("over," + channel + "," + username);
+        	if(importador)
+        		out.println("over," + channel + "," + username + ",");
         	else
         		out.println("over," + channel + ",");
         }

@@ -39,7 +39,9 @@ handleImportador(Sock, Room, Username) ->
 				io:format("Importador: Recebi a resposta ~p~n", [Data]),
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				handleImportador(Sock, Room, Username);
-			%{deal, _, Data} -> 			%Dizer se o importador realizou ou não o negocio
+			{deal, Data} -> 			%Dizer se o importador realizou ou não o negocio
+				gen_tcp:send(Sock, Data),
+				handleImportador(Sock, Room, Username);
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
 				io:format("Importador: Recebi do importador ~p ~n", [List]),
@@ -57,7 +59,7 @@ handleRequest([H | T], Username, Room, Sock) ->
 		H =:= "offer"->
 			Res = newOffer(T, Username, Room);
 		H =:= "over" ->
-			Res = neg(T, Username, Room);
+			Res = neg(T, Room);
 		true -> 
 			Res = false
 	end,
@@ -69,9 +71,21 @@ handleRequest([H | T], Username, Room, Sock) ->
 			io:format("~n")
 	end.
 
-neg(List, Username, Room) -> 
+neg(List, Room) -> 
 	io:format("Importador: A lista que recebi foi ~p~n", [List]), 
-	Res = true,
+	Size = length([X || X <- List]),
+	if
+		Size >= 3 ->
+			Fab = lists:nth(1, List),
+			Prod = lists:nth(2, List),
+			User = lists:nth(3, List),
+			Room ! {finish, {Fab, Prod, User}, self()},
+			io:format("Importador: Vou enviar para Server~n"),
+			Res = true;
+		true ->
+			io:format("Formato errado"),
+			Res = false
+	end,
 	Res.
 
 newOffer(List, Username, Room) ->
