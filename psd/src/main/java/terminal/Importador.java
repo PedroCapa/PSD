@@ -71,11 +71,11 @@ public class Importador{
 
 			System.out.println("Importador: Recebi" + response);
 
-            if(arrOfStr[0].equals("-1\n")){
+            if(arrOfStr[0].equals("-1")){
                 System.out.println("Palavra passe incorreta");
                 return authentication(scanner, teclado, out);
             }
-            else if(arrOfStr[0].equals("1\n")){
+            else if(arrOfStr[0].equals("1")){
                 System.out.println("Conta criada com sucesso");
             	return arrOfStr[1];
             }

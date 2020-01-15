@@ -8,8 +8,7 @@ fabricante(Sock, Room) ->
 	receive
 		{tcp, _, Name} ->
 			U = binary_to_list(Name),
-			Id = string:trim(U),
-			io:format("Fabricante O valor do Name e ~p ~n", [Id])
+			Id = string:trim(U)
 	end,
 	receive
 		{tcp, _, Pass} ->
@@ -20,8 +19,10 @@ fabricante(Sock, Room) ->
 	receive
 		{aut, {Username, Result}} ->
 			Send = Result ++ "," ++ Username ++ ",\n",
+			io:format("Result: ~p~n", [Result]),
 			if
 				Result =:= "erro" ->
+					io:format("Enviei: ~p~n", [Result]),
 					gen_tcp:send(Sock, "-1\n"),
 					fabricante(Sock, Room);
 				true ->
@@ -36,16 +37,14 @@ handleFabricante(Sock, Room, Username) ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				handleFabricante(Sock, Room, Username);
 			{res, Data} ->
-				io:format("Fabricante: Recebi a resposta do servidor ~p~n", [binary_to_list(Data)]),
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				handleFabricante(Sock, Room, Username);
 			{deal, Data} ->		%Recebe a resposta do Room por causa do ZeroMQ
-				%Enviar um de cada vez
-				gen_tcp:send(Sock, Data),
+				io:format("Recebi Data: ~p~n", [Data]),
+				sendRes(Sock, Data),
 				handleFabricante(Sock, Room, Username);
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
-				io:format("Fabricante: Recebi do fabricante ~p ~n", [List]),
 				handleRequest(List, Username, Room, Sock),
 				handleFabricante(Sock, Room, Username);
 			{tcp_closed, _} ->
@@ -73,13 +72,11 @@ handleRequest([H | T], Username, Room, Sock) ->
 
 %Colocar aqui o pedido para verificar quais são os negocios validos
 negocios(List, Room) -> 
-	io:format("Fabricante: A lista que recebi foi ~p~n", [List]),
 	Size = length([X || X <- List]),
 	if
 		Size >= 2 ->
 			Fab = lists:nth(1, List),
 			Prod = lists:nth(2, List),
-			io:format("FAbricante: Enviei para o server~n"),
 			Room ! {over, {Fab, Prod}, self()},
 			Res = true;
 		true ->
@@ -112,3 +109,12 @@ newProduct(List, Username, Room) ->
 			Res = false
 	end,
 	Res.
+
+sendRes(_, []) -> 
+	gen_tcp(Sock, "Vou enviar os pedidos aceites~n");
+sendRes(Sock, [{Username, Price, Ammount, Time, State} |T]) ->
+	Send = "Username:" ++ Username ++ " Price: " ++ lists:flatten(io_lib:format("~p", [Price])) ++ 
+	"  Ammount: " ++ lists:flatten(io_lib:format("~p", [Ammount])) ++ "  Time: " ++ Time ++ 
+	"  State: " ++ lists:flatten(io_lib:format("~p", [State])) ++ "\n",
+	gen_tcp:send(Sock, Send),
+	sendRes(Sock, T).

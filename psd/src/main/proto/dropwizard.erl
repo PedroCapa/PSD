@@ -1,5 +1,5 @@
 -module(dropwizard).
--export([dropwizard/2]).
+-export([dropwizard/2, sendRes/2]).
 
 %Mudar apenas os send para aquele tipo especifico e encode
 %Mudar a parte de receber em que é preciso fazer decode

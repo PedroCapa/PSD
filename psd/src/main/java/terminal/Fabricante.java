@@ -67,11 +67,13 @@ public class Fabricante{
             String response = teclado.readLine();
 			String[] arrOfStr = response.split(",");
 
-            if(arrOfStr[0].equals("-1\n")){
+			System.out.println("response: " + response);
+
+            if(arrOfStr[0].equals("-1")){
                 System.out.println("Palavra passe incorreta");
                 return authentication(scanner, teclado, out);
             }
-            else if(arrOfStr[0].equals("1\n")){
+            else if(arrOfStr[0].equals("1")){
                 System.out.println("Conta criada com sucesso");
             	return arrOfStr[1];
             }

@@ -8,8 +8,7 @@ importador(Sock, Room) ->
 	receive
 		{tcp, _, Name} ->
 			U = binary_to_list(Name),
-			Id = string:trim(U),
-			io:format("User: O valor do User e ~p ~n", [Id])
+			Id = string:trim(U)
 	end,
 	receive
 		{tcp, _, Pass} ->
@@ -36,15 +35,14 @@ handleImportador(Sock, Room, Username) ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				handleImportador(Sock, Room, Username);
 			{res, Data} ->
-				io:format("Importador: Recebi a resposta ~p~n", [Data]),
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				handleImportador(Sock, Room, Username);
 			{deal, Data} -> 			%Dizer se o importador realizou ou não o negocio
-				gen_tcp:send(Sock, Data),
+				io:format("Recebi Data: ~p~n", [Data]),
+				sendRes(Sock, Data),
 				handleImportador(Sock, Room, Username);
 			{tcp, _, Data} ->
 				List = string: tokens(binary_to_list(Data), ","),
-				io:format("Importador: Recebi do importador ~p ~n", [List]),
 				handleRequest(List, Username, Room, Sock),
 				handleImportador(Sock, Room, Username);
 			{tcp_closed, _} ->
@@ -72,7 +70,6 @@ handleRequest([H | T], Username, Room, Sock) ->
 	end.
 
 neg(List, Room) -> 
-	io:format("Importador: A lista que recebi foi ~p~n", [List]), 
 	Size = length([X || X <- List]),
 	if
 		Size >= 3 ->
@@ -80,7 +77,6 @@ neg(List, Room) ->
 			Prod = lists:nth(2, List),
 			User = lists:nth(3, List),
 			Room ! {finish, {Fab, Prod, User}, self()},
-			io:format("Importador: Vou enviar para Server~n"),
 			Res = true;
 		true ->
 			io:format("Formato errado"),
@@ -110,3 +106,12 @@ newOffer(List, Username, Room) ->
 			Res = false
 	end,
 	Res.
+
+sendRes(Sock, []) -> 
+	gen_tcp(Sock, "Vou enviar os pedidos aceites~n");
+sendRes(Sock, [{Username, Price, Ammount, Time, State} |T]) ->
+	Send = "Username:" ++ Username ++ " Price: " ++ lists:flatten(io_lib:format("~p", [Price])) ++ 
+	"  Ammount: " ++ lists:flatten(io_lib:format("~p", [Ammount])) ++ "  Time: " ++ Time ++ 
+	"  State: " ++ lists:flatten(io_lib:format("~p", [State])) ++ "\n",
+	gen_tcp:send(Sock, Send),
+	sendRes(Sock, T).

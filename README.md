@@ -9,7 +9,7 @@ Acrescentar um Produto
 
 Realizar uma Negociacao
 	
-	offer,Pedro,Prod,20,500,
+	offer,Pedro,Prod,60,500,
 
 Para o dropwizard
 	
@@ -30,6 +30,7 @@ Criar o proto.erl
 	
 	# .../gpb/bin/protoc-erl -I. x.proto
 
-Compilar proto
+Compilar proto  
 	
+	cd .../src/main/proto/
 	erlc -I.../gpb/include x.erl
