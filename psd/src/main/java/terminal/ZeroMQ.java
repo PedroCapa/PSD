@@ -13,21 +13,24 @@ public class ZeroMQ{
     public static void main(String[] args) throws Exception{
         ZContext zcont = new ZContext();
         ZMQ.Context context = ZMQ.context(1);
-        ZMQ.Socket socket = context.socket(ZMQ.REP); //Este é usado para receber mensagens dos Subscritores
-        ZMQ.Socket publisher = zcont.createSocket(ZMQ.PUB);  //Este é usado para enviar mensagens para os subscitores  que subscrevem o topico
+        ZMQ.Socket socket = context.socket(ZMQ.REP);        //Este é usado para receber mensagens dos Subscritores
+        ZMQ.Socket publisher = zcont.createSocket(ZMQ.PUB); //Este é usado para enviar mensagens para os subscitores  que subscrevem o topico
         socket.bind("tcp://*:5555");
         publisher.bind("tcp://*:6666");
 
         while (!Thread.currentThread().isInterrupted()) {
             //Receb dos subbscritores. Significa que eles criaram um produto
             byte[] b = socket.recv();
+            socket.send(new String(b));
             String s = new String(b);
-            System.out.println("Received " + s);
+            System.out.println("ZeroMQ: Received " + s + "  and send");
+
             //Falta converter o tempo da mensagem para o LocalDateTime
             AlertSubscriber as = new AlertSubscriber(LocalDateTime.now(), s, publisher);
             Thread t = new Thread(as);
             t.start();
         }
+        System.out.println("Acabei");
     }
 }
 
@@ -49,15 +52,15 @@ class AlertSubscriber implements Runnable{
         try{
             ZonedDateTime zdt = this.tempo.atZone(ZoneId.of("Europe/Lisbon"));
             long falta = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
-            System.out.println("Daqui a uns segundos vou enviar para todos os subscritores");
-            Thread.sleep(10000);
-            System.out.println("Ja enviei para todos os subscritores");
+            System.out.println("AlertSubscriber:Daqui a uns segundos vou enviar para todos os subscritores");
+            Thread.sleep(20000);
             //Enviar qual o topico que vai escrever
             publisher.send(this.channel);
             //Enviar qual o produto que acabou de ser vendido
         }
         catch(Exception e){
-            System.out.println("Deu barraca " + e.getMessage());
+            System.out.println("AlertSubscriber:Deu barraca " + e.getMessage());
         }
+        System.out.println("AlertSubscriber:Acabei de enviar para toda a gente");
     }
 }

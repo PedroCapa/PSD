@@ -111,22 +111,19 @@ class LeitorFabricante implements Runnable{
 			while(!this.cs.isClosed()){
 				String eco = in.readLine();
 				if(eco != null)
-					System.out.println("Server: " + eco);
+					System.out.println("Recebi: " + eco);
 				String[] arrOfStr = eco.split(",");
 				if(arrOfStr.length == 3){
-					System.out.println("Vou enviar para o servidor do ZeroMQ");
+					System.out.println("Vou enviar para o servidor do ZeroMQ " + arrOfStr[0] + "		" + arrOfStr[1]);
 					this.notifications.subscribe(arrOfStr[0] + "," + arrOfStr[1]);
 					this.socket.send(arrOfStr[0] + "," + arrOfStr[1]);
-				}
-				//Colocar aqui no caso de o pedido ser para responder por causa do pedido ter acabado
-				if(arrOfStr.length == 4){//Importador,Produto,Ammount,Price
-					System.out.println("Este Importador: " + arrOfStr[0] + "comprou o teu" + "Produto: " + arrOfStr[1]);
+					byte[] b = socket.recv();
 				}
 			}
 			System.out.println("Fechei");
 		}
 		catch(Exception e){
-			System.out.println();
+			System.out.println("Deu Exceção no Leitor " + e.getMessage());
 		}
 	}
 }
@@ -160,7 +157,7 @@ class Notifications implements Runnable{
         		out.println("over," + channel + ",");
         }
     }
-    //Mudar o tipo de subscrição
+
     public void subscribe(String prod){
         this.subscriber.subscribe(prod);
     }

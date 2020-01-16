@@ -27,6 +27,7 @@ room(Importadores, Fabricantes) ->
 				%Verifica se existe algum fabricante ou Importador com esse nome
 				Fab = checkUsername(Username, Password, Fabricantes),
 				Imp = checkUsername(Username, Password, Importadores),
+				io:format("Fab: ~p   Imp~p~n", [Fab, Imp]),
 				if
 					%No caso do Utilizador ser um Importador
 					Imp =:= true ->
@@ -69,7 +70,7 @@ room(Importadores, Fabricantes) ->
 				end;
 			%Em principio vai ser para manter pq é so para colocar um produto
 			{new, Fab, Prod, Min, Max, Price, Time, PID} ->
-				io:format("Fabricantes: ~p~nImportadores: ~p~n", [Fabricantes, Importadores]),
+				io:format("Vou tratar no Produto: ~p~p~n", [Fab, Prod]),
 				Contains = findUserProd(Fab, Prod, Fabricantes),
 				if
 					Contains =:= true ->
@@ -78,75 +79,49 @@ room(Importadores, Fabricantes) ->
 						room(Importadores, Fabricantes);
 					true ->
 						Msg = Fab ++ "," ++ Prod ++ "," ++ Time ++ ",\n",
-						PID ! {res, list_to_binary(Msg)},
 						Update = addProduct(Fab, Prod, Min, Max, Price, Time, Fabricantes),
 						Res = maps:update(Fab, Update, Fabricantes),
+						io:format("Adicionei o produto Fabricantes: ~p~nImportadores: ~p~n", [Res, Importadores]),
+						PID ! {res, Msg},
 						room(Importadores, Res)
 				end;
 			%Em principio vai ser para manter pq é so para acrescentar uma negociação
 			{neg, Username, Fab, Prod, Ammount, Price, Time, PID} ->
-				io:format("Fabricantes: ~p~nImportadores: ~p~n", [Fabricantes, Importadores]),
+				io:format("Vou tratar no Neg: ~p~p~p~n", [Username, Fab, Prod]),
 				Contains = findUserOffer(Fab, Prod, Price, Ammount, Time, Fabricantes),
 				if
 					Contains =:= true ->
 						Msg = Fab ++ "," ++ Prod ++ "," ++ "\n",
 						Update = addNegocioFabricante(Fab, Username, Prod, Price, Ammount, Time, Fabricantes),
 						Res = maps:update(Fab, Update, Fabricantes),
-						Up = addNegocioImportador(Username, Prod, Price, Ammount, Time, Importadores),
+						Up = addNegocioImportador(Username, Fab, Prod, Price, Ammount, Time, Importadores),
 						Imp = maps:update(Username, Up, Importadores),
+						io:format("Adicionei o Negocio: Fabricantes: ~p~nImportadores: ~p~n", [Res, Imp]),
 						PID ! {res, list_to_binary(Msg)},
 						room(Imp, Res);
 					true ->
 						Msg = "Oferta não foi realizada com sucesso\n",
-						PID ! {res, list_to_binary(Msg)},
+						PID ! {res, Msg},
 						room(Importadores, Fabricantes)
 				end;
+
 			{finish, {Fabricante, Produto, Negociador}, PID} ->
-				io:format("Finish:~n 	 Fabricantes: ~p~n 		Importadores: ~p~n", [Fabricantes, Importadores]),
-				{ok, {Pass, Products}} = maps:find(Fabricante, Fabricantes),
-				P = getProdutoFabricante(Products, Produto),
-				Res = checkOver(P),
-				if
-					Res =:= false ->
-						Prod = changeNegStatus(P),
-						Update = replaceProd(Products, Prod),
-						Value = {Pass, Update},
-						New = maps:update(Fabricante, Value, Fabricantes),
-						io:format("Update: ~p~n", [Update]),
-						Status = getNegStatus(Update, Produto, Negociador),
-						io:format("Finish: Status: ~p~n", [Status]),
-						PID ! {deal, Status},
-						room(Importadores, New);
-					true ->
-						Neg = getNeg(P),
-						Status = negStatus(Neg, Negociador),
-						io:format("Finish: Status: ~p~n", [Status]),
-						PID ! {deal, Status},
-						room(Importadores, Fabricantes)
-				end;				
+				{Imp, Fab} = atualizaNegocio(Importadores, Fabricantes, Fabricante, Produto),
+				
+				{ok, {_, NewProducts}} = maps:find(Fabricante, Fab),
+				Update = getProd(NewProducts, Produto),
+				Neg = getNeg(Update),
+				Status = negStatus(Neg, Negociador),
+				PID ! {deal, Status},
+				room(Imp, Fab);
 			{over, {Fabricante, Produto}, PID} ->
-				io:format("over:~n 	 Fabricantes: ~p~n 		Importadores: ~p~n", [Fabricantes, Importadores]),
-				{ok, {Pass, Products}} = maps:find(Fabricante, Fabricantes),
-				P = getProdutoFabricante(Products, Produto),
-				Res = checkOver(P),
-				if
-					Res =:= false ->
-						Prod = changeNegStatus(P),
-						Update = replaceProd(Products, Prod),
-						Value = {Pass, Update},
-						New = maps:update(Fabricante, Value, Fabricantes),
-						io:format("Depois do finish ficou:~p~n", [New]),
-						Accepted = getAcceptedOffers(Update, Produto),
-						io:format("over: Accepted: ~p~n", [Accepted]),
-						PID ! {deal, Accepted},
-						room(Importadores, New);
-					true ->
-						Neg = getNeg(P),
-						Accepted = acceptedOffers(Neg),
-						io:format("over: Accepted: ~p~n", [Accepted]),
-						PID ! {deal, Accepted},
-						room(Importadores, Fabricantes)
-				end;
+				{Imp, Fab} = atualizaNegocio(Importadores, Fabricantes, Fabricante, Produto),
+				
+				{ok, {_, NewProducts}} = maps:find(Fabricante, Fab),
+				Update = getProd(NewProducts, Produto),
+				Accepted = getAcceptedOffers(Update),			%Vai buscar a lista de Negocios que foram aceites
+				PID ! {deal, Accepted},
+				room(Imp, Fab);
 			{imp, Imp, PID} ->
 				%Ir buscar o importador e quais são as ofertas que realizaou
 				Res = getImp(Imp, Importadores),
@@ -155,14 +130,14 @@ room(Importadores, Fabricantes) ->
 				room(Importadores, Fabricantes);
 			{negotiations, Fab, Prod, PID} ->
 				%Vai buscar as negociações de um produto
-				Res = getNegotiations(Fab, Prod, Fabricantes),
+				Res = getNegotiationsProduct(Fab, Prod, Fabricantes),
 				PID ! {res, Res},
 				io:format("Peguie nas negociações do produto~n"),
 				room(Importadores, Fabricantes);
 			{produtores, Fab, PID} ->
 				%Ir buscar o Fabricante e os seus produtos
 				io:format("O Fabricante é: ~p~n", [Fab]),
-				Res = getProdutos(Fab, Fabricantes),
+				Res = getProdutosFabricante(Fab, Fabricantes),
 				PID ! {res, Res},
 				io:format("Chegeu ao Fab~n"),
 				room(Importadores, Fabricantes);
@@ -174,60 +149,83 @@ room(Importadores, Fabricantes) ->
 				room(Importadores, Fabricantes)
 		end.
 
-getImp(_, []) -> [];
-getImp(Imp, [{Username, Fab, Prod, Price, Quant} | T]) ->
-	Rest = getImp(Imp, T),
+getImp(Importador, Map) ->
+	Exist = maps:is_key(Importador, Map),
 	if
-		Imp =:= Username ->
-			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",\n",
-			Res = lists:append(Rest, [I]);
+		Exist =:= true ->
+			{ok, {_, Negotiations}} = maps:find(Importador, Map),
+			getNegotiationsText(Negotiations);
 		true ->
-			Res = Rest
-	end,
-	Res.
+			"\n"
+	end.
 
-getProdutos(_, []) -> [];
-getProdutos(Fab, [{Username, Prod, Min, Max, Price, Time} | T]) ->
-	Rest = getProdutos(Fab, T),
+getNegotiationsText([]) -> "\n";
+getNegotiationsText([{Username, Fabricante, Prod, Price, Quant, Data, Status}|T]) ->
+	Rest = getNegotiationsText(T),
+	Username ++ "," ++ Fabricante ++ "," ++ Prod ++ "," ++ lists:flatten(io_lib:format("~p", [Price])) ++ "," ++ 
+	lists:flatten(io_lib:format("~p", [Quant])) ++ "," ++ Status ++ "," ++ Data ++ "," ++ lists:flatten(io_lib:format("~p", [Status])) ++ ",\n" ++ Rest.
+
+getProdutosFabricante(Fab, Map) ->
+	Exist = maps:is_key(Fab, Map),
 	if
-		Fab =:= Username ->
-			P = Username ++ "," ++ Prod ++ "," ++ Min ++ "," ++ Max ++ "," ++ Price ++ "," ++ Time ++ ",\n",
-			Res = lists:append(Rest, [P]);
+		Exist =:= true ->
+			{ok, {_, Prod}} = maps:find(Fab, Map),
+			getProdutosText(Prod);
 		true ->
-			Res = Rest
-	end,
-	Res.
+			"\n"
+	end.
+
+getProdutosText([]) -> "";
+getProdutosText([{Username, Min, Max, Price, Time, State, _} | T]) ->
+	Rest = getProdutosText(T),
+	Username ++ "," ++ lists:flatten(io_lib:format("~p", [Min])) ++ "," ++ lists:flatten(io_lib:format("~p", [Max])) ++ "," ++ 
+	lists:flatten(io_lib:format("~p", [Price])) ++ "," ++ Time ++ "," ++ lists:flatten(io_lib:format("~p", [State])) ++ ",\n" ++ Rest.
 
 %Mudar esta funcão pq vai receber uma lista de produtos e não uma lista de negocios
 %Não mudar para ja porque talvez possa ser utilizado um MAP e não é preciso correr listas
-getNegotiations(_, _, []) -> [];
-getNegotiations(Fab, S, [{Username, Fabr, Prod, Price, Quant} | T]) ->
-	Rest = getNegotiations(Fab, S, T),
-	if
-		Fab =:= Fabr ->
-			I = Username ++ "," ++ Fab ++ "," ++ Prod ++ "," ++ Price ++ "," ++ Quant ++ ",\n",
-			Res = lists:append(Rest, [I]);
-		true ->
-			Res = Rest
-	end,
-	Res.
 
-getProdutoFabricante([], _) ->
-	[];
-getProdutoFabricante([{Prod, Min, Max, Price, Time, Status, Neg}|T], Product) ->
+getNegotiationsProduct(Fab, Produto, Map) ->
+	Exist = map:is_key(Fab, Map),
 	if
-		Prod =:= Product ->
-			Res = {Prod, Min, Max, Price, Time, Status, Neg};
+		Exist =:= true ->
+			{ok, {_, Produtos}} = maps:find(Fab, Map),
+			Prod = getProd(Produtos, Produto),
+			Neg = getNeg(Prod),
+			getNegotiationsProductText(Neg);
 		true ->
-			Res = getProdutoFabricante(T, Product)
-	end,
-	Res.
+			"\n"
+	end.
 
-getAcceptedOffers(Produtos, Name) ->
-	Prod = getProd(Produtos, Name),
-	Neg = getNeg(Prod),
-	Res = acceptedOffers(Neg),
-	Res.
+%Vai buscar os negocios de um Produto
+getNegotiationsProductText([]) -> "\n";
+getNegotiationsProductText([{Username, Price, Ammount, Data, Status}|T]) ->
+	Rest = getNegotiationsProductText(T),
+	Username ++ "," ++ lists:flatten(io_lib:format("~p", [Price])) ++ "," ++ lists:flatten(io_lib:format("~p", [Ammount])) ++ 
+	"," ++ Data ++ "," ++ lists:flatten(io_lib:format("~p", [Status])) ++ ",\n" ++ Rest.
+
+getAcceptedOffers(Produto) ->
+	Neg = getNeg(Produto),
+	acceptedOffers(Neg).
+
+atualizaNegocio(Importadores, Fabricantes, Fabricante, Produto)->
+				{ok, {Pass, Products}} = maps:find(Fabricante, Fabricantes), 	%Vai buscar o Fabricante com esse nome
+				P = getProd(Products, Produto),									%Vai buscar o Produto
+				Res = checkOver(P),												%Ve se os produtos já foram verificados
+				if
+					Res =:= false ->
+						Prod = changeNegStatus(P),								%Vai mudar o produto
+						Update = replaceProd(Products, Prod),					%Substitui o produto na lista de Produtos do fabricante
+						Value = {Pass, Update},									
+						New = maps:update(Fabricante, Value, Fabricantes),		%Da update ao valor
+						
+						%Ir buscar a lista que atualiza cada negocio
+						Neg = getNeg(Prod),
+						Imp = changeImportadores(Neg, Produto, Fabricante, Importadores),
+						io:format("Depois do changeImportadores:~n 	 Fabricantes: ~p~n 		Importadores: ~p~n", [New, Imp]),
+						{Imp, New};
+					true ->
+						{Importadores, Fabricantes}
+				end.
 
 acceptedOffers([]) ->
 	[];
@@ -235,59 +233,47 @@ acceptedOffers([{Username, Price, Quant, Time, Status}|T]) ->
 	Rest = acceptedOffers(T),
 	if
 		Status =:= 1 ->
-			Result = [{Username, Price, Quant, Time, Status} | Rest];
+			[{Username, Price, Quant, Time, Status} | Rest];
 		true ->
-			Result = Rest
-	end,
-	Result.
-
-getNegStatus(Produtos, Produto, Username) ->
-	io:format("Produtos: ~p Name: ~p ~n", [Produtos, Produto]),
-	Prod = getProd(Produtos, Produto),
-	Neg = getNeg(Prod),
-	Res = negStatus(Neg, Username),
-	Res.
+			Rest
+	end.
 
 negStatus([], _) ->
 	[];
 negStatus([{Username, Price, Ammount, Time, Status}|T], User) ->
 	Rest = negStatus(T, User),
 	if
-		Status =:= 1, Username =:= User ->
-			Result = [{Username, Price, Ammount, Time, Status} | Rest];
+		Username =:= User ->
+			[{Username, Price, Ammount, Time, Status} | Rest];
 		true ->
-			Result = Rest
-	end,
-	Result.
+			Rest
+	end.
 
 changeNegStatus({Product, Min, Max, Price, Time, _, Neg}) ->
 	Produced = checkEnough(Neg, Min),
 	if 
 		Produced =:= true ->
 			Negocio = changeNeg(Neg, Max),
-			Res = {Product, Min, Max, Price, Time, 1, Negocio};
+			{Product, Min, Max, Price, Time, 1, Negocio};
 		true ->
 			Negocio = changeNegImpossible(Neg),
-			Res = {Product, Min, Max, Price, Time, 0, Negocio}
-	end,
-	Res.
+			{Product, Min, Max, Price, Time, 0, Negocio}
+	end.
 
 checkEnough([], Min) ->
 	if
 		Min > 0 ->
-			Res = false;
+			false;
 		true ->
-			Res = true
-	end,
-	Res;
+			true
+	end;
 checkEnough([{_, _, Ammount, _, _}|T], Min) ->
 	if
 		Min - Ammount < 0 ->
-			Res = true;
+			true;
 		true ->
-			Res = checkEnough(T, Min - Ammount)
-	end,
-	Res.
+			checkEnough(T, Min - Ammount)
+	end.
 
 changeNeg([], _) ->
 	[];
@@ -296,30 +282,47 @@ changeNeg([{Username, Price, Ammount, Time, _} | T], Max) ->
 		Max - Ammount >= 0  ->
 			New = Max - Ammount,
 			Rest = changeNeg(T, New),
-			Res = [{Username, Price, Ammount, Time, 1} | Rest];
+			[{Username, Price, Ammount, Time, 1} | Rest];
 		true ->
 			Rest = changeNeg(T, Max),
-			Res = [{Username, Price, Ammount, Time, 0} | Rest]	
-	end,
-	Res.
+			[{Username, Price, Ammount, Time, 0} | Rest]	
+	end.
 
 changeNegImpossible([]) ->
 	[];
 changeNegImpossible([{Username, Price, Ammount, Time, _} | T]) ->
 	Rest = changeNegImpossible(T),
-	Res = [{Username, Price, Ammount, Time, 0} | Rest],
-	Res.
+	[{Username, Price, Ammount, Time, 0} | Rest].
+
+%	Negocios: que foram alterados
+%	Prod: 	Nome do produto
+changeImportadores([], _, _, Importadores) -> Importadores;
+%A lista são os negocios no Fabricante que vão ser alteradas
+changeImportadores([{Username, Price, Quant, Time, Status}| T], Prod, Fabricante, Importadores) ->
+	{ok, {Password, Neg}} = maps:find(Username, Importadores), %Vai buscar os Negocios do Importador
+	NewNeg = atualizaStatus(Username, Fabricante, Prod, Price, Quant, Time, Status, Neg),	%Vai atualizar o Negocio com aquilo tudo igual
+	NewImp = maps:update(Username, {Password, NewNeg}, Importadores),
+	changeImportadores(T, Prod, Fabricante, NewImp).
+
+atualizaStatus(_, _, _, _, _, _, _, []) -> [];
+atualizaStatus(Username, Fabricante, Prod, Price, Quant, Time, Status, [{User, Fab, Product, Value, Ammount, Data, Validation} | T]) ->
+	if
+		User =:= Username, Prod =:= Product, Price =:= Value, Quant =:= Ammount, Time =:= Data, Validation =:= -1, Fabricante =:= Fab ->
+			[{Username, Fabricante, Prod, Price, Quant, Time, Status}| T];
+		true ->
+			Rest = atualizaStatus(Username, Fabricante, Prod, Price, Quant, Time, Status, T),
+			[{User, Fab, Product, Value, Ammount, Data, Validation}| Rest]
+	end.
 
 checkOver({_, _, _, _, _, Status, _}) ->
 	if 
 		Status =:= 1 ->
-			Res = true;
+			true;
 		Status =:= 0 ->
-			Res = true;
+			true;
 		true ->
-			Res = false
-	end,
-	Res.
+			false
+	end.
 
 checkUsername(Username, Password, Map) ->
 	User = maps:is_key(Username, Map),
@@ -332,8 +335,7 @@ checkUsername(Username, Password, Map) ->
 	end.
 
 checkPassword(Username, Password, Map)  ->
-	{ok, P} = maps:find(Username, Map),
-	Pass = getPassword(P),
+	{ok, {Pass, _}} = maps:find(Username, Map),
 	if
 		Pass =:= Password ->
 			true;
@@ -342,33 +344,23 @@ checkPassword(Username, Password, Map)  ->
 	end.
 
 findUserProd(Fab, Product, Map) ->
-	io:format("Server: Map: ~p~n", [Map]),
-	{ok, P} = maps:find(Fab, Map),
-	findProd(P, Product).
+	{ok, {_, P}} = maps:find(Fab, Map),
+	existProd(P, Product).
 
-findProd({_, []}, _) ->
+existProd([], _) ->
 	false;
-findProd({Password, [{Prod, _, _, _, _, _, _}|T]}, Product) ->
+existProd([{Prod, _, _, _, _, _, _}|T], Product) ->
 	if 
 		Product =:= Prod ->
-			Res = true;
+			true;
 		true ->
-			Res = findProd({Password, T}, Product)
-	end,
-	Res.
+			existProd(T, Product)
+	end.
 
 addProduct(Fab, Prod, Min, Max, Price, Time, Fabricantes) ->
-	{ok, P} = maps:find(Fab, Fabricantes),
-	Password = getPassword(P),
-	Products = getProds(P),
+	{ok, {Password, Products}} = maps:find(Fab, Fabricantes),
 	Final = addProd(Prod, Min, Max, Price, Time, Products),
 	{Password, Final}.
-
-getPassword({Password, _}) ->
-	Password.
-
-getProds({_, Prod}) ->
-	Prod.
 
 addProd(Prod, Min, Max, Price, Time, Final) ->
 	{A, _} = string:to_integer(Min),
@@ -394,7 +386,6 @@ verifyOffer(Fab, Product, Pr, Quant, Ti, {Password, [{Prod, _, Max, Price, Time,
 	Q = [Char || Char <- Quant, Char < $0 orelse Char > $9] == [],
 	{E, _} = string:to_integer(Pr),
 	{F, _} = string:to_integer(Quant),
-
 	if
 		Q =:= true, Pri =:= true, Product =:= Prod,  E >= Price, F =< Max, Time > Ti ->
 			true;
@@ -405,9 +396,7 @@ verifyOffer(Fab, Product, Pr, Quant, Ti, {Password, [{Prod, _, Max, Price, Time,
 	end.
 
 addNegocioFabricante(Fab, Username, Prod, Price, Quant, Time, Fabricantes) ->
-	{ok, P} = maps:find(Fab, Fabricantes),
-	Prods = getProds(P), %Vai buscar os produtos de um fabricante
-	Pass = getPassword(P),
+	{ok, {Pass, Prods}} = maps:find(Fab, Fabricantes),
 	Product = getProd(Prods, Prod), %Vai buscar o produto
 	Neg = getNeg(Product), %Vai buscar os Negocios que se pretende inserir o negocio
 	Final = putNegProd(Username, Price, Quant, Time, Neg, Product, Prods), %Lista que ja contem o negocio
@@ -431,8 +420,7 @@ putNegProd(Username, Price, Ammount, Time, Neg, {Name, Min, Max, Pri, Ti, Status
 	{P, _} = string:to_integer(Price),
 	Negocios = addNegProd(Neg, Username, P, A, Time),
 	Produto = {Name, Min, Max, Pri, Ti, Status, Negocios},
-	Final = replaceProd(Prods, Produto),
-	Final.
+	replaceProd(Prods, Produto).
 
 addNegProd([], Username, Price, Ammount, Time) ->
 	[{Username, Price, Ammount, Time, -1}];
@@ -462,15 +450,12 @@ replaceProd([{Name, Mi, Ma, Price, Time, Sta, Neg} | T], {P, Min, Max, Pri, Ti, 
 			[{Name, Mi, Ma, Price, Time, Sta, Neg} | Rest]
 	end.
 %Adicionar o status quando fizer o Rest
-addNegocioImportador(Username, Prod, Price, Quant, Time, Importadores) ->
-	{ok, User} = maps:find(Username, Importadores),
-	Password = getPassword(User),
-	Negocios = getNegs(User), %Vamos buscar os negocios
-	Final = addNeg(Password, Username, Prod, Price, Quant, Time, Negocios), %Vamos adicionar o negocio
-	Final.
+addNegocioImportador(Username, Fabricante, Prod, Price, Quant, Time, Importadores) ->
+	{ok, {Password, Negocios}} = maps:find(Username, Importadores),
+	addNeg(Password, Username, Fabricante, Prod, Price, Quant, Time, Negocios). %Vamos adicionar o negocio
 
-getNegs({_, Neg})->
-	Neg.
 %Status é depois do tempo
-addNeg(Password, Username, Prod, Price, Quant, Time, Negocios)->
-	{Password, [{Username, Prod, Price, Quant, Time} | Negocios]}.
+addNeg(Password, Username, Fabricante, Prod, Price, Quant, Time, Negocios)->
+	{P, _} = string:to_integer(Price),
+	{Q, _} = string:to_integer(Quant),
+	{Password, [{Username, Fabricante, Prod, P, Q, Time, -1} | Negocios]}.

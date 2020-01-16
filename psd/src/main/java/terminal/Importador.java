@@ -119,7 +119,7 @@ class LeitorImportador implements Runnable{
 			System.out.println("Fechei");
 		}
 		catch(Exception e){
-			System.out.println();
+			System.out.println("Deu Exceção no LeitorImportador " + e.getMessage());
 		}
 	}
 }

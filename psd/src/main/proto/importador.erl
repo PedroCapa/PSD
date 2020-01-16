@@ -35,13 +35,13 @@ handleImportador(Sock, Room, Username) ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				handleImportador(Sock, Room, Username);
 			{res, Data} ->
-				gen_tcp:send(Sock, binary_to_list(Data)),
+				gen_tcp:send(Sock, Data),
 				handleImportador(Sock, Room, Username);
 			{deal, Data} -> 			%Dizer se o importador realizou ou não o negocio
-				io:format("Recebi Data: ~p~n", [Data]),
 				sendRes(Sock, Data),
 				handleImportador(Sock, Room, Username);
 			{tcp, _, Data} ->
+				io:format("Recebi do importador: ~p~n", [Data]),
 				List = string: tokens(binary_to_list(Data), ","),
 				handleRequest(List, Username, Room, Sock),
 				handleImportador(Sock, Room, Username);
@@ -108,10 +108,10 @@ newOffer(List, Username, Room) ->
 	Res.
 
 sendRes(Sock, []) -> 
-	gen_tcp(Sock, "Vou enviar os pedidos aceites~n");
+	gen_tcp:send(Sock, "Vou enviar os pedidos aceites\n");
 sendRes(Sock, [{Username, Price, Ammount, Time, State} |T]) ->
+	sendRes(Sock, T),
 	Send = "Username:" ++ Username ++ " Price: " ++ lists:flatten(io_lib:format("~p", [Price])) ++ 
 	"  Ammount: " ++ lists:flatten(io_lib:format("~p", [Ammount])) ++ "  Time: " ++ Time ++ 
 	"  State: " ++ lists:flatten(io_lib:format("~p", [State])) ++ "\n",
-	gen_tcp:send(Sock, Send),
-	sendRes(Sock, T).
+	gen_tcp:send(Sock, Send).
