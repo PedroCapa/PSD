@@ -16,17 +16,17 @@ public class Fabricante{
 	public static void main(String[] args) throws IOException, InterruptedException, SocketException{
 		int port = Integer.parseInt(args[0]);
 		Socket cs = new Socket("127.0.0.1", port);
-		PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
+		SendMessage sm = new SendMessage(cs);
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 		Scanner scanner = new Scanner(System.in);
 
 
-		out.println("1");
-		out.println("fab");
-		String user = authentication(scanner, teclado, out);
+		sm.sendServer("1");
+		sm.sendServer("fab");
+		String user = authentication(scanner, teclado, sm);
 
 
-		Notifications n = new Notifications(out, false, user);
+		Notifications n = new Notifications(sm, false, user);
 		Thread not = new Thread(n);
 		not.start();
 		
@@ -41,27 +41,26 @@ public class Fabricante{
 			current = scanner.nextLine();
 			//Criar os objetos deste lado para depois encriptar
 			//Fazer encode dos objetos e enviar
-			out.println(current);
+			sm.sendServer(current);
 		}
 
 		System.out.println("Shutdown Output");
 
 		cs.shutdownOutput();
 		teclado.close();
-		out.close();
 	}
 
 
-	public static String authentication(Scanner scanner, BufferedReader teclado, PrintWriter out){
+	public static String authentication(Scanner scanner, BufferedReader teclado, SendMessage sm){
 		try{
             //Ler do scanner nome e pass
             System.out.println("Username");
             String username = scanner.nextLine();
-            out.println(username);
+            sm.sendServer(username);
 
             System.out.println("Password");
             String password = scanner.nextLine();
-            out.println(password);
+            sm.sendServer(password);
 
             //Enviar para servidor a autenticação
             String response = teclado.readLine();
@@ -71,7 +70,7 @@ public class Fabricante{
 
             if(arrOfStr[0].equals("-1")){
                 System.out.println("Palavra passe incorreta");
-                return authentication(scanner, teclado, out);
+                return authentication(scanner, teclado, sm);
             }
             else if(arrOfStr[0].equals("1")){
                 System.out.println("Conta criada com sucesso");
@@ -132,13 +131,13 @@ class Notifications implements Runnable{
 
 	private ZContext zcont = new ZContext();
 	private ZMQ.Socket subscriber;
-	private PrintWriter out;
+	private SendMessage sm;
 	private boolean importador;
 	private String username;
 
-	public Notifications(PrintWriter out, boolean importador, String username){
+	public Notifications(SendMessage sm, boolean importador, String username){
     	this.subscriber = zcont.createSocket(SocketType.SUB);
-    	this.out = out;
+    	this.sm = sm;
     	this.importador = importador;
     	this.username = username;
 	}
@@ -152,13 +151,35 @@ class Notifications implements Runnable{
         	String channel = subscriber.recvStr();
         	System.out.println("Acabou o tempo do produto " + channel);
         	if(importador)
-        		out.println("over," + channel + "," + username + ",");
+        		sm.sendServer("over," + channel + "," + username + ",");
         	else
-        		out.println("over," + channel + ",");
+        		sm.sendServer("over," + channel + ",");
         }
     }
 
     public void subscribe(String prod){
         this.subscriber.subscribe(prod);
     }
+}
+
+class SendMessage{
+	private PrintWriter out;
+
+	public SendMessage(Socket cs){
+		try{
+			this.out = new PrintWriter(cs.getOutputStream(), true);
+		}
+		catch(Exception e){
+			System.out.println("Deu exceção no SendMessage: " + e.getMessage());
+		}
+	}
+
+	public synchronized void sendServer(String send){
+		out.println(send);
+	}
+
+	public synchronized void sendSynSeerver(String type, String send){
+		out.println(type);
+		out.println(send);
+	}
 }

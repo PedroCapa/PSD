@@ -14,17 +14,17 @@ public class Importador{
 	public static void main(String[] args) throws IOException, InterruptedException, SocketException{
 		int port = Integer.parseInt(args[0]);
 		Socket cs = new Socket("127.0.0.1", port);
-		PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
+		SendMessage sm = new SendMessage(cs);
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 		Scanner scanner = new Scanner(System.in);
 
 		//Depois substituir para uma mensagem so com protobuf
-		out.println("1");
-		out.println("imp");
-		String user = authentication(scanner, teclado, out);
+		sm.sendServer("1");
+		sm.sendServer("imp");
+		String user = authentication(scanner, teclado, sm);
 
 
-		Notifications n = new Notifications(out, true, user);
+		Notifications n = new Notifications(sm, true, user);
 		Thread not = new Thread(n);
 		not.start();
 		
@@ -44,26 +44,25 @@ public class Importador{
 			}
 			//Criar os objetos deste lado para depois encriptar
 			//Fazer encode dos objetos e enviar
-			out.println(current);
+			sm.sendServer(current);
 		}
 
 		System.out.println("Shutdown Output");
 
 		cs.shutdownOutput();
 		teclado.close();
-		out.close();
 	}
 
-	public static String authentication(Scanner scanner, BufferedReader teclado, PrintWriter out){
+	public static String authentication(Scanner scanner, BufferedReader teclado, SendMessage sm){
 		try{
             //Ler do scanner nome e pass
             System.out.println("Username");
             String username = scanner.nextLine();
-            out.println(username);
+            sm.sendServer(username);
 
             System.out.println("Password");
             String password = scanner.nextLine();
-            out.println(password);
+            sm.sendServer(password);
 
             //Enviar para servidor a autenticação
             String response = teclado.readLine();
@@ -73,7 +72,7 @@ public class Importador{
 
             if(arrOfStr[0].equals("-1")){
                 System.out.println("Palavra passe incorreta");
-                return authentication(scanner, teclado, out);
+                return authentication(scanner, teclado, sm);
             }
             else if(arrOfStr[0].equals("1")){
                 System.out.println("Conta criada com sucesso");
