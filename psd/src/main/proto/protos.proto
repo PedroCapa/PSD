@@ -2,19 +2,23 @@ syntax="proto2";
 
 package main.proto;
 
+//Este é usado para indicar o tipo de utilizador, e que tipo de mensagem vai ser enviada. Production, Negotiation
 message Syn{
 	required string type = 1;
 }
 
+//So é usado para a autenticação
 message Login {
     required string name = 1;
     required string pass = 2;
 }
 
+//É usado para confirmar a autenticação
 message LoginConfirmation{
 	required bool response = 1;
 }
 
+//O fabricante envia para o servidor qual será o negocio que pretende adicionar
 message Production{
 	required string product_name = 1;
 	required int32 min = 2;
@@ -23,12 +27,8 @@ message Production{
 	required string data = 5;
 }
 
-message ProductionConfirmation{
-	required bool response = 1;
-	required string zeroMQ = 2;
-}
-
-message Negotiations{
+//O importador coloca o negocio que pretende adicionar
+message Negotiation{
 	required string importer_offer = 1;
 	required string product_name = 3;
 	required float price = 4;
@@ -36,20 +36,37 @@ message Negotiations{
 	required string data = 6;
 }
 
-message NegotiationsConfirmation{
+//O server envia a indicar qual é o resultado da inserção do produto/negocio
+//O zeroMQ é a string que tem que enviar para o ZeroMQ
+message BusinessConfirmation{
 	required bool response = 1;
-	required string subscription = 2;
+	required string zeroMQ = 2;
 }
 
-message Finish{
-	required string zeroMQ = 1;
+//Comentario a indicar as listas de coisas que vai enviar
+//Tambem pode ser usado no Dropwizard para 
+message NegotiationsConfirmatio{
+	repeated AceptedNegotiation acepted = 1;
 }
 
-message AcceptedNegotiation{
+//Negocio envolvido. No final
+message AceptedNegotiation{
 	required string importer_offer = 1;
 	required string product_name = 3;
 	required float price = 4;
 	required int32 amount = 5;
 	required string data = 6;
 	required string state = 7;
+}
+
+//Cliente envia ao servidor a indicar o pedido
+message Dropwizard{
+	required string type = 1;
+	required string username = 2;
+	required string prod = 3;
+}
+
+//Resposta do Dropwizard aos Produtos
+message ResponseDropProd{
+	repeated Production products = 1;
 }

@@ -20,7 +20,7 @@ public class AskServer{
 		BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
 		//Criar aqui a estrutura que será enviada
-
+		out.println("drop");
 		out.println(request + "," + name + ",");
 
 		List<String> elementos = new ArrayList<>();
@@ -82,7 +82,7 @@ public class AskServer{
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
-		out.println("0\n");
+		out.println("drop");
 		out.println("request" + "," + "name");
 
 		List<String> elementos = new ArrayList<>();

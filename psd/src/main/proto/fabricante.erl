@@ -1,10 +1,8 @@
 -module(fabricante).
 -export([fabricante/2]).
 
-%Mudar apenas os send para aquele tipo especifico e encode
-%Mudar a parte de receber em que é preciso fazer decode
-
 fabricante(Sock, Room) ->
+	%Em vez de ter dois receive ter apenas um para o login
 	receive
 		{tcp, _, Name} ->
 			U = binary_to_list(Name),
@@ -19,7 +17,7 @@ fabricante(Sock, Room) ->
 	receive
 		{aut, {Username, Result}} ->
 			Send = Result ++ "," ++ Username ++ ",\n",
-			io:format("Result: ~p~n", [Result]),
+			%Em vez de ter desta forma tem-se que fazer encode da mensagem e enviar
 			if
 				Result =:= "erro" ->
 					io:format("Enviei: ~p~n", [Result]),
@@ -32,29 +30,35 @@ fabricante(Sock, Room) ->
 	end.
 
 handleFabricante(Sock, Room, Username) ->
-		receive
-			{line, Data} ->
-				gen_tcp:send(Sock, binary_to_list(Data)),
-				handleFabricante(Sock, Room, Username);
-			{res, Data} ->
-				io:format("Os dados que recebi foram: ~p~n", [Data]),
-				gen_tcp:send(Sock, Data),
-				handleFabricante(Sock, Room, Username);
-			{deal, Data} ->		%Recebe a resposta do Room por causa do ZeroMQ
-				sendRes(Sock, Data),
-				handleFabricante(Sock, Room, Username);
-			{tcp, _, Data} ->
-				io:format("Recebi do fabricante: ~p~n", [Data]),
-				List = string: tokens(binary_to_list(Data), ","),
-				handleRequest(List, Username, Room, Sock),
-				handleFabricante(Sock, Room, Username);
-			{tcp_closed, _} ->
-				Room ! {leave, self()};
-			{tcp_error, _, _} ->
-				Room ! {leave, self()}
-		end.
+	receive
+		{line, Data} ->
+			gen_tcp:send(Sock, binary_to_list(Data)),
+			handleFabricante(Sock, Room, Username);
+		{res, Data} ->
+			%So vai ser realizado o encode da resposta. Apenas uma mensagem já com o ZeroMQ para que o cliente só chegue e envie para o ZeroMQ
+			io:format("Os dados que recebi foram: ~p~n", [Data]),
+			gen_tcp:send(Sock, Data),
+			handleFabricante(Sock, Room, Username);
+		%Recebe a resposta do Room por causa do ZeroMQ aqui so vai ser realizado encode e enviado um de cada vez
+		{deal, Data} ->
+			sendRes(Sock, Data),
+			handleFabricante(Sock, Room, Username);
+		{tcp, _, Data} ->
+			%Aqui vai ser enviado o Syn para saber qual era a função usada
+			%Vai deixar de ter uma lista. A lista vai ser tratado depois. Vai so ter uma variavel
+			io:format("Recebi do fabricante: ~p~n", [Data]),			%Em principio vai ser para retirar isto		
+			List = string: tokens(binary_to_list(Data), ","),			%Em principio vai ser para retirar isto
+			handleRequest(List, Username, Room, Sock),					%Vai ser chamada na mesma mas sem a List
+			handleFabricante(Sock, Room, Username);
+		{tcp_closed, _} ->
+			Room ! {leave, self()};
+		{tcp_error, _, _} ->
+			Room ! {leave, self()}
+	end.
 
 handleRequest([H | T], Username, Room, Sock) ->
+	%Receber o pacote com os dados
+	%Decode Aqui e entrar no if de acordo com a variavel obtida anteriormente
 	if 
 		H =:= "new"->
 			Res = newProduct(T, Username, Room);
@@ -71,7 +75,7 @@ handleRequest([H | T], Username, Room, Sock) ->
 			io:format("~n")
 	end.
 
-%Colocar aqui o pedido para verificar quais são os negocios validos
+%Altera a lista para n argumentos
 negocios(List, Room) -> 
 	Size = length([X || X <- List]),
 	if
@@ -86,7 +90,7 @@ negocios(List, Room) ->
 	end,
 	Res.
 	
-
+%Altera a lista para n argumentos
 newProduct(List, Username, Room) ->
 	Size = length([X || X <- List]),
 	if 
@@ -111,6 +115,7 @@ newProduct(List, Username, Room) ->
 	end,
 	Res.
 
+%Mudar esta função para que faça encode numa lista
 sendRes(Sock, []) -> 
 	gen_tcp:send(Sock, "Vou enviar os pedidos aceites\n");
 sendRes(Sock, [{Username, Price, Ammount, Time, State} |T]) ->

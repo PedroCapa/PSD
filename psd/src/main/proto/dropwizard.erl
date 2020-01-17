@@ -1,9 +1,6 @@
 -module(dropwizard).
 -export([dropwizard/2, sendRes/2]).
 
-%Mudar apenas os send para aquele tipo especifico e encode
-%Mudar a parte de receber em que é preciso fazer decode
-
 dropwizard(Sock, Room) ->
 	receive
 			{line, Data} ->
@@ -14,6 +11,7 @@ dropwizard(Sock, Room) ->
 				sendRes(Sock, Data),
 				io:format("Enviei tudo");
 			{tcp, _, Data} ->
+				%Fazer decode aqui
 				List = string: tokens(binary_to_list(Data), ","),
 				io:format("Recebi ~p ~n", [List]),
 				handleDropwizard(List, Room, Sock),

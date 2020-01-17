@@ -20,8 +20,6 @@ public class Fabricante{
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 		Scanner scanner = new Scanner(System.in);
 
-
-		sm.sendServer("1");
 		sm.sendServer("fab");
 		String user = authentication(scanner, teclado, sm);
 

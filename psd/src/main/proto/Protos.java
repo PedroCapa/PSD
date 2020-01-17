@@ -28,6 +28,10 @@ public final class Protos {
   }
   /**
    * Protobuf type {@code main.proto.Syn}
+   *
+   * <pre>
+   *Este é usado para indicar o tipo de utilizador, e que tipo de mensagem vai ser enviada. Production, Negotiation
+   * </pre>
    */
   public  static final class Syn extends
       com.google.protobuf.GeneratedMessage implements
@@ -251,6 +255,10 @@ public final class Protos {
     }
     /**
      * Protobuf type {@code main.proto.Syn}
+     *
+     * <pre>
+     *Este é usado para indicar o tipo de utilizador, e que tipo de mensagem vai ser enviada. Production, Negotiation
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -523,6 +531,10 @@ public final class Protos {
   }
   /**
    * Protobuf type {@code main.proto.Login}
+   *
+   * <pre>
+   *So é usado para a autenticação
+   * </pre>
    */
   public  static final class Login extends
       com.google.protobuf.GeneratedMessage implements
@@ -805,6 +817,10 @@ public final class Protos {
     }
     /**
      * Protobuf type {@code main.proto.Login}
+     *
+     * <pre>
+     *So é usado para a autenticação
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -1148,6 +1164,10 @@ public final class Protos {
   }
   /**
    * Protobuf type {@code main.proto.LoginConfirmation}
+   *
+   * <pre>
+   *É usado para confirmar a autenticação
+   * </pre>
    */
   public  static final class LoginConfirmation extends
       com.google.protobuf.GeneratedMessage implements
@@ -1344,6 +1364,10 @@ public final class Protos {
     }
     /**
      * Protobuf type {@code main.proto.LoginConfirmation}
+     *
+     * <pre>
+     *É usado para confirmar a autenticação
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -1597,6 +1621,10 @@ public final class Protos {
   }
   /**
    * Protobuf type {@code main.proto.Production}
+   *
+   * <pre>
+   *O fabricante envia para o servidor qual será o negocio que pretende adicionar
+   * </pre>
    */
   public  static final class Production extends
       com.google.protobuf.GeneratedMessage implements
@@ -1975,6 +2003,10 @@ public final class Protos {
     }
     /**
      * Protobuf type {@code main.proto.Production}
+     *
+     * <pre>
+     *O fabricante envia para o servidor qual será o negocio que pretende adicionar
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
@@ -2435,574 +2467,8 @@ public final class Protos {
 
   }
 
-  public interface ProductionConfirmationOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:main.proto.ProductionConfirmation)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>required bool response = 1;</code>
-     */
-    boolean hasResponse();
-    /**
-     * <code>required bool response = 1;</code>
-     */
-    boolean getResponse();
-
-    /**
-     * <code>required string zeroMQ = 2;</code>
-     */
-    boolean hasZeroMQ();
-    /**
-     * <code>required string zeroMQ = 2;</code>
-     */
-    java.lang.String getZeroMQ();
-    /**
-     * <code>required string zeroMQ = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getZeroMQBytes();
-  }
-  /**
-   * Protobuf type {@code main.proto.ProductionConfirmation}
-   */
-  public  static final class ProductionConfirmation extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:main.proto.ProductionConfirmation)
-      ProductionConfirmationOrBuilder {
-    // Use ProductionConfirmation.newBuilder() to construct.
-    private ProductionConfirmation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private ProductionConfirmation() {
-      response_ = false;
-      zeroMQ_ = "";
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ProductionConfirmation(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              response_ = input.readBool();
-              break;
-            }
-            case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000002;
-              zeroMQ_ = bs;
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return main.proto.Protos.internal_static_main_proto_ProductionConfirmation_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return main.proto.Protos.internal_static_main_proto_ProductionConfirmation_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              main.proto.Protos.ProductionConfirmation.class, main.proto.Protos.ProductionConfirmation.Builder.class);
-    }
-
-    private int bitField0_;
-    public static final int RESPONSE_FIELD_NUMBER = 1;
-    private boolean response_;
-    /**
-     * <code>required bool response = 1;</code>
-     */
-    public boolean hasResponse() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required bool response = 1;</code>
-     */
-    public boolean getResponse() {
-      return response_;
-    }
-
-    public static final int ZEROMQ_FIELD_NUMBER = 2;
-    private volatile java.lang.Object zeroMQ_;
-    /**
-     * <code>required string zeroMQ = 2;</code>
-     */
-    public boolean hasZeroMQ() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required string zeroMQ = 2;</code>
-     */
-    public java.lang.String getZeroMQ() {
-      java.lang.Object ref = zeroMQ_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          zeroMQ_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>required string zeroMQ = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getZeroMQBytes() {
-      java.lang.Object ref = zeroMQ_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        zeroMQ_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      if (!hasResponse()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasZeroMQ()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBool(1, response_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, zeroMQ_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, response_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, zeroMQ_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static main.proto.Protos.ProductionConfirmation parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static main.proto.Protos.ProductionConfirmation parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(main.proto.Protos.ProductionConfirmation prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code main.proto.ProductionConfirmation}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:main.proto.ProductionConfirmation)
-        main.proto.Protos.ProductionConfirmationOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return main.proto.Protos.internal_static_main_proto_ProductionConfirmation_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return main.proto.Protos.internal_static_main_proto_ProductionConfirmation_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                main.proto.Protos.ProductionConfirmation.class, main.proto.Protos.ProductionConfirmation.Builder.class);
-      }
-
-      // Construct using main.proto.Protos.ProductionConfirmation.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        response_ = false;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        zeroMQ_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return main.proto.Protos.internal_static_main_proto_ProductionConfirmation_descriptor;
-      }
-
-      public main.proto.Protos.ProductionConfirmation getDefaultInstanceForType() {
-        return main.proto.Protos.ProductionConfirmation.getDefaultInstance();
-      }
-
-      public main.proto.Protos.ProductionConfirmation build() {
-        main.proto.Protos.ProductionConfirmation result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public main.proto.Protos.ProductionConfirmation buildPartial() {
-        main.proto.Protos.ProductionConfirmation result = new main.proto.Protos.ProductionConfirmation(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.response_ = response_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.zeroMQ_ = zeroMQ_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof main.proto.Protos.ProductionConfirmation) {
-          return mergeFrom((main.proto.Protos.ProductionConfirmation)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(main.proto.Protos.ProductionConfirmation other) {
-        if (other == main.proto.Protos.ProductionConfirmation.getDefaultInstance()) return this;
-        if (other.hasResponse()) {
-          setResponse(other.getResponse());
-        }
-        if (other.hasZeroMQ()) {
-          bitField0_ |= 0x00000002;
-          zeroMQ_ = other.zeroMQ_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        if (!hasResponse()) {
-          return false;
-        }
-        if (!hasZeroMQ()) {
-          return false;
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        main.proto.Protos.ProductionConfirmation parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (main.proto.Protos.ProductionConfirmation) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private boolean response_ ;
-      /**
-       * <code>required bool response = 1;</code>
-       */
-      public boolean hasResponse() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required bool response = 1;</code>
-       */
-      public boolean getResponse() {
-        return response_;
-      }
-      /**
-       * <code>required bool response = 1;</code>
-       */
-      public Builder setResponse(boolean value) {
-        bitField0_ |= 0x00000001;
-        response_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required bool response = 1;</code>
-       */
-      public Builder clearResponse() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        response_ = false;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object zeroMQ_ = "";
-      /**
-       * <code>required string zeroMQ = 2;</code>
-       */
-      public boolean hasZeroMQ() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required string zeroMQ = 2;</code>
-       */
-      public java.lang.String getZeroMQ() {
-        java.lang.Object ref = zeroMQ_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            zeroMQ_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>required string zeroMQ = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getZeroMQBytes() {
-        java.lang.Object ref = zeroMQ_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          zeroMQ_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>required string zeroMQ = 2;</code>
-       */
-      public Builder setZeroMQ(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        zeroMQ_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string zeroMQ = 2;</code>
-       */
-      public Builder clearZeroMQ() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        zeroMQ_ = getDefaultInstance().getZeroMQ();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>required string zeroMQ = 2;</code>
-       */
-      public Builder setZeroMQBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        zeroMQ_ = value;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:main.proto.ProductionConfirmation)
-    }
-
-    // @@protoc_insertion_point(class_scope:main.proto.ProductionConfirmation)
-    private static final main.proto.Protos.ProductionConfirmation DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new main.proto.Protos.ProductionConfirmation();
-    }
-
-    public static main.proto.Protos.ProductionConfirmation getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<ProductionConfirmation>
-        PARSER = new com.google.protobuf.AbstractParser<ProductionConfirmation>() {
-      public ProductionConfirmation parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new ProductionConfirmation(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<ProductionConfirmation> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ProductionConfirmation> getParserForType() {
-      return PARSER;
-    }
-
-    public main.proto.Protos.ProductionConfirmation getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface NegotiationsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:main.proto.Negotiations)
+  public interface NegotiationOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:main.proto.Negotiation)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -3066,17 +2532,21 @@ public final class Protos {
         getDataBytes();
   }
   /**
-   * Protobuf type {@code main.proto.Negotiations}
+   * Protobuf type {@code main.proto.Negotiation}
+   *
+   * <pre>
+   *O importador coloca o negocio que pretende adicionar
+   * </pre>
    */
-  public  static final class Negotiations extends
+  public  static final class Negotiation extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:main.proto.Negotiations)
-      NegotiationsOrBuilder {
-    // Use Negotiations.newBuilder() to construct.
-    private Negotiations(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:main.proto.Negotiation)
+      NegotiationOrBuilder {
+    // Use Negotiation.newBuilder() to construct.
+    private Negotiation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private Negotiations() {
+    private Negotiation() {
       importerOffer_ = "";
       productName_ = "";
       price_ = 0F;
@@ -3089,7 +2559,7 @@ public final class Protos {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Negotiations(
+    private Negotiation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -3154,14 +2624,14 @@ public final class Protos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return main.proto.Protos.internal_static_main_proto_Negotiations_descriptor;
+      return main.proto.Protos.internal_static_main_proto_Negotiation_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return main.proto.Protos.internal_static_main_proto_Negotiations_fieldAccessorTable
+      return main.proto.Protos.internal_static_main_proto_Negotiation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              main.proto.Protos.Negotiations.class, main.proto.Protos.Negotiations.Builder.class);
+              main.proto.Protos.Negotiation.class, main.proto.Protos.Negotiation.Builder.class);
     }
 
     private int bitField0_;
@@ -3399,53 +2869,53 @@ public final class Protos {
     }
 
     private static final long serialVersionUID = 0L;
-    public static main.proto.Protos.Negotiations parseFrom(
+    public static main.proto.Protos.Negotiation parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.Negotiations parseFrom(
+    public static main.proto.Protos.Negotiation parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.Negotiations parseFrom(byte[] data)
+    public static main.proto.Protos.Negotiation parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.Negotiations parseFrom(
+    public static main.proto.Protos.Negotiation parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.Negotiations parseFrom(java.io.InputStream input)
+    public static main.proto.Protos.Negotiation parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.Negotiations parseFrom(
+    public static main.proto.Protos.Negotiation parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.Negotiations parseDelimitedFrom(java.io.InputStream input)
+    public static main.proto.Protos.Negotiation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static main.proto.Protos.Negotiations parseDelimitedFrom(
+    public static main.proto.Protos.Negotiation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.Negotiations parseFrom(
+    public static main.proto.Protos.Negotiation parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.Negotiations parseFrom(
+    public static main.proto.Protos.Negotiation parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3456,7 +2926,7 @@ public final class Protos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(main.proto.Protos.Negotiations prototype) {
+    public static Builder newBuilder(main.proto.Protos.Negotiation prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -3471,25 +2941,29 @@ public final class Protos {
       return builder;
     }
     /**
-     * Protobuf type {@code main.proto.Negotiations}
+     * Protobuf type {@code main.proto.Negotiation}
+     *
+     * <pre>
+     *O importador coloca o negocio que pretende adicionar
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:main.proto.Negotiations)
-        main.proto.Protos.NegotiationsOrBuilder {
+        // @@protoc_insertion_point(builder_implements:main.proto.Negotiation)
+        main.proto.Protos.NegotiationOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return main.proto.Protos.internal_static_main_proto_Negotiations_descriptor;
+        return main.proto.Protos.internal_static_main_proto_Negotiation_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return main.proto.Protos.internal_static_main_proto_Negotiations_fieldAccessorTable
+        return main.proto.Protos.internal_static_main_proto_Negotiation_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                main.proto.Protos.Negotiations.class, main.proto.Protos.Negotiations.Builder.class);
+                main.proto.Protos.Negotiation.class, main.proto.Protos.Negotiation.Builder.class);
       }
 
-      // Construct using main.proto.Protos.Negotiations.newBuilder()
+      // Construct using main.proto.Protos.Negotiation.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3520,23 +2994,23 @@ public final class Protos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return main.proto.Protos.internal_static_main_proto_Negotiations_descriptor;
+        return main.proto.Protos.internal_static_main_proto_Negotiation_descriptor;
       }
 
-      public main.proto.Protos.Negotiations getDefaultInstanceForType() {
-        return main.proto.Protos.Negotiations.getDefaultInstance();
+      public main.proto.Protos.Negotiation getDefaultInstanceForType() {
+        return main.proto.Protos.Negotiation.getDefaultInstance();
       }
 
-      public main.proto.Protos.Negotiations build() {
-        main.proto.Protos.Negotiations result = buildPartial();
+      public main.proto.Protos.Negotiation build() {
+        main.proto.Protos.Negotiation result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public main.proto.Protos.Negotiations buildPartial() {
-        main.proto.Protos.Negotiations result = new main.proto.Protos.Negotiations(this);
+      public main.proto.Protos.Negotiation buildPartial() {
+        main.proto.Protos.Negotiation result = new main.proto.Protos.Negotiation(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3565,16 +3039,16 @@ public final class Protos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof main.proto.Protos.Negotiations) {
-          return mergeFrom((main.proto.Protos.Negotiations)other);
+        if (other instanceof main.proto.Protos.Negotiation) {
+          return mergeFrom((main.proto.Protos.Negotiation)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(main.proto.Protos.Negotiations other) {
-        if (other == main.proto.Protos.Negotiations.getDefaultInstance()) return this;
+      public Builder mergeFrom(main.proto.Protos.Negotiation other) {
+        if (other == main.proto.Protos.Negotiation.getDefaultInstance()) return this;
         if (other.hasImporterOffer()) {
           bitField0_ |= 0x00000001;
           importerOffer_ = other.importerOffer_;
@@ -3624,11 +3098,11 @@ public final class Protos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        main.proto.Protos.Negotiations parsedMessage = null;
+        main.proto.Protos.Negotiation parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (main.proto.Protos.Negotiations) e.getUnfinishedMessage();
+          parsedMessage = (main.proto.Protos.Negotiation) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3931,27 +3405,27 @@ public final class Protos {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:main.proto.Negotiations)
+      // @@protoc_insertion_point(builder_scope:main.proto.Negotiation)
     }
 
-    // @@protoc_insertion_point(class_scope:main.proto.Negotiations)
-    private static final main.proto.Protos.Negotiations DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:main.proto.Negotiation)
+    private static final main.proto.Protos.Negotiation DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new main.proto.Protos.Negotiations();
+      DEFAULT_INSTANCE = new main.proto.Protos.Negotiation();
     }
 
-    public static main.proto.Protos.Negotiations getDefaultInstance() {
+    public static main.proto.Protos.Negotiation getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Negotiations>
-        PARSER = new com.google.protobuf.AbstractParser<Negotiations>() {
-      public Negotiations parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Negotiation>
+        PARSER = new com.google.protobuf.AbstractParser<Negotiation>() {
+      public Negotiation parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new Negotiations(input, extensionRegistry);
+          return new Negotiation(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -3963,23 +3437,23 @@ public final class Protos {
       }
     };
 
-    public static com.google.protobuf.Parser<Negotiations> parser() {
+    public static com.google.protobuf.Parser<Negotiation> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Negotiations> getParserForType() {
+    public com.google.protobuf.Parser<Negotiation> getParserForType() {
       return PARSER;
     }
 
-    public main.proto.Protos.Negotiations getDefaultInstanceForType() {
+    public main.proto.Protos.Negotiation getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface NegotiationsConfirmationOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:main.proto.NegotiationsConfirmation)
+  public interface BusinessConfirmationOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:main.proto.BusinessConfirmation)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -3992,33 +3466,38 @@ public final class Protos {
     boolean getResponse();
 
     /**
-     * <code>required string subscription = 2;</code>
+     * <code>required string zeroMQ = 2;</code>
      */
-    boolean hasSubscription();
+    boolean hasZeroMQ();
     /**
-     * <code>required string subscription = 2;</code>
+     * <code>required string zeroMQ = 2;</code>
      */
-    java.lang.String getSubscription();
+    java.lang.String getZeroMQ();
     /**
-     * <code>required string subscription = 2;</code>
+     * <code>required string zeroMQ = 2;</code>
      */
     com.google.protobuf.ByteString
-        getSubscriptionBytes();
+        getZeroMQBytes();
   }
   /**
-   * Protobuf type {@code main.proto.NegotiationsConfirmation}
+   * Protobuf type {@code main.proto.BusinessConfirmation}
+   *
+   * <pre>
+   *O server envia a indicar qual é o resultado da inserção do produto/negocio
+   *O zeroMQ é a string que tem que enviar para o ZeroMQ
+   * </pre>
    */
-  public  static final class NegotiationsConfirmation extends
+  public  static final class BusinessConfirmation extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:main.proto.NegotiationsConfirmation)
-      NegotiationsConfirmationOrBuilder {
-    // Use NegotiationsConfirmation.newBuilder() to construct.
-    private NegotiationsConfirmation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:main.proto.BusinessConfirmation)
+      BusinessConfirmationOrBuilder {
+    // Use BusinessConfirmation.newBuilder() to construct.
+    private BusinessConfirmation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private NegotiationsConfirmation() {
+    private BusinessConfirmation() {
       response_ = false;
-      subscription_ = "";
+      zeroMQ_ = "";
     }
 
     @java.lang.Override
@@ -4026,7 +3505,7 @@ public final class Protos {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private NegotiationsConfirmation(
+    private BusinessConfirmation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -4056,7 +3535,7 @@ public final class Protos {
             case 18: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              subscription_ = bs;
+              zeroMQ_ = bs;
               break;
             }
           }
@@ -4074,14 +3553,14 @@ public final class Protos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmation_descriptor;
+      return main.proto.Protos.internal_static_main_proto_BusinessConfirmation_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmation_fieldAccessorTable
+      return main.proto.Protos.internal_static_main_proto_BusinessConfirmation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              main.proto.Protos.NegotiationsConfirmation.class, main.proto.Protos.NegotiationsConfirmation.Builder.class);
+              main.proto.Protos.BusinessConfirmation.class, main.proto.Protos.BusinessConfirmation.Builder.class);
     }
 
     private int bitField0_;
@@ -4100,19 +3579,19 @@ public final class Protos {
       return response_;
     }
 
-    public static final int SUBSCRIPTION_FIELD_NUMBER = 2;
-    private volatile java.lang.Object subscription_;
+    public static final int ZEROMQ_FIELD_NUMBER = 2;
+    private volatile java.lang.Object zeroMQ_;
     /**
-     * <code>required string subscription = 2;</code>
+     * <code>required string zeroMQ = 2;</code>
      */
-    public boolean hasSubscription() {
+    public boolean hasZeroMQ() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string subscription = 2;</code>
+     * <code>required string zeroMQ = 2;</code>
      */
-    public java.lang.String getSubscription() {
-      java.lang.Object ref = subscription_;
+    public java.lang.String getZeroMQ() {
+      java.lang.Object ref = zeroMQ_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -4120,22 +3599,22 @@ public final class Protos {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          subscription_ = s;
+          zeroMQ_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string subscription = 2;</code>
+     * <code>required string zeroMQ = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getSubscriptionBytes() {
-      java.lang.Object ref = subscription_;
+        getZeroMQBytes() {
+      java.lang.Object ref = zeroMQ_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        subscription_ = b;
+        zeroMQ_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -4152,7 +3631,7 @@ public final class Protos {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasSubscription()) {
+      if (!hasZeroMQ()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -4166,7 +3645,7 @@ public final class Protos {
         output.writeBool(1, response_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, subscription_);
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, zeroMQ_);
       }
       unknownFields.writeTo(output);
     }
@@ -4181,7 +3660,7 @@ public final class Protos {
           .computeBoolSize(1, response_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, subscription_);
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, zeroMQ_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4189,53 +3668,53 @@ public final class Protos {
     }
 
     private static final long serialVersionUID = 0L;
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(
+    public static main.proto.Protos.BusinessConfirmation parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(
+    public static main.proto.Protos.BusinessConfirmation parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(byte[] data)
+    public static main.proto.Protos.BusinessConfirmation parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(
+    public static main.proto.Protos.BusinessConfirmation parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(java.io.InputStream input)
+    public static main.proto.Protos.BusinessConfirmation parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(
+    public static main.proto.Protos.BusinessConfirmation parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseDelimitedFrom(java.io.InputStream input)
+    public static main.proto.Protos.BusinessConfirmation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseDelimitedFrom(
+    public static main.proto.Protos.BusinessConfirmation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(
+    public static main.proto.Protos.BusinessConfirmation parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.NegotiationsConfirmation parseFrom(
+    public static main.proto.Protos.BusinessConfirmation parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4246,7 +3725,7 @@ public final class Protos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(main.proto.Protos.NegotiationsConfirmation prototype) {
+    public static Builder newBuilder(main.proto.Protos.BusinessConfirmation prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -4261,25 +3740,30 @@ public final class Protos {
       return builder;
     }
     /**
-     * Protobuf type {@code main.proto.NegotiationsConfirmation}
+     * Protobuf type {@code main.proto.BusinessConfirmation}
+     *
+     * <pre>
+     *O server envia a indicar qual é o resultado da inserção do produto/negocio
+     *O zeroMQ é a string que tem que enviar para o ZeroMQ
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:main.proto.NegotiationsConfirmation)
-        main.proto.Protos.NegotiationsConfirmationOrBuilder {
+        // @@protoc_insertion_point(builder_implements:main.proto.BusinessConfirmation)
+        main.proto.Protos.BusinessConfirmationOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmation_descriptor;
+        return main.proto.Protos.internal_static_main_proto_BusinessConfirmation_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmation_fieldAccessorTable
+        return main.proto.Protos.internal_static_main_proto_BusinessConfirmation_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                main.proto.Protos.NegotiationsConfirmation.class, main.proto.Protos.NegotiationsConfirmation.Builder.class);
+                main.proto.Protos.BusinessConfirmation.class, main.proto.Protos.BusinessConfirmation.Builder.class);
       }
 
-      // Construct using main.proto.Protos.NegotiationsConfirmation.newBuilder()
+      // Construct using main.proto.Protos.BusinessConfirmation.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4297,30 +3781,30 @@ public final class Protos {
         super.clear();
         response_ = false;
         bitField0_ = (bitField0_ & ~0x00000001);
-        subscription_ = "";
+        zeroMQ_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmation_descriptor;
+        return main.proto.Protos.internal_static_main_proto_BusinessConfirmation_descriptor;
       }
 
-      public main.proto.Protos.NegotiationsConfirmation getDefaultInstanceForType() {
-        return main.proto.Protos.NegotiationsConfirmation.getDefaultInstance();
+      public main.proto.Protos.BusinessConfirmation getDefaultInstanceForType() {
+        return main.proto.Protos.BusinessConfirmation.getDefaultInstance();
       }
 
-      public main.proto.Protos.NegotiationsConfirmation build() {
-        main.proto.Protos.NegotiationsConfirmation result = buildPartial();
+      public main.proto.Protos.BusinessConfirmation build() {
+        main.proto.Protos.BusinessConfirmation result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public main.proto.Protos.NegotiationsConfirmation buildPartial() {
-        main.proto.Protos.NegotiationsConfirmation result = new main.proto.Protos.NegotiationsConfirmation(this);
+      public main.proto.Protos.BusinessConfirmation buildPartial() {
+        main.proto.Protos.BusinessConfirmation result = new main.proto.Protos.BusinessConfirmation(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4330,29 +3814,29 @@ public final class Protos {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.subscription_ = subscription_;
+        result.zeroMQ_ = zeroMQ_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof main.proto.Protos.NegotiationsConfirmation) {
-          return mergeFrom((main.proto.Protos.NegotiationsConfirmation)other);
+        if (other instanceof main.proto.Protos.BusinessConfirmation) {
+          return mergeFrom((main.proto.Protos.BusinessConfirmation)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(main.proto.Protos.NegotiationsConfirmation other) {
-        if (other == main.proto.Protos.NegotiationsConfirmation.getDefaultInstance()) return this;
+      public Builder mergeFrom(main.proto.Protos.BusinessConfirmation other) {
+        if (other == main.proto.Protos.BusinessConfirmation.getDefaultInstance()) return this;
         if (other.hasResponse()) {
           setResponse(other.getResponse());
         }
-        if (other.hasSubscription()) {
+        if (other.hasZeroMQ()) {
           bitField0_ |= 0x00000002;
-          subscription_ = other.subscription_;
+          zeroMQ_ = other.zeroMQ_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -4364,7 +3848,7 @@ public final class Protos {
         if (!hasResponse()) {
           return false;
         }
-        if (!hasSubscription()) {
+        if (!hasZeroMQ()) {
           return false;
         }
         return true;
@@ -4374,11 +3858,11 @@ public final class Protos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        main.proto.Protos.NegotiationsConfirmation parsedMessage = null;
+        main.proto.Protos.BusinessConfirmation parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (main.proto.Protos.NegotiationsConfirmation) e.getUnfinishedMessage();
+          parsedMessage = (main.proto.Protos.BusinessConfirmation) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4421,24 +3905,24 @@ public final class Protos {
         return this;
       }
 
-      private java.lang.Object subscription_ = "";
+      private java.lang.Object zeroMQ_ = "";
       /**
-       * <code>required string subscription = 2;</code>
+       * <code>required string zeroMQ = 2;</code>
        */
-      public boolean hasSubscription() {
+      public boolean hasZeroMQ() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string subscription = 2;</code>
+       * <code>required string zeroMQ = 2;</code>
        */
-      public java.lang.String getSubscription() {
-        java.lang.Object ref = subscription_;
+      public java.lang.String getZeroMQ() {
+        java.lang.Object ref = zeroMQ_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            subscription_ = s;
+            zeroMQ_ = s;
           }
           return s;
         } else {
@@ -4446,78 +3930,78 @@ public final class Protos {
         }
       }
       /**
-       * <code>required string subscription = 2;</code>
+       * <code>required string zeroMQ = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getSubscriptionBytes() {
-        java.lang.Object ref = subscription_;
+          getZeroMQBytes() {
+        java.lang.Object ref = zeroMQ_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          subscription_ = b;
+          zeroMQ_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string subscription = 2;</code>
+       * <code>required string zeroMQ = 2;</code>
        */
-      public Builder setSubscription(
+      public Builder setZeroMQ(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        subscription_ = value;
+        zeroMQ_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string subscription = 2;</code>
+       * <code>required string zeroMQ = 2;</code>
        */
-      public Builder clearSubscription() {
+      public Builder clearZeroMQ() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        subscription_ = getDefaultInstance().getSubscription();
+        zeroMQ_ = getDefaultInstance().getZeroMQ();
         onChanged();
         return this;
       }
       /**
-       * <code>required string subscription = 2;</code>
+       * <code>required string zeroMQ = 2;</code>
        */
-      public Builder setSubscriptionBytes(
+      public Builder setZeroMQBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        subscription_ = value;
+        zeroMQ_ = value;
         onChanged();
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:main.proto.NegotiationsConfirmation)
+      // @@protoc_insertion_point(builder_scope:main.proto.BusinessConfirmation)
     }
 
-    // @@protoc_insertion_point(class_scope:main.proto.NegotiationsConfirmation)
-    private static final main.proto.Protos.NegotiationsConfirmation DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:main.proto.BusinessConfirmation)
+    private static final main.proto.Protos.BusinessConfirmation DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new main.proto.Protos.NegotiationsConfirmation();
+      DEFAULT_INSTANCE = new main.proto.Protos.BusinessConfirmation();
     }
 
-    public static main.proto.Protos.NegotiationsConfirmation getDefaultInstance() {
+    public static main.proto.Protos.BusinessConfirmation getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<NegotiationsConfirmation>
-        PARSER = new com.google.protobuf.AbstractParser<NegotiationsConfirmation>() {
-      public NegotiationsConfirmation parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<BusinessConfirmation>
+        PARSER = new com.google.protobuf.AbstractParser<BusinessConfirmation>() {
+      public BusinessConfirmation parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new NegotiationsConfirmation(input, extensionRegistry);
+          return new BusinessConfirmation(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -4529,52 +4013,67 @@ public final class Protos {
       }
     };
 
-    public static com.google.protobuf.Parser<NegotiationsConfirmation> parser() {
+    public static com.google.protobuf.Parser<BusinessConfirmation> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<NegotiationsConfirmation> getParserForType() {
+    public com.google.protobuf.Parser<BusinessConfirmation> getParserForType() {
       return PARSER;
     }
 
-    public main.proto.Protos.NegotiationsConfirmation getDefaultInstanceForType() {
+    public main.proto.Protos.BusinessConfirmation getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface FinishOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:main.proto.Finish)
+  public interface NegotiationsConfirmatioOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:main.proto.NegotiationsConfirmatio)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string zeroMQ = 1;</code>
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
      */
-    boolean hasZeroMQ();
+    java.util.List<main.proto.Protos.AceptedNegotiation> 
+        getAceptedList();
     /**
-     * <code>required string zeroMQ = 1;</code>
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
      */
-    java.lang.String getZeroMQ();
+    main.proto.Protos.AceptedNegotiation getAcepted(int index);
     /**
-     * <code>required string zeroMQ = 1;</code>
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
      */
-    com.google.protobuf.ByteString
-        getZeroMQBytes();
+    int getAceptedCount();
+    /**
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+     */
+    java.util.List<? extends main.proto.Protos.AceptedNegotiationOrBuilder> 
+        getAceptedOrBuilderList();
+    /**
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+     */
+    main.proto.Protos.AceptedNegotiationOrBuilder getAceptedOrBuilder(
+        int index);
   }
   /**
-   * Protobuf type {@code main.proto.Finish}
+   * Protobuf type {@code main.proto.NegotiationsConfirmatio}
+   *
+   * <pre>
+   *Comentario a indicar as listas de coisas que vai enviar
+   *Tambem pode ser usado no Dropwizard para 
+   * </pre>
    */
-  public  static final class Finish extends
+  public  static final class NegotiationsConfirmatio extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:main.proto.Finish)
-      FinishOrBuilder {
-    // Use Finish.newBuilder() to construct.
-    private Finish(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:main.proto.NegotiationsConfirmatio)
+      NegotiationsConfirmatioOrBuilder {
+    // Use NegotiationsConfirmatio.newBuilder() to construct.
+    private NegotiationsConfirmatio(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private Finish() {
-      zeroMQ_ = "";
+    private NegotiationsConfirmatio() {
+      acepted_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -4582,7 +4081,7 @@ public final class Protos {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Finish(
+    private NegotiationsConfirmatio(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -4605,9 +4104,11 @@ public final class Protos {
               break;
             }
             case 10: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000001;
-              zeroMQ_ = bs;
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                acepted_ = new java.util.ArrayList<main.proto.Protos.AceptedNegotiation>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              acepted_.add(input.readMessage(main.proto.Protos.AceptedNegotiation.parser(), extensionRegistry));
               break;
             }
           }
@@ -4619,63 +4120,58 @@ public final class Protos {
             new com.google.protobuf.InvalidProtocolBufferException(
                 e.getMessage()).setUnfinishedMessage(this));
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          acepted_ = java.util.Collections.unmodifiableList(acepted_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return main.proto.Protos.internal_static_main_proto_Finish_descriptor;
+      return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmatio_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return main.proto.Protos.internal_static_main_proto_Finish_fieldAccessorTable
+      return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmatio_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              main.proto.Protos.Finish.class, main.proto.Protos.Finish.Builder.class);
+              main.proto.Protos.NegotiationsConfirmatio.class, main.proto.Protos.NegotiationsConfirmatio.Builder.class);
     }
 
-    private int bitField0_;
-    public static final int ZEROMQ_FIELD_NUMBER = 1;
-    private volatile java.lang.Object zeroMQ_;
+    public static final int ACEPTED_FIELD_NUMBER = 1;
+    private java.util.List<main.proto.Protos.AceptedNegotiation> acepted_;
     /**
-     * <code>required string zeroMQ = 1;</code>
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
      */
-    public boolean hasZeroMQ() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+    public java.util.List<main.proto.Protos.AceptedNegotiation> getAceptedList() {
+      return acepted_;
     }
     /**
-     * <code>required string zeroMQ = 1;</code>
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
      */
-    public java.lang.String getZeroMQ() {
-      java.lang.Object ref = zeroMQ_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          zeroMQ_ = s;
-        }
-        return s;
-      }
+    public java.util.List<? extends main.proto.Protos.AceptedNegotiationOrBuilder> 
+        getAceptedOrBuilderList() {
+      return acepted_;
     }
     /**
-     * <code>required string zeroMQ = 1;</code>
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getZeroMQBytes() {
-      java.lang.Object ref = zeroMQ_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        zeroMQ_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getAceptedCount() {
+      return acepted_.size();
+    }
+    /**
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+     */
+    public main.proto.Protos.AceptedNegotiation getAcepted(int index) {
+      return acepted_.get(index);
+    }
+    /**
+     * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+     */
+    public main.proto.Protos.AceptedNegotiationOrBuilder getAceptedOrBuilder(
+        int index) {
+      return acepted_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -4684,9 +4180,11 @@ public final class Protos {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasZeroMQ()) {
-        memoizedIsInitialized = 0;
-        return false;
+      for (int i = 0; i < getAceptedCount(); i++) {
+        if (!getAcepted(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -4694,8 +4192,8 @@ public final class Protos {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 1, zeroMQ_);
+      for (int i = 0; i < acepted_.size(); i++) {
+        output.writeMessage(1, acepted_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -4705,8 +4203,9 @@ public final class Protos {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, zeroMQ_);
+      for (int i = 0; i < acepted_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, acepted_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4714,53 +4213,53 @@ public final class Protos {
     }
 
     private static final long serialVersionUID = 0L;
-    public static main.proto.Protos.Finish parseFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.Finish parseFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.Finish parseFrom(byte[] data)
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.Finish parseFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.Finish parseFrom(java.io.InputStream input)
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.Finish parseFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.Finish parseDelimitedFrom(java.io.InputStream input)
+    public static main.proto.Protos.NegotiationsConfirmatio parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static main.proto.Protos.Finish parseDelimitedFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.Finish parseFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.Finish parseFrom(
+    public static main.proto.Protos.NegotiationsConfirmatio parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4771,7 +4270,7 @@ public final class Protos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(main.proto.Protos.Finish prototype) {
+    public static Builder newBuilder(main.proto.Protos.NegotiationsConfirmatio prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -4786,25 +4285,30 @@ public final class Protos {
       return builder;
     }
     /**
-     * Protobuf type {@code main.proto.Finish}
+     * Protobuf type {@code main.proto.NegotiationsConfirmatio}
+     *
+     * <pre>
+     *Comentario a indicar as listas de coisas que vai enviar
+     *Tambem pode ser usado no Dropwizard para 
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:main.proto.Finish)
-        main.proto.Protos.FinishOrBuilder {
+        // @@protoc_insertion_point(builder_implements:main.proto.NegotiationsConfirmatio)
+        main.proto.Protos.NegotiationsConfirmatioOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return main.proto.Protos.internal_static_main_proto_Finish_descriptor;
+        return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmatio_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return main.proto.Protos.internal_static_main_proto_Finish_fieldAccessorTable
+        return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmatio_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                main.proto.Protos.Finish.class, main.proto.Protos.Finish.Builder.class);
+                main.proto.Protos.NegotiationsConfirmatio.class, main.proto.Protos.NegotiationsConfirmatio.Builder.class);
       }
 
-      // Construct using main.proto.Protos.Finish.newBuilder()
+      // Construct using main.proto.Protos.NegotiationsConfirmatio.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4816,60 +4320,89 @@ public final class Protos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getAceptedFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        zeroMQ_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
+        if (aceptedBuilder_ == null) {
+          acepted_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          aceptedBuilder_.clear();
+        }
         return this;
       }
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return main.proto.Protos.internal_static_main_proto_Finish_descriptor;
+        return main.proto.Protos.internal_static_main_proto_NegotiationsConfirmatio_descriptor;
       }
 
-      public main.proto.Protos.Finish getDefaultInstanceForType() {
-        return main.proto.Protos.Finish.getDefaultInstance();
+      public main.proto.Protos.NegotiationsConfirmatio getDefaultInstanceForType() {
+        return main.proto.Protos.NegotiationsConfirmatio.getDefaultInstance();
       }
 
-      public main.proto.Protos.Finish build() {
-        main.proto.Protos.Finish result = buildPartial();
+      public main.proto.Protos.NegotiationsConfirmatio build() {
+        main.proto.Protos.NegotiationsConfirmatio result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public main.proto.Protos.Finish buildPartial() {
-        main.proto.Protos.Finish result = new main.proto.Protos.Finish(this);
+      public main.proto.Protos.NegotiationsConfirmatio buildPartial() {
+        main.proto.Protos.NegotiationsConfirmatio result = new main.proto.Protos.NegotiationsConfirmatio(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
+        if (aceptedBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            acepted_ = java.util.Collections.unmodifiableList(acepted_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.acepted_ = acepted_;
+        } else {
+          result.acepted_ = aceptedBuilder_.build();
         }
-        result.zeroMQ_ = zeroMQ_;
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof main.proto.Protos.Finish) {
-          return mergeFrom((main.proto.Protos.Finish)other);
+        if (other instanceof main.proto.Protos.NegotiationsConfirmatio) {
+          return mergeFrom((main.proto.Protos.NegotiationsConfirmatio)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(main.proto.Protos.Finish other) {
-        if (other == main.proto.Protos.Finish.getDefaultInstance()) return this;
-        if (other.hasZeroMQ()) {
-          bitField0_ |= 0x00000001;
-          zeroMQ_ = other.zeroMQ_;
-          onChanged();
+      public Builder mergeFrom(main.proto.Protos.NegotiationsConfirmatio other) {
+        if (other == main.proto.Protos.NegotiationsConfirmatio.getDefaultInstance()) return this;
+        if (aceptedBuilder_ == null) {
+          if (!other.acepted_.isEmpty()) {
+            if (acepted_.isEmpty()) {
+              acepted_ = other.acepted_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureAceptedIsMutable();
+              acepted_.addAll(other.acepted_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.acepted_.isEmpty()) {
+            if (aceptedBuilder_.isEmpty()) {
+              aceptedBuilder_.dispose();
+              aceptedBuilder_ = null;
+              acepted_ = other.acepted_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              aceptedBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getAceptedFieldBuilder() : null;
+            } else {
+              aceptedBuilder_.addAllMessages(other.acepted_);
+            }
+          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4877,8 +4410,10 @@ public final class Protos {
       }
 
       public final boolean isInitialized() {
-        if (!hasZeroMQ()) {
-          return false;
+        for (int i = 0; i < getAceptedCount(); i++) {
+          if (!getAcepted(i).isInitialized()) {
+            return false;
+          }
         }
         return true;
       }
@@ -4887,11 +4422,11 @@ public final class Protos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        main.proto.Protos.Finish parsedMessage = null;
+        main.proto.Protos.NegotiationsConfirmatio parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (main.proto.Protos.Finish) e.getUnfinishedMessage();
+          parsedMessage = (main.proto.Protos.NegotiationsConfirmatio) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4902,103 +4437,267 @@ public final class Protos {
       }
       private int bitField0_;
 
-      private java.lang.Object zeroMQ_ = "";
+      private java.util.List<main.proto.Protos.AceptedNegotiation> acepted_ =
+        java.util.Collections.emptyList();
+      private void ensureAceptedIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          acepted_ = new java.util.ArrayList<main.proto.Protos.AceptedNegotiation>(acepted_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          main.proto.Protos.AceptedNegotiation, main.proto.Protos.AceptedNegotiation.Builder, main.proto.Protos.AceptedNegotiationOrBuilder> aceptedBuilder_;
+
       /**
-       * <code>required string zeroMQ = 1;</code>
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
        */
-      public boolean hasZeroMQ() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+      public java.util.List<main.proto.Protos.AceptedNegotiation> getAceptedList() {
+        if (aceptedBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(acepted_);
+        } else {
+          return aceptedBuilder_.getMessageList();
+        }
       }
       /**
-       * <code>required string zeroMQ = 1;</code>
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
        */
-      public java.lang.String getZeroMQ() {
-        java.lang.Object ref = zeroMQ_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            zeroMQ_ = s;
+      public int getAceptedCount() {
+        if (aceptedBuilder_ == null) {
+          return acepted_.size();
+        } else {
+          return aceptedBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public main.proto.Protos.AceptedNegotiation getAcepted(int index) {
+        if (aceptedBuilder_ == null) {
+          return acepted_.get(index);
+        } else {
+          return aceptedBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder setAcepted(
+          int index, main.proto.Protos.AceptedNegotiation value) {
+        if (aceptedBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
           }
-          return s;
+          ensureAceptedIsMutable();
+          acepted_.set(index, value);
+          onChanged();
         } else {
-          return (java.lang.String) ref;
+          aceptedBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder setAcepted(
+          int index, main.proto.Protos.AceptedNegotiation.Builder builderForValue) {
+        if (aceptedBuilder_ == null) {
+          ensureAceptedIsMutable();
+          acepted_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          aceptedBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder addAcepted(main.proto.Protos.AceptedNegotiation value) {
+        if (aceptedBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAceptedIsMutable();
+          acepted_.add(value);
+          onChanged();
+        } else {
+          aceptedBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder addAcepted(
+          int index, main.proto.Protos.AceptedNegotiation value) {
+        if (aceptedBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAceptedIsMutable();
+          acepted_.add(index, value);
+          onChanged();
+        } else {
+          aceptedBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder addAcepted(
+          main.proto.Protos.AceptedNegotiation.Builder builderForValue) {
+        if (aceptedBuilder_ == null) {
+          ensureAceptedIsMutable();
+          acepted_.add(builderForValue.build());
+          onChanged();
+        } else {
+          aceptedBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder addAcepted(
+          int index, main.proto.Protos.AceptedNegotiation.Builder builderForValue) {
+        if (aceptedBuilder_ == null) {
+          ensureAceptedIsMutable();
+          acepted_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          aceptedBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder addAllAcepted(
+          java.lang.Iterable<? extends main.proto.Protos.AceptedNegotiation> values) {
+        if (aceptedBuilder_ == null) {
+          ensureAceptedIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, acepted_);
+          onChanged();
+        } else {
+          aceptedBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder clearAcepted() {
+        if (aceptedBuilder_ == null) {
+          acepted_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          aceptedBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public Builder removeAcepted(int index) {
+        if (aceptedBuilder_ == null) {
+          ensureAceptedIsMutable();
+          acepted_.remove(index);
+          onChanged();
+        } else {
+          aceptedBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public main.proto.Protos.AceptedNegotiation.Builder getAceptedBuilder(
+          int index) {
+        return getAceptedFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
+       */
+      public main.proto.Protos.AceptedNegotiationOrBuilder getAceptedOrBuilder(
+          int index) {
+        if (aceptedBuilder_ == null) {
+          return acepted_.get(index);  } else {
+          return aceptedBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>required string zeroMQ = 1;</code>
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getZeroMQBytes() {
-        java.lang.Object ref = zeroMQ_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          zeroMQ_ = b;
-          return b;
+      public java.util.List<? extends main.proto.Protos.AceptedNegotiationOrBuilder> 
+           getAceptedOrBuilderList() {
+        if (aceptedBuilder_ != null) {
+          return aceptedBuilder_.getMessageOrBuilderList();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          return java.util.Collections.unmodifiableList(acepted_);
         }
       }
       /**
-       * <code>required string zeroMQ = 1;</code>
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
        */
-      public Builder setZeroMQ(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        zeroMQ_ = value;
-        onChanged();
-        return this;
+      public main.proto.Protos.AceptedNegotiation.Builder addAceptedBuilder() {
+        return getAceptedFieldBuilder().addBuilder(
+            main.proto.Protos.AceptedNegotiation.getDefaultInstance());
       }
       /**
-       * <code>required string zeroMQ = 1;</code>
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
        */
-      public Builder clearZeroMQ() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        zeroMQ_ = getDefaultInstance().getZeroMQ();
-        onChanged();
-        return this;
+      public main.proto.Protos.AceptedNegotiation.Builder addAceptedBuilder(
+          int index) {
+        return getAceptedFieldBuilder().addBuilder(
+            index, main.proto.Protos.AceptedNegotiation.getDefaultInstance());
       }
       /**
-       * <code>required string zeroMQ = 1;</code>
+       * <code>repeated .main.proto.AceptedNegotiation acepted = 1;</code>
        */
-      public Builder setZeroMQBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        zeroMQ_ = value;
-        onChanged();
-        return this;
+      public java.util.List<main.proto.Protos.AceptedNegotiation.Builder> 
+           getAceptedBuilderList() {
+        return getAceptedFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          main.proto.Protos.AceptedNegotiation, main.proto.Protos.AceptedNegotiation.Builder, main.proto.Protos.AceptedNegotiationOrBuilder> 
+          getAceptedFieldBuilder() {
+        if (aceptedBuilder_ == null) {
+          aceptedBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              main.proto.Protos.AceptedNegotiation, main.proto.Protos.AceptedNegotiation.Builder, main.proto.Protos.AceptedNegotiationOrBuilder>(
+                  acepted_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          acepted_ = null;
+        }
+        return aceptedBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:main.proto.Finish)
+      // @@protoc_insertion_point(builder_scope:main.proto.NegotiationsConfirmatio)
     }
 
-    // @@protoc_insertion_point(class_scope:main.proto.Finish)
-    private static final main.proto.Protos.Finish DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:main.proto.NegotiationsConfirmatio)
+    private static final main.proto.Protos.NegotiationsConfirmatio DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new main.proto.Protos.Finish();
+      DEFAULT_INSTANCE = new main.proto.Protos.NegotiationsConfirmatio();
     }
 
-    public static main.proto.Protos.Finish getDefaultInstance() {
+    public static main.proto.Protos.NegotiationsConfirmatio getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Finish>
-        PARSER = new com.google.protobuf.AbstractParser<Finish>() {
-      public Finish parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<NegotiationsConfirmatio>
+        PARSER = new com.google.protobuf.AbstractParser<NegotiationsConfirmatio>() {
+      public NegotiationsConfirmatio parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new Finish(input, extensionRegistry);
+          return new NegotiationsConfirmatio(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -5010,23 +4709,23 @@ public final class Protos {
       }
     };
 
-    public static com.google.protobuf.Parser<Finish> parser() {
+    public static com.google.protobuf.Parser<NegotiationsConfirmatio> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Finish> getParserForType() {
+    public com.google.protobuf.Parser<NegotiationsConfirmatio> getParserForType() {
       return PARSER;
     }
 
-    public main.proto.Protos.Finish getDefaultInstanceForType() {
+    public main.proto.Protos.NegotiationsConfirmatio getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface AcceptedNegotiationOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:main.proto.AcceptedNegotiation)
+  public interface AceptedNegotiationOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:main.proto.AceptedNegotiation)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -5104,17 +4803,21 @@ public final class Protos {
         getStateBytes();
   }
   /**
-   * Protobuf type {@code main.proto.AcceptedNegotiation}
+   * Protobuf type {@code main.proto.AceptedNegotiation}
+   *
+   * <pre>
+   *Negocio envolvido. No final
+   * </pre>
    */
-  public  static final class AcceptedNegotiation extends
+  public  static final class AceptedNegotiation extends
       com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:main.proto.AcceptedNegotiation)
-      AcceptedNegotiationOrBuilder {
-    // Use AcceptedNegotiation.newBuilder() to construct.
-    private AcceptedNegotiation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      // @@protoc_insertion_point(message_implements:main.proto.AceptedNegotiation)
+      AceptedNegotiationOrBuilder {
+    // Use AceptedNegotiation.newBuilder() to construct.
+    private AceptedNegotiation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
     }
-    private AcceptedNegotiation() {
+    private AceptedNegotiation() {
       importerOffer_ = "";
       productName_ = "";
       price_ = 0F;
@@ -5128,7 +4831,7 @@ public final class Protos {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private AcceptedNegotiation(
+    private AceptedNegotiation(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
       this();
@@ -5199,14 +4902,14 @@ public final class Protos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return main.proto.Protos.internal_static_main_proto_AcceptedNegotiation_descriptor;
+      return main.proto.Protos.internal_static_main_proto_AceptedNegotiation_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return main.proto.Protos.internal_static_main_proto_AcceptedNegotiation_fieldAccessorTable
+      return main.proto.Protos.internal_static_main_proto_AceptedNegotiation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              main.proto.Protos.AcceptedNegotiation.class, main.proto.Protos.AcceptedNegotiation.Builder.class);
+              main.proto.Protos.AceptedNegotiation.class, main.proto.Protos.AceptedNegotiation.Builder.class);
     }
 
     private int bitField0_;
@@ -5496,53 +5199,53 @@ public final class Protos {
     }
 
     private static final long serialVersionUID = 0L;
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(
+    public static main.proto.Protos.AceptedNegotiation parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(
+    public static main.proto.Protos.AceptedNegotiation parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(byte[] data)
+    public static main.proto.Protos.AceptedNegotiation parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(
+    public static main.proto.Protos.AceptedNegotiation parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(java.io.InputStream input)
+    public static main.proto.Protos.AceptedNegotiation parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(
+    public static main.proto.Protos.AceptedNegotiation parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseDelimitedFrom(java.io.InputStream input)
+    public static main.proto.Protos.AceptedNegotiation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseDelimitedFrom(
+    public static main.proto.Protos.AceptedNegotiation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(
+    public static main.proto.Protos.AceptedNegotiation parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static main.proto.Protos.AcceptedNegotiation parseFrom(
+    public static main.proto.Protos.AceptedNegotiation parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5553,7 +5256,7 @@ public final class Protos {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(main.proto.Protos.AcceptedNegotiation prototype) {
+    public static Builder newBuilder(main.proto.Protos.AceptedNegotiation prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() {
@@ -5568,25 +5271,29 @@ public final class Protos {
       return builder;
     }
     /**
-     * Protobuf type {@code main.proto.AcceptedNegotiation}
+     * Protobuf type {@code main.proto.AceptedNegotiation}
+     *
+     * <pre>
+     *Negocio envolvido. No final
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:main.proto.AcceptedNegotiation)
-        main.proto.Protos.AcceptedNegotiationOrBuilder {
+        // @@protoc_insertion_point(builder_implements:main.proto.AceptedNegotiation)
+        main.proto.Protos.AceptedNegotiationOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return main.proto.Protos.internal_static_main_proto_AcceptedNegotiation_descriptor;
+        return main.proto.Protos.internal_static_main_proto_AceptedNegotiation_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return main.proto.Protos.internal_static_main_proto_AcceptedNegotiation_fieldAccessorTable
+        return main.proto.Protos.internal_static_main_proto_AceptedNegotiation_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                main.proto.Protos.AcceptedNegotiation.class, main.proto.Protos.AcceptedNegotiation.Builder.class);
+                main.proto.Protos.AceptedNegotiation.class, main.proto.Protos.AceptedNegotiation.Builder.class);
       }
 
-      // Construct using main.proto.Protos.AcceptedNegotiation.newBuilder()
+      // Construct using main.proto.Protos.AceptedNegotiation.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5619,23 +5326,23 @@ public final class Protos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return main.proto.Protos.internal_static_main_proto_AcceptedNegotiation_descriptor;
+        return main.proto.Protos.internal_static_main_proto_AceptedNegotiation_descriptor;
       }
 
-      public main.proto.Protos.AcceptedNegotiation getDefaultInstanceForType() {
-        return main.proto.Protos.AcceptedNegotiation.getDefaultInstance();
+      public main.proto.Protos.AceptedNegotiation getDefaultInstanceForType() {
+        return main.proto.Protos.AceptedNegotiation.getDefaultInstance();
       }
 
-      public main.proto.Protos.AcceptedNegotiation build() {
-        main.proto.Protos.AcceptedNegotiation result = buildPartial();
+      public main.proto.Protos.AceptedNegotiation build() {
+        main.proto.Protos.AceptedNegotiation result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public main.proto.Protos.AcceptedNegotiation buildPartial() {
-        main.proto.Protos.AcceptedNegotiation result = new main.proto.Protos.AcceptedNegotiation(this);
+      public main.proto.Protos.AceptedNegotiation buildPartial() {
+        main.proto.Protos.AceptedNegotiation result = new main.proto.Protos.AceptedNegotiation(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5668,16 +5375,16 @@ public final class Protos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof main.proto.Protos.AcceptedNegotiation) {
-          return mergeFrom((main.proto.Protos.AcceptedNegotiation)other);
+        if (other instanceof main.proto.Protos.AceptedNegotiation) {
+          return mergeFrom((main.proto.Protos.AceptedNegotiation)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(main.proto.Protos.AcceptedNegotiation other) {
-        if (other == main.proto.Protos.AcceptedNegotiation.getDefaultInstance()) return this;
+      public Builder mergeFrom(main.proto.Protos.AceptedNegotiation other) {
+        if (other == main.proto.Protos.AceptedNegotiation.getDefaultInstance()) return this;
         if (other.hasImporterOffer()) {
           bitField0_ |= 0x00000001;
           importerOffer_ = other.importerOffer_;
@@ -5735,11 +5442,11 @@ public final class Protos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        main.proto.Protos.AcceptedNegotiation parsedMessage = null;
+        main.proto.Protos.AceptedNegotiation parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (main.proto.Protos.AcceptedNegotiation) e.getUnfinishedMessage();
+          parsedMessage = (main.proto.Protos.AceptedNegotiation) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6118,27 +5825,27 @@ public final class Protos {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:main.proto.AcceptedNegotiation)
+      // @@protoc_insertion_point(builder_scope:main.proto.AceptedNegotiation)
     }
 
-    // @@protoc_insertion_point(class_scope:main.proto.AcceptedNegotiation)
-    private static final main.proto.Protos.AcceptedNegotiation DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:main.proto.AceptedNegotiation)
+    private static final main.proto.Protos.AceptedNegotiation DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new main.proto.Protos.AcceptedNegotiation();
+      DEFAULT_INSTANCE = new main.proto.Protos.AceptedNegotiation();
     }
 
-    public static main.proto.Protos.AcceptedNegotiation getDefaultInstance() {
+    public static main.proto.Protos.AceptedNegotiation getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<AcceptedNegotiation>
-        PARSER = new com.google.protobuf.AbstractParser<AcceptedNegotiation>() {
-      public AcceptedNegotiation parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<AceptedNegotiation>
+        PARSER = new com.google.protobuf.AbstractParser<AceptedNegotiation>() {
+      public AceptedNegotiation parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         try {
-          return new AcceptedNegotiation(input, extensionRegistry);
+          return new AceptedNegotiation(input, extensionRegistry);
         } catch (RuntimeException e) {
           if (e.getCause() instanceof
               com.google.protobuf.InvalidProtocolBufferException) {
@@ -6150,16 +5857,1525 @@ public final class Protos {
       }
     };
 
-    public static com.google.protobuf.Parser<AcceptedNegotiation> parser() {
+    public static com.google.protobuf.Parser<AceptedNegotiation> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<AcceptedNegotiation> getParserForType() {
+    public com.google.protobuf.Parser<AceptedNegotiation> getParserForType() {
       return PARSER;
     }
 
-    public main.proto.Protos.AcceptedNegotiation getDefaultInstanceForType() {
+    public main.proto.Protos.AceptedNegotiation getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface DropwizardOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:main.proto.Dropwizard)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string type = 1;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required string type = 1;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>required string type = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
+    /**
+     * <code>required string username = 2;</code>
+     */
+    boolean hasUsername();
+    /**
+     * <code>required string username = 2;</code>
+     */
+    java.lang.String getUsername();
+    /**
+     * <code>required string username = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getUsernameBytes();
+
+    /**
+     * <code>required string prod = 3;</code>
+     */
+    boolean hasProd();
+    /**
+     * <code>required string prod = 3;</code>
+     */
+    java.lang.String getProd();
+    /**
+     * <code>required string prod = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getProdBytes();
+  }
+  /**
+   * Protobuf type {@code main.proto.Dropwizard}
+   *
+   * <pre>
+   *Cliente envia ao servidor a indicar o pedido
+   * </pre>
+   */
+  public  static final class Dropwizard extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:main.proto.Dropwizard)
+      DropwizardOrBuilder {
+    // Use Dropwizard.newBuilder() to construct.
+    private Dropwizard(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private Dropwizard() {
+      type_ = "";
+      username_ = "";
+      prod_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Dropwizard(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              type_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              username_ = bs;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              prod_ = bs;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return main.proto.Protos.internal_static_main_proto_Dropwizard_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return main.proto.Protos.internal_static_main_proto_Dropwizard_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              main.proto.Protos.Dropwizard.class, main.proto.Protos.Dropwizard.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private volatile java.lang.Object type_;
+    /**
+     * <code>required string type = 1;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string type = 1;</code>
+     */
+    public java.lang.String getType() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          type_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string type = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int USERNAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object username_;
+    /**
+     * <code>required string username = 2;</code>
+     */
+    public boolean hasUsername() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string username = 2;</code>
+     */
+    public java.lang.String getUsername() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          username_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string username = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUsernameBytes() {
+      java.lang.Object ref = username_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        username_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PROD_FIELD_NUMBER = 3;
+    private volatile java.lang.Object prod_;
+    /**
+     * <code>required string prod = 3;</code>
+     */
+    public boolean hasProd() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required string prod = 3;</code>
+     */
+    public java.lang.String getProd() {
+      java.lang.Object ref = prod_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          prod_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string prod = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getProdBytes() {
+      java.lang.Object ref = prod_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        prod_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasUsername()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasProd()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 1, type_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 2, username_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 3, prod_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(1, type_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, username_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(3, prod_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static main.proto.Protos.Dropwizard parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static main.proto.Protos.Dropwizard parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static main.proto.Protos.Dropwizard parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static main.proto.Protos.Dropwizard parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(main.proto.Protos.Dropwizard prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code main.proto.Dropwizard}
+     *
+     * <pre>
+     *Cliente envia ao servidor a indicar o pedido
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:main.proto.Dropwizard)
+        main.proto.Protos.DropwizardOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return main.proto.Protos.internal_static_main_proto_Dropwizard_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return main.proto.Protos.internal_static_main_proto_Dropwizard_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                main.proto.Protos.Dropwizard.class, main.proto.Protos.Dropwizard.Builder.class);
+      }
+
+      // Construct using main.proto.Protos.Dropwizard.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        type_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        username_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        prod_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return main.proto.Protos.internal_static_main_proto_Dropwizard_descriptor;
+      }
+
+      public main.proto.Protos.Dropwizard getDefaultInstanceForType() {
+        return main.proto.Protos.Dropwizard.getDefaultInstance();
+      }
+
+      public main.proto.Protos.Dropwizard build() {
+        main.proto.Protos.Dropwizard result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public main.proto.Protos.Dropwizard buildPartial() {
+        main.proto.Protos.Dropwizard result = new main.proto.Protos.Dropwizard(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.username_ = username_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.prod_ = prod_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof main.proto.Protos.Dropwizard) {
+          return mergeFrom((main.proto.Protos.Dropwizard)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(main.proto.Protos.Dropwizard other) {
+        if (other == main.proto.Protos.Dropwizard.getDefaultInstance()) return this;
+        if (other.hasType()) {
+          bitField0_ |= 0x00000001;
+          type_ = other.type_;
+          onChanged();
+        }
+        if (other.hasUsername()) {
+          bitField0_ |= 0x00000002;
+          username_ = other.username_;
+          onChanged();
+        }
+        if (other.hasProd()) {
+          bitField0_ |= 0x00000004;
+          prod_ = other.prod_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasType()) {
+          return false;
+        }
+        if (!hasUsername()) {
+          return false;
+        }
+        if (!hasProd()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        main.proto.Protos.Dropwizard parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (main.proto.Protos.Dropwizard) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object type_ = "";
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = getDefaultInstance().getType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object username_ = "";
+      /**
+       * <code>required string username = 2;</code>
+       */
+      public boolean hasUsername() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string username = 2;</code>
+       */
+      public java.lang.String getUsername() {
+        java.lang.Object ref = username_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            username_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string username = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUsernameBytes() {
+        java.lang.Object ref = username_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          username_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string username = 2;</code>
+       */
+      public Builder setUsername(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        username_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string username = 2;</code>
+       */
+      public Builder clearUsername() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        username_ = getDefaultInstance().getUsername();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string username = 2;</code>
+       */
+      public Builder setUsernameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        username_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object prod_ = "";
+      /**
+       * <code>required string prod = 3;</code>
+       */
+      public boolean hasProd() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required string prod = 3;</code>
+       */
+      public java.lang.String getProd() {
+        java.lang.Object ref = prod_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            prod_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string prod = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getProdBytes() {
+        java.lang.Object ref = prod_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          prod_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string prod = 3;</code>
+       */
+      public Builder setProd(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        prod_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string prod = 3;</code>
+       */
+      public Builder clearProd() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        prod_ = getDefaultInstance().getProd();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string prod = 3;</code>
+       */
+      public Builder setProdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        prod_ = value;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:main.proto.Dropwizard)
+    }
+
+    // @@protoc_insertion_point(class_scope:main.proto.Dropwizard)
+    private static final main.proto.Protos.Dropwizard DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new main.proto.Protos.Dropwizard();
+    }
+
+    public static main.proto.Protos.Dropwizard getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Dropwizard>
+        PARSER = new com.google.protobuf.AbstractParser<Dropwizard>() {
+      public Dropwizard parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new Dropwizard(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<Dropwizard> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Dropwizard> getParserForType() {
+      return PARSER;
+    }
+
+    public main.proto.Protos.Dropwizard getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ResponseDropProdOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:main.proto.ResponseDropProd)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    java.util.List<main.proto.Protos.Production> 
+        getProductsList();
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    main.proto.Protos.Production getProducts(int index);
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    int getProductsCount();
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    java.util.List<? extends main.proto.Protos.ProductionOrBuilder> 
+        getProductsOrBuilderList();
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    main.proto.Protos.ProductionOrBuilder getProductsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code main.proto.ResponseDropProd}
+   *
+   * <pre>
+   *Resposta do Dropwizard aos Produtos
+   * </pre>
+   */
+  public  static final class ResponseDropProd extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:main.proto.ResponseDropProd)
+      ResponseDropProdOrBuilder {
+    // Use ResponseDropProd.newBuilder() to construct.
+    private ResponseDropProd(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private ResponseDropProd() {
+      products_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ResponseDropProd(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                products_ = new java.util.ArrayList<main.proto.Protos.Production>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              products_.add(input.readMessage(main.proto.Protos.Production.parser(), extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw new RuntimeException(e.setUnfinishedMessage(this));
+      } catch (java.io.IOException e) {
+        throw new RuntimeException(
+            new com.google.protobuf.InvalidProtocolBufferException(
+                e.getMessage()).setUnfinishedMessage(this));
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          products_ = java.util.Collections.unmodifiableList(products_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return main.proto.Protos.internal_static_main_proto_ResponseDropProd_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return main.proto.Protos.internal_static_main_proto_ResponseDropProd_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              main.proto.Protos.ResponseDropProd.class, main.proto.Protos.ResponseDropProd.Builder.class);
+    }
+
+    public static final int PRODUCTS_FIELD_NUMBER = 1;
+    private java.util.List<main.proto.Protos.Production> products_;
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    public java.util.List<main.proto.Protos.Production> getProductsList() {
+      return products_;
+    }
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    public java.util.List<? extends main.proto.Protos.ProductionOrBuilder> 
+        getProductsOrBuilderList() {
+      return products_;
+    }
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    public int getProductsCount() {
+      return products_.size();
+    }
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    public main.proto.Protos.Production getProducts(int index) {
+      return products_.get(index);
+    }
+    /**
+     * <code>repeated .main.proto.Production products = 1;</code>
+     */
+    public main.proto.Protos.ProductionOrBuilder getProductsOrBuilder(
+        int index) {
+      return products_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      for (int i = 0; i < getProductsCount(); i++) {
+        if (!getProducts(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < products_.size(); i++) {
+        output.writeMessage(1, products_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < products_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, products_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    public static main.proto.Protos.ResponseDropProd parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static main.proto.Protos.ResponseDropProd parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static main.proto.Protos.ResponseDropProd parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static main.proto.Protos.ResponseDropProd parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(main.proto.Protos.ResponseDropProd prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code main.proto.ResponseDropProd}
+     *
+     * <pre>
+     *Resposta do Dropwizard aos Produtos
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:main.proto.ResponseDropProd)
+        main.proto.Protos.ResponseDropProdOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return main.proto.Protos.internal_static_main_proto_ResponseDropProd_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return main.proto.Protos.internal_static_main_proto_ResponseDropProd_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                main.proto.Protos.ResponseDropProd.class, main.proto.Protos.ResponseDropProd.Builder.class);
+      }
+
+      // Construct using main.proto.Protos.ResponseDropProd.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getProductsFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (productsBuilder_ == null) {
+          products_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          productsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return main.proto.Protos.internal_static_main_proto_ResponseDropProd_descriptor;
+      }
+
+      public main.proto.Protos.ResponseDropProd getDefaultInstanceForType() {
+        return main.proto.Protos.ResponseDropProd.getDefaultInstance();
+      }
+
+      public main.proto.Protos.ResponseDropProd build() {
+        main.proto.Protos.ResponseDropProd result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public main.proto.Protos.ResponseDropProd buildPartial() {
+        main.proto.Protos.ResponseDropProd result = new main.proto.Protos.ResponseDropProd(this);
+        int from_bitField0_ = bitField0_;
+        if (productsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            products_ = java.util.Collections.unmodifiableList(products_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.products_ = products_;
+        } else {
+          result.products_ = productsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof main.proto.Protos.ResponseDropProd) {
+          return mergeFrom((main.proto.Protos.ResponseDropProd)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(main.proto.Protos.ResponseDropProd other) {
+        if (other == main.proto.Protos.ResponseDropProd.getDefaultInstance()) return this;
+        if (productsBuilder_ == null) {
+          if (!other.products_.isEmpty()) {
+            if (products_.isEmpty()) {
+              products_ = other.products_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureProductsIsMutable();
+              products_.addAll(other.products_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.products_.isEmpty()) {
+            if (productsBuilder_.isEmpty()) {
+              productsBuilder_.dispose();
+              productsBuilder_ = null;
+              products_ = other.products_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              productsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getProductsFieldBuilder() : null;
+            } else {
+              productsBuilder_.addAllMessages(other.products_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        for (int i = 0; i < getProductsCount(); i++) {
+          if (!getProducts(i).isInitialized()) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        main.proto.Protos.ResponseDropProd parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (main.proto.Protos.ResponseDropProd) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<main.proto.Protos.Production> products_ =
+        java.util.Collections.emptyList();
+      private void ensureProductsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          products_ = new java.util.ArrayList<main.proto.Protos.Production>(products_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          main.proto.Protos.Production, main.proto.Protos.Production.Builder, main.proto.Protos.ProductionOrBuilder> productsBuilder_;
+
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public java.util.List<main.proto.Protos.Production> getProductsList() {
+        if (productsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(products_);
+        } else {
+          return productsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public int getProductsCount() {
+        if (productsBuilder_ == null) {
+          return products_.size();
+        } else {
+          return productsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public main.proto.Protos.Production getProducts(int index) {
+        if (productsBuilder_ == null) {
+          return products_.get(index);
+        } else {
+          return productsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder setProducts(
+          int index, main.proto.Protos.Production value) {
+        if (productsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureProductsIsMutable();
+          products_.set(index, value);
+          onChanged();
+        } else {
+          productsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder setProducts(
+          int index, main.proto.Protos.Production.Builder builderForValue) {
+        if (productsBuilder_ == null) {
+          ensureProductsIsMutable();
+          products_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          productsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder addProducts(main.proto.Protos.Production value) {
+        if (productsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureProductsIsMutable();
+          products_.add(value);
+          onChanged();
+        } else {
+          productsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder addProducts(
+          int index, main.proto.Protos.Production value) {
+        if (productsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureProductsIsMutable();
+          products_.add(index, value);
+          onChanged();
+        } else {
+          productsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder addProducts(
+          main.proto.Protos.Production.Builder builderForValue) {
+        if (productsBuilder_ == null) {
+          ensureProductsIsMutable();
+          products_.add(builderForValue.build());
+          onChanged();
+        } else {
+          productsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder addProducts(
+          int index, main.proto.Protos.Production.Builder builderForValue) {
+        if (productsBuilder_ == null) {
+          ensureProductsIsMutable();
+          products_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          productsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder addAllProducts(
+          java.lang.Iterable<? extends main.proto.Protos.Production> values) {
+        if (productsBuilder_ == null) {
+          ensureProductsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, products_);
+          onChanged();
+        } else {
+          productsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder clearProducts() {
+        if (productsBuilder_ == null) {
+          products_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          productsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public Builder removeProducts(int index) {
+        if (productsBuilder_ == null) {
+          ensureProductsIsMutable();
+          products_.remove(index);
+          onChanged();
+        } else {
+          productsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public main.proto.Protos.Production.Builder getProductsBuilder(
+          int index) {
+        return getProductsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public main.proto.Protos.ProductionOrBuilder getProductsOrBuilder(
+          int index) {
+        if (productsBuilder_ == null) {
+          return products_.get(index);  } else {
+          return productsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public java.util.List<? extends main.proto.Protos.ProductionOrBuilder> 
+           getProductsOrBuilderList() {
+        if (productsBuilder_ != null) {
+          return productsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(products_);
+        }
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public main.proto.Protos.Production.Builder addProductsBuilder() {
+        return getProductsFieldBuilder().addBuilder(
+            main.proto.Protos.Production.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public main.proto.Protos.Production.Builder addProductsBuilder(
+          int index) {
+        return getProductsFieldBuilder().addBuilder(
+            index, main.proto.Protos.Production.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .main.proto.Production products = 1;</code>
+       */
+      public java.util.List<main.proto.Protos.Production.Builder> 
+           getProductsBuilderList() {
+        return getProductsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          main.proto.Protos.Production, main.proto.Protos.Production.Builder, main.proto.Protos.ProductionOrBuilder> 
+          getProductsFieldBuilder() {
+        if (productsBuilder_ == null) {
+          productsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              main.proto.Protos.Production, main.proto.Protos.Production.Builder, main.proto.Protos.ProductionOrBuilder>(
+                  products_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          products_ = null;
+        }
+        return productsBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:main.proto.ResponseDropProd)
+    }
+
+    // @@protoc_insertion_point(class_scope:main.proto.ResponseDropProd)
+    private static final main.proto.Protos.ResponseDropProd DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new main.proto.Protos.ResponseDropProd();
+    }
+
+    public static main.proto.Protos.ResponseDropProd getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ResponseDropProd>
+        PARSER = new com.google.protobuf.AbstractParser<ResponseDropProd>() {
+      public ResponseDropProd parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        try {
+          return new ResponseDropProd(input, extensionRegistry);
+        } catch (RuntimeException e) {
+          if (e.getCause() instanceof
+              com.google.protobuf.InvalidProtocolBufferException) {
+            throw (com.google.protobuf.InvalidProtocolBufferException)
+                e.getCause();
+          }
+          throw e;
+        }
+      }
+    };
+
+    public static com.google.protobuf.Parser<ResponseDropProd> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ResponseDropProd> getParserForType() {
+      return PARSER;
+    }
+
+    public main.proto.Protos.ResponseDropProd getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6186,30 +7402,35 @@ public final class Protos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_main_proto_Production_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_main_proto_ProductionConfirmation_descriptor;
+    internal_static_main_proto_Negotiation_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_main_proto_ProductionConfirmation_fieldAccessorTable;
+      internal_static_main_proto_Negotiation_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_main_proto_Negotiations_descriptor;
+    internal_static_main_proto_BusinessConfirmation_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_main_proto_Negotiations_fieldAccessorTable;
+      internal_static_main_proto_BusinessConfirmation_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_main_proto_NegotiationsConfirmation_descriptor;
+    internal_static_main_proto_NegotiationsConfirmatio_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_main_proto_NegotiationsConfirmation_fieldAccessorTable;
+      internal_static_main_proto_NegotiationsConfirmatio_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_main_proto_Finish_descriptor;
+    internal_static_main_proto_AceptedNegotiation_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_main_proto_Finish_fieldAccessorTable;
+      internal_static_main_proto_AceptedNegotiation_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_main_proto_AcceptedNegotiation_descriptor;
+    internal_static_main_proto_Dropwizard_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_main_proto_AcceptedNegotiation_fieldAccessorTable;
+      internal_static_main_proto_Dropwizard_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_main_proto_ResponseDropProd_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_main_proto_ResponseDropProd_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6224,17 +7445,19 @@ public final class Protos {
       " \002(\t\"%\n\021LoginConfirmation\022\020\n\010response\030\001 " +
       "\002(\010\"Y\n\nProduction\022\024\n\014product_name\030\001 \002(\t\022" +
       "\013\n\003min\030\002 \002(\005\022\013\n\003max\030\003 \002(\005\022\r\n\005price\030\004 \002(\002" +
-      "\022\014\n\004data\030\005 \002(\t\":\n\026ProductionConfirmation" +
-      "\022\020\n\010response\030\001 \002(\010\022\016\n\006zeroMQ\030\002 \002(\t\"i\n\014Ne" +
-      "gotiations\022\026\n\016importer_offer\030\001 \002(\t\022\024\n\014pr" +
-      "oduct_name\030\003 \002(\t\022\r\n\005price\030\004 \002(\002\022\016\n\006amoun" +
-      "t\030\005 \002(\005\022\014\n\004data\030\006 \002(\t\"B\n\030NegotiationsCon",
-      "firmation\022\020\n\010response\030\001 \002(\010\022\024\n\014subscript" +
-      "ion\030\002 \002(\t\"\030\n\006Finish\022\016\n\006zeroMQ\030\001 \002(\t\"\177\n\023A" +
-      "cceptedNegotiation\022\026\n\016importer_offer\030\001 \002" +
-      "(\t\022\024\n\014product_name\030\003 \002(\t\022\r\n\005price\030\004 \002(\002\022" +
-      "\016\n\006amount\030\005 \002(\005\022\014\n\004data\030\006 \002(\t\022\r\n\005state\030\007" +
-      " \002(\t"
+      "\022\014\n\004data\030\005 \002(\t\"h\n\013Negotiation\022\026\n\016importe" +
+      "r_offer\030\001 \002(\t\022\024\n\014product_name\030\003 \002(\t\022\r\n\005p" +
+      "rice\030\004 \002(\002\022\016\n\006amount\030\005 \002(\005\022\014\n\004data\030\006 \002(\t" +
+      "\"8\n\024BusinessConfirmation\022\020\n\010response\030\001 \002" +
+      "(\010\022\016\n\006zeroMQ\030\002 \002(\t\"J\n\027NegotiationsConfir",
+      "matio\022/\n\007acepted\030\001 \003(\0132\036.main.proto.Acep" +
+      "tedNegotiation\"~\n\022AceptedNegotiation\022\026\n\016" +
+      "importer_offer\030\001 \002(\t\022\024\n\014product_name\030\003 \002" +
+      "(\t\022\r\n\005price\030\004 \002(\002\022\016\n\006amount\030\005 \002(\005\022\014\n\004dat" +
+      "a\030\006 \002(\t\022\r\n\005state\030\007 \002(\t\":\n\nDropwizard\022\014\n\004" +
+      "type\030\001 \002(\t\022\020\n\010username\030\002 \002(\t\022\014\n\004prod\030\003 \002" +
+      "(\t\"<\n\020ResponseDropProd\022(\n\010products\030\001 \003(\013" +
+      "2\026.main.proto.Production"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6272,36 +7495,42 @@ public final class Protos {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_main_proto_Production_descriptor,
         new java.lang.String[] { "ProductName", "Min", "Max", "Price", "Data", });
-    internal_static_main_proto_ProductionConfirmation_descriptor =
+    internal_static_main_proto_Negotiation_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_main_proto_ProductionConfirmation_fieldAccessorTable = new
+    internal_static_main_proto_Negotiation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_main_proto_ProductionConfirmation_descriptor,
-        new java.lang.String[] { "Response", "ZeroMQ", });
-    internal_static_main_proto_Negotiations_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_main_proto_Negotiations_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_main_proto_Negotiations_descriptor,
+        internal_static_main_proto_Negotiation_descriptor,
         new java.lang.String[] { "ImporterOffer", "ProductName", "Price", "Amount", "Data", });
-    internal_static_main_proto_NegotiationsConfirmation_descriptor =
+    internal_static_main_proto_BusinessConfirmation_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_main_proto_BusinessConfirmation_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_main_proto_BusinessConfirmation_descriptor,
+        new java.lang.String[] { "Response", "ZeroMQ", });
+    internal_static_main_proto_NegotiationsConfirmatio_descriptor =
       getDescriptor().getMessageTypes().get(6);
-    internal_static_main_proto_NegotiationsConfirmation_fieldAccessorTable = new
+    internal_static_main_proto_NegotiationsConfirmatio_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_main_proto_NegotiationsConfirmation_descriptor,
-        new java.lang.String[] { "Response", "Subscription", });
-    internal_static_main_proto_Finish_descriptor =
+        internal_static_main_proto_NegotiationsConfirmatio_descriptor,
+        new java.lang.String[] { "Acepted", });
+    internal_static_main_proto_AceptedNegotiation_descriptor =
       getDescriptor().getMessageTypes().get(7);
-    internal_static_main_proto_Finish_fieldAccessorTable = new
+    internal_static_main_proto_AceptedNegotiation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_main_proto_Finish_descriptor,
-        new java.lang.String[] { "ZeroMQ", });
-    internal_static_main_proto_AcceptedNegotiation_descriptor =
-      getDescriptor().getMessageTypes().get(8);
-    internal_static_main_proto_AcceptedNegotiation_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_main_proto_AcceptedNegotiation_descriptor,
+        internal_static_main_proto_AceptedNegotiation_descriptor,
         new java.lang.String[] { "ImporterOffer", "ProductName", "Price", "Amount", "Data", "State", });
+    internal_static_main_proto_Dropwizard_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_main_proto_Dropwizard_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_main_proto_Dropwizard_descriptor,
+        new java.lang.String[] { "Type", "Username", "Prod", });
+    internal_static_main_proto_ResponseDropProd_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_main_proto_ResponseDropProd_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_main_proto_ResponseDropProd_descriptor,
+        new java.lang.String[] { "Products", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

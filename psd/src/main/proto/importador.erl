@@ -1,10 +1,8 @@
 -module(importador).
 -export([importador/2]).
 
-%Mudar apenas os send para aquele tipo especifico e encode
-%Mudar a parte de receber em que é preciso fazer decode
-
 importador(Sock, Room) ->
+	%Em vez de ter dois receive ter apenas um para o login
 	receive
 		{tcp, _, Name} ->
 			U = binary_to_list(Name),
@@ -19,6 +17,7 @@ importador(Sock, Room) ->
 	receive
 		{aut, {Username, Result}} ->
 			Send = Result ++ "," ++ Username ++ ",\n",
+			%Em vez de ter desta forma tem-se que fazer encode da mensagem e enviar
 			if
 				Result =:= "erro" ->
 					gen_tcp:send(Sock, "-1\n"),
@@ -30,29 +29,33 @@ importador(Sock, Room) ->
 	end.
 
 handleImportador(Sock, Room, Username) ->
-		receive
-			{line, Data} ->
-				gen_tcp:send(Sock, binary_to_list(Data)),
-				handleImportador(Sock, Room, Username);
-			{res, Data} ->
-				gen_tcp:send(Sock, Data),
-				handleImportador(Sock, Room, Username);
-			{deal, Data} -> 			%Dizer se o importador realizou ou não o negocio
-				sendRes(Sock, Data),
-				handleImportador(Sock, Room, Username);
-			{tcp, _, Data} ->
-				io:format("Recebi do importador: ~p~n", [Data]),
-				List = string: tokens(binary_to_list(Data), ","),
-				handleRequest(List, Username, Room, Sock),
-				handleImportador(Sock, Room, Username);
-			{tcp_closed, _} ->
-				Room ! {leave, self()};
-			{tcp_error, _, _} ->
-				Room ! {leave, self()}
-		end.
+	receive
+		{line, Data} ->
+			gen_tcp:send(Sock, binary_to_list(Data)),
+			handleImportador(Sock, Room, Username);
+		{res, Data} ->
+			%So vai ser realizado o encode da resposta. Apenas uma mensagem já com o ZeroMQ para que o cliente só chegue e subscrever para o ZeroMQ
+			gen_tcp:send(Sock, Data),
+			handleImportador(Sock, Room, Username);
+		{deal, Data} -> 			
+			%Recebe a resposta do Room por causa do ZeroMQ aqui so vai ser realizado encode e enviado um de cada vez
+			sendRes(Sock, Data),
+			handleImportador(Sock, Room, Username);
+		{tcp, _, Data} ->
+			io:format("Recebi do importador: ~p~n", [Data]),
+			List = string: tokens(binary_to_list(Data), ","),
+			handleRequest(List, Username, Room, Sock),
+			handleImportador(Sock, Room, Username);
+		{tcp_closed, _} ->
+			Room ! {leave, self()};
+		{tcp_error, _, _} ->
+			Room ! {leave, self()}
+	end.
 
 
 handleRequest([H | T], Username, Room, Sock) ->
+	%Receber o pacote com os dados
+	%Decode Aqui e entrar no if de acordo com a variavel obtida anteriormente
 	if 
 		H =:= "offer"->
 			Res = newOffer(T, Username, Room);
@@ -69,6 +72,7 @@ handleRequest([H | T], Username, Room, Sock) ->
 			io:format("~n")
 	end.
 
+%Altera a lista para n argumentos
 neg(List, Room) -> 
 	Size = length([X || X <- List]),
 	if
@@ -84,6 +88,7 @@ neg(List, Room) ->
 	end,
 	Res.
 
+%Altera a lista para n argumentos
 newOffer(List, Username, Room) ->
 	Size = length([X || X <- List]),
 	if 

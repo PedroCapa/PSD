@@ -19,28 +19,16 @@ user(Sock, Room) ->
 
 checkInterface(Data, Sock, Room) ->
 	D = binary_to_list(Data),
-	%Substituir aqui pelo tipo de pedido se o pedido for Importador/Negociador ou aqueles request
-	%Em vez de 0 e 1 verificar o tipo é importador/negociador/rest
+	%Aqui fazer decode da mensagem e verificar o tipo
+	%Enviar para o tipo correspondente
 	if
-		D =:= "0\n" ->
+		D =:= "drop\n" ->
 			io:format("User: Entrei no dropwizard~n"),
 			dropwizard:dropwizard(Sock, Room);
-		D =:= "1\n" ->
-			Person = authentication(Sock, Room),
-			Room ! {aut, Person, self()};
+		D =:= "fab\n" ->
+			fabricante:fabricante(Sock, Room);
+		D =:= "imp\n" ->
+			importador:importador(Sock, Room);
 		true ->
 			gen_tcp:send("Errado\n")
 	end.
-
-%Mudar esta função para que apenas envia a mensagem para o Room e não esteja à espera do utilizador
-authentication(Sock, Room) ->
-		receive
-			{tcp, _, Data} ->
-				D = binary_to_list(Data),
-				if
-					D =:= "fab\n" ->
-						fabricante:fabricante(Sock, Room);
-					true ->
-						importador:importador(Sock, Room)
-				end
-		end.

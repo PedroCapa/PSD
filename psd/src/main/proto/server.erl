@@ -27,7 +27,6 @@ room(Importadores, Fabricantes) ->
 				%Verifica se existe algum fabricante ou Importador com esse nome
 				Fab = checkUsername(Username, Password, Fabricantes),
 				Imp = checkUsername(Username, Password, Importadores),
-				io:format("Fab: ~p   Imp~p~n", [Fab, Imp]),
 				if
 					%No caso do Utilizador ser um Importador
 					Imp =:= true ->

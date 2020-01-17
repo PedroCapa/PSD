@@ -19,7 +19,6 @@ public class Importador{
 		Scanner scanner = new Scanner(System.in);
 
 		//Depois substituir para uma mensagem so com protobuf
-		sm.sendServer("1");
 		sm.sendServer("imp");
 		String user = authentication(scanner, teclado, sm);
 
