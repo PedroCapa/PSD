@@ -1,12 +1,11 @@
 package main.java.terminal;
 
-import java.net.*;
-import java.io.*;
-import java.time.LocalDate;
 import java.util.Scanner;
-import java.util.Random;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.SocketException;
+import java.time.LocalDate;
 
-//Copiar as coisas do Importador acerca da autenticação envio e receção de mensagens
 import main.proto.Protos.Syn;
 import main.proto.Protos.Login;
 import main.proto.Protos.LoginConfirmation;
@@ -18,23 +17,21 @@ public class Importador{
 		int port = Integer.parseInt(args[0]);
 		Socket cs = new Socket("127.0.0.1", port);
 		SendMessage sm = new SendMessage(cs);
-		InputStream is = cs.getInputStream();
+		ReadMessage rm = new ReadMessage(cs);
 		Scanner scanner = new Scanner(System.in);
 
-		//Depois substituir para uma mensagem so com protobuf
 		Syn syn = Syn.newBuilder().
 						setType(Syn.Type.IMP).
 						build();
 		byte[] bsyn = syn.toByteArray();
 		sm.sendServer(bsyn);
-		String user = authentication(scanner, is, sm);
-
+		
+		String user = authentication(scanner, rm, sm);
 
 		Notifications n = new Notifications(sm, true, user);
 		Thread not = new Thread(n);
 		not.start();
 		
-
 		LeitorImportador l = new LeitorImportador(cs, n);
 		Thread t = new Thread(l);
 		t.start();
@@ -56,9 +53,9 @@ public class Importador{
 												setData(LocalDate.now().toString()).
 												build();
 
-			//Talvez ter o Syn
+			//Criar o Syn e converter para Bytes
 			byte[] c = neg.toByteArray();
-			sm.sendServer(c);
+			sm.sendServer(c);//Enviar duas mensagens
 			}
 		}
 		System.out.println("Shutdown Output");
@@ -79,26 +76,7 @@ public class Importador{
 	    return true;
 	}
 
-	public static byte[] receive(InputStream is){
-        
-        try{
-            byte[] tmp = new byte[1024];
-            int count = 0;
-            count = is.read(tmp);
-            byte[] res = new byte[count];
-
-            for(int i = 0; i < count; i++){
-                res[i] = tmp[i];
-            }
-            return res;
-        }
-        catch(IOException exc){
-            exc.printStackTrace();
-        }
-        return (new byte[1]);
-    }
-
-	public static String authentication(Scanner scanner, InputStream is, SendMessage sm){
+	public static String authentication(Scanner scanner, ReadMessage rm, SendMessage sm){
 		try{
            System.out.println("Username");
             String username = scanner.nextLine();
@@ -116,13 +94,13 @@ public class Importador{
 			sm.sendServer(blogin);
 
 			//Receber aqui
-	        byte[] res = receive(is);
+	        byte[] res = rm.receiveMessage();
 	        LoginConfirmation lc = LoginConfirmation.parseFrom(res);
 	        System.out.println(lc);
 
             if(!lc.getResponse()){
                 System.out.println("Palavra passe incorreta");
-                return authentication(scanner, is, sm);
+                return authentication(scanner, rm, sm);
             }
             else if(lc.getResponse()){
                 System.out.println("Entrou com sucesso");
@@ -155,18 +133,25 @@ class LeitorImportador implements Runnable{
 
 	public void run(){
 		try{
-			BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+			ReadMessage rm = new ReadMessage(cs);
 			while(!this.cs.isClosed()){
-				String eco = in.readLine();
-				//Colocar aqui outro readLine no caso do anterior ser apenas um Syn
-				if(eco != null)
-					System.out.println("Server: " + eco);
-				String[] arrOfStr = eco.split(",");
-				//Colocar aqui no caso de o pedido ser para responder por causa do pedido ter acabado
-				if(arrOfStr.length == 2){//Fabricante,Produto,Quantidade,Preco
-					this.notifications.subscribe(arrOfStr[0] + "," + arrOfStr[1]);
+				byte[] res = rm.receiveMessage();
+				Syn syn = Syn.parseFrom(res);
+				/*
+				if(syn.get){
+					//No caso de enviar uma lista de Negocios
+					//Ir buscar os bytes
+					//Converter para Lista de Negocios
+					//System.out.println(); //Da lista de Mensagens
+				}
+
+				else if(syn.getQQ){
+					//No caso de ser uma resposta ao negocio ou seja se foi valido
+					//Caso seja valido subscrever
+					//this.notifications.subscribe(this.QQ + "," + this.QQ);
 					System.out.println("Recebi coisas e foram aceites");
 				}
+				*/
 			}
 			System.out.println("Fechei");
 		}

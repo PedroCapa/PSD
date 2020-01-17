@@ -47,7 +47,8 @@ message Negotiation{
 //O zeroMQ é a string que tem que enviar para o ZeroMQ
 message BusinessConfirmation{
 	required bool response = 1;
-	required string zeroMQ = 2;
+	required string fabricante = 2;
+	required string produto = 3;
 }
 
 message Notification{
