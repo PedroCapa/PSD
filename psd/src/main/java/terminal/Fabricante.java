@@ -10,6 +10,9 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 
 import main.proto.Protos.Syn;
+import main.proto.Protos.Login;
+import main.proto.Protos.LoginConfirmation;
+import main.proto.Protos.Production;
 
 public class Fabricante{
 
@@ -17,7 +20,7 @@ public class Fabricante{
 		int port = Integer.parseInt(args[0]);
 		Socket cs = new Socket("127.0.0.1", port);
 		SendMessage sm = new SendMessage(cs);
-		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		InputStream is = cs.getInputStream();
 		Scanner scanner = new Scanner(System.in);
 
 		Syn syn = Syn.newBuilder().
@@ -26,12 +29,7 @@ public class Fabricante{
 		byte[] bsyn = syn.toByteArray();
 		sm.sendServer(bsyn);
 		
-		InputStream is = cs.getInputStream();
-        byte[] res = receive(is);
-        Syn b = Syn.parseFrom(res);
-        System.out.println(b);
-
-		String user = authentication(scanner, teclado, sm);
+		String user = authentication(scanner, is, sm);
 
 
 		Notifications n = new Notifications(sm, false, user);
@@ -49,14 +47,41 @@ public class Fabricante{
 			current = scanner.nextLine();
 			//Criar os objetos deste lado para depois encriptar
 			//Fazer encode dos objetos e enviar
-			byte[] c = current.getBytes();
-			sm.sendServer(c);
+
+			String[] arrOfStr = current.split(",");
+			if(arrOfStr.length >= 5 && isNumeric(arrOfStr[1]) && isNumeric(arrOfStr[2]) && isNumeric(arrOfStr[3])){
+				int min = Integer.parseInt(arrOfStr[1]);	
+				int max = Integer.parseInt(arrOfStr[2]);	
+				int price = Integer.parseInt(arrOfStr[3]);	
+				Production product = Production.newBuilder().
+												setProductName(arrOfStr[0]).
+												setMin(min).
+												setMax(max).
+												setPrice(price).
+												setData(arrOfStr[4]).
+												build();
+
+				//Talvez ter o Syn
+				byte[] prod = product.toByteArray();
+				sm.sendServer(prod);
+			}
 		}
 
 		System.out.println("Shutdown Output");
 
 		cs.shutdownOutput();
-		teclado.close();
+	}
+
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        int d = Integer.parseInt(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
 	}
 
 	public static byte[] receive(InputStream is){
@@ -78,35 +103,43 @@ public class Fabricante{
         return (new byte[1]);
     }
 
-	public static String authentication(Scanner scanner, BufferedReader teclado, SendMessage sm){
+	public static String authentication(Scanner scanner, InputStream is, SendMessage sm){
 		try{
             //Ler do scanner nome e pass
             System.out.println("Username");
             String username = scanner.nextLine();
-            sm.sendServer(username.getBytes());
 
             System.out.println("Password");
             String password = scanner.nextLine();
-            sm.sendServer(password.getBytes());
 
-            //Enviar para servidor a autenticação
-            String response = teclado.readLine();
-			String[] arrOfStr = response.split(",");
+            //enviar aqui em baixo
+            Login login = Login.newBuilder().
+						setName(username).
+						setPass(password).
+						build();
 
-			System.out.println("response: " + response);
+			byte[] blogin = login.toByteArray();
+			sm.sendServer(blogin);
 
-            if(arrOfStr[0].equals("-1")){
+			//Receber aqui
+	        byte[] res = receive(is);
+	        LoginConfirmation lc = LoginConfirmation.parseFrom(res);
+	        System.out.println(lc);
+
+            if(!lc.getResponse()){
                 System.out.println("Palavra passe incorreta");
-                return authentication(scanner, teclado, sm);
+                return authentication(scanner, is, sm);
             }
-            else if(arrOfStr[0].equals("1")){
-                System.out.println("Conta criada com sucesso");
-            	return arrOfStr[1];
+            else if(lc.getResponse()){
+                System.out.println("Entrou com sucesso");
+            	return lc.getUsername();
             }
+            /*
             else{
                 System.out.println("Sessão iniciada com sucesso");
-            	return arrOfStr[1];
+            	return ;
             }
+            */
         }
         catch(IOException exc){
         	System.out.println("Deu asneira");
@@ -136,6 +169,7 @@ class LeitorFabricante implements Runnable{
 			this.socket.connect("tcp://localhost:5555");
 			while(!this.cs.isClosed()){
 				String eco = in.readLine();
+				//Colocar aqui outro readLine no caso do anterior ser apenas um Syn
 				if(eco != null)
 					System.out.println("Recebi: " + eco);
 				String[] arrOfStr = eco.split(",");
@@ -177,10 +211,14 @@ class Notifications implements Runnable{
         while(!Thread.currentThread().isInterrupted()){
         	String channel = subscriber.recvStr();
         	System.out.println("Acabou o tempo do produto " + channel);
-        	if(importador)
+        	if(importador){
+				
         		sm.sendServer(("over," + channel + "," + username + ",").getBytes());
-        	else
+        	}
+        	else{
+
         		sm.sendServer(("over," + channel + ",").getBytes());
+        	}
         }
     }
 

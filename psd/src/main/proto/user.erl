@@ -1,7 +1,7 @@
 -module(user).
 -export([user/2]).
 
-%-include ("protos.hrl").
+-include ("protos.hrl").
 
 user(Sock, Room) ->
 	receive
@@ -18,15 +18,10 @@ user(Sock, Room) ->
 
 
 checkInterface(Data, Sock, Room) ->
-	gen_tcp:send(Sock, protos:encode_msg({'Syn', 'IMP'})),
 	D = protos:decode_msg(Data, 'Syn'),
 	checkSyn(D, Sock, Room).
-	%Aqui fazer decode da mensagem e verificar o tipo
-	%Enviar para o tipo correspondente
-
 
 checkSyn({_, D}, Sock, Room) ->
-	io:format("AAA:~p~n", [D]),
 	if
 		D =:= 'DROP' ->
 			io:format("User: Entrei no dropwizard~n"),

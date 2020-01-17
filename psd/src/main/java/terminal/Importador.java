@@ -8,6 +8,9 @@ import java.util.Random;
 
 //Copiar as coisas do Importador acerca da autenticação envio e receção de mensagens
 import main.proto.Protos.Syn;
+import main.proto.Protos.Login;
+import main.proto.Protos.LoginConfirmation;
+import main.proto.Protos.Negotiation;
 
 public class Importador{
 
@@ -15,7 +18,7 @@ public class Importador{
 		int port = Integer.parseInt(args[0]);
 		Socket cs = new Socket("127.0.0.1", port);
 		SendMessage sm = new SendMessage(cs);
-		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		InputStream is = cs.getInputStream();
 		Scanner scanner = new Scanner(System.in);
 
 		//Depois substituir para uma mensagem so com protobuf
@@ -24,7 +27,7 @@ public class Importador{
 						build();
 		byte[] bsyn = syn.toByteArray();
 		sm.sendServer(bsyn);
-		String user = authentication(scanner, teclado, sm);
+		String user = authentication(scanner, is, sm);
 
 
 		Notifications n = new Notifications(sm, true, user);
@@ -41,51 +44,96 @@ public class Importador{
 		while(scanner.hasNextLine()){
 			current = scanner.nextLine();
 			String[] arrOfStr = current.split(",");
-			if(arrOfStr[0].equals("offer")){
-				LocalDate ldt = LocalDate.now();
-				current = current + ldt.toString() + ",";
-			}
-			//Criar os objetos deste lado para depois encriptar
-			//Fazer encode dos objetos e enviar
-			byte[] c = current.getBytes();
-			sm.sendServer(c);
-		}
+			
+			if(arrOfStr.length >= 5 && isNumeric(arrOfStr[2]) && isNumeric(arrOfStr[3])){
+				int price = Integer.parseInt(arrOfStr[2]);	
+				int amount = Integer.parseInt(arrOfStr[3]);	
+				Negotiation neg = Negotiation.newBuilder().
+												setImporterOffer(arrOfStr[0]).
+												setProductName(arrOfStr[1]).
+												setPrice(price).
+												setAmount(amount).
+												setData(LocalDate.now().toString()).
+												build();
 
+			//Talvez ter o Syn
+			byte[] c = neg.toByteArray();
+			sm.sendServer(c);
+			}
+		}
 		System.out.println("Shutdown Output");
 
 		cs.shutdownOutput();
-		teclado.close();
+
 	}
 
-	public static String authentication(Scanner scanner, BufferedReader teclado, SendMessage sm){
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        int d = Integer.parseInt(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
+
+	public static byte[] receive(InputStream is){
+        
+        try{
+            byte[] tmp = new byte[1024];
+            int count = 0;
+            count = is.read(tmp);
+            byte[] res = new byte[count];
+
+            for(int i = 0; i < count; i++){
+                res[i] = tmp[i];
+            }
+            return res;
+        }
+        catch(IOException exc){
+            exc.printStackTrace();
+        }
+        return (new byte[1]);
+    }
+
+	public static String authentication(Scanner scanner, InputStream is, SendMessage sm){
 		try{
-            //Ler do scanner nome e pass
-            System.out.println("Username");
+           System.out.println("Username");
             String username = scanner.nextLine();
-            sm.sendServer(username.getBytes());
 
             System.out.println("Password");
             String password = scanner.nextLine();
-            sm.sendServer(password.getBytes());
 
-            //Enviar para servidor a autenticação
-            String response = teclado.readLine();
-			String[] arrOfStr = response.split(",");
+            //enviar aqui em baixo
+            Login login = Login.newBuilder().
+						setName(username).
+						setPass(password).
+						build();
 
-			System.out.println("Importador: Recebi" + response);
+			byte[] blogin = login.toByteArray();
+			sm.sendServer(blogin);
 
-            if(arrOfStr[0].equals("-1")){
+			//Receber aqui
+	        byte[] res = receive(is);
+	        LoginConfirmation lc = LoginConfirmation.parseFrom(res);
+	        System.out.println(lc);
+
+            if(!lc.getResponse()){
                 System.out.println("Palavra passe incorreta");
-                return authentication(scanner, teclado, sm);
+                return authentication(scanner, is, sm);
             }
-            else if(arrOfStr[0].equals("1")){
-                System.out.println("Conta criada com sucesso");
-            	return arrOfStr[1];
+            else if(lc.getResponse()){
+                System.out.println("Entrou com sucesso");
+            	return lc.getUsername();
             }
+            /*
             else{
                 System.out.println("Sessão iniciada com sucesso");
-            	return arrOfStr[1];
+            	return ;
             }
+            */
         }
         catch(IOException exc){
         	System.out.println("Deu asneira");
@@ -110,6 +158,7 @@ class LeitorImportador implements Runnable{
 			BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 			while(!this.cs.isClosed()){
 				String eco = in.readLine();
+				//Colocar aqui outro readLine no caso do anterior ser apenas um Syn
 				if(eco != null)
 					System.out.println("Server: " + eco);
 				String[] arrOfStr = eco.split(",");

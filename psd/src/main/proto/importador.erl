@@ -4,26 +4,20 @@
 importador(Sock, Room) ->
 	%Em vez de ter dois receive ter apenas um para o login
 	receive
-		{tcp, _, Name} ->
-			U = binary_to_list(Name),
-			Id = string:trim(U)
-	end,
-	receive
-		{tcp, _, Pass} ->
-			P = binary_to_list(Pass),
-			Password = string:trim(P),
+		{tcp, _, Auth} ->
+			{_, Id, Password} = proto:decode_msg('Login', Auth),
 			Room ! {imp, {Id, Password}, self()}
 	end,
 	receive
 		{aut, {Username, Result}} ->
-			Send = Result ++ "," ++ Username ++ ",\n",
-			%Em vez de ter desta forma tem-se que fazer encode da mensagem e enviar
+			Send = {'LoginConfirmation', Result, Username},
+			Enc = prot:encode_msg(Send),
+			gen_tcp:send(Sock, Enc),
 			if
 				Result =:= "erro" ->
-					gen_tcp:send(Sock, "-1\n"),
+					io:format("Enviei: ~p~n", [Result]),
 					importador(Sock, Room);
 				true ->
-					gen_tcp:send(Sock, Send),
 					handleImportador(Sock, Room, Username)
 			end
 	end.

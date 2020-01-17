@@ -22,6 +22,7 @@ message Login {
 //É usado para confirmar a autenticação
 message LoginConfirmation{
 	required bool response = 1;
+	required string username = 2;
 }
 
 //O fabricante envia para o servidor qual será o negocio que pretende adicionar
@@ -29,7 +30,7 @@ message Production{
 	required string product_name = 1;
 	required int32 min = 2;
 	required int32 max = 3;
-	required float price = 4;
+	required int32 price = 4;
 	required string data = 5;
 }
 
@@ -37,7 +38,7 @@ message Production{
 message Negotiation{
 	required string importer_offer = 1;
 	required string product_name = 3;
-	required float price = 4;
+	required int32 price = 4;
 	required int32 amount = 5;
 	required string data = 6;
 }
@@ -49,6 +50,13 @@ message BusinessConfirmation{
 	required string zeroMQ = 2;
 }
 
+message Notification{
+	required string fabricante = 1;
+	required string produto = 2;
+	required string username = 3;
+}
+
+
 //Comentario a indicar as listas de coisas que vai enviar
 //Tambem pode ser usado no Dropwizard para 
 message NegotiationsConfirmatio{
@@ -59,11 +67,16 @@ message NegotiationsConfirmatio{
 message AceptedNegotiation{
 	required string importer_offer = 1;
 	required string product_name = 3;
-	required float price = 4;
+	required int32 price = 4;
 	required int32 amount = 5;
 	required string data = 6;
 	required string state = 7;
 }
+
+
+
+
+
 
 //Cliente envia ao servidor a indicar o pedido
 message Dropwizard{
