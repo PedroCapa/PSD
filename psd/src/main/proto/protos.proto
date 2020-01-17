@@ -4,7 +4,13 @@ package main.proto;
 
 //Este é usado para indicar o tipo de utilizador, e que tipo de mensagem vai ser enviada. Production, Negotiation
 message Syn{
-	required string type = 1;
+	required Type type = 1;
+
+	enum Type{
+		FAB = 0;
+		IMP = 1;
+		DROP = 2;
+	}
 }
 
 //So é usado para a autenticação
