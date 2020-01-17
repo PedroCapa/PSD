@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 //Copiar as coisas do Importador acerca da autenticação envio e receção de mensagens
-
+import main.proto.Protos.Syn;
 
 public class Importador{
 
@@ -19,7 +19,11 @@ public class Importador{
 		Scanner scanner = new Scanner(System.in);
 
 		//Depois substituir para uma mensagem so com protobuf
-		sm.sendServer("imp");
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.IMP).
+						build();
+		byte[] bsyn = syn.toByteArray();
+		sm.sendServer(bsyn);
 		String user = authentication(scanner, teclado, sm);
 
 
@@ -43,7 +47,8 @@ public class Importador{
 			}
 			//Criar os objetos deste lado para depois encriptar
 			//Fazer encode dos objetos e enviar
-			sm.sendServer(current);
+			byte[] c = current.getBytes();
+			sm.sendServer(c);
 		}
 
 		System.out.println("Shutdown Output");
@@ -57,11 +62,11 @@ public class Importador{
             //Ler do scanner nome e pass
             System.out.println("Username");
             String username = scanner.nextLine();
-            sm.sendServer(username);
+            sm.sendServer(username.getBytes());
 
             System.out.println("Password");
             String password = scanner.nextLine();
-            sm.sendServer(password);
+            sm.sendServer(password.getBytes());
 
             //Enviar para servidor a autenticação
             String response = teclado.readLine();

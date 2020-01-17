@@ -18,17 +18,26 @@ user(Sock, Room) ->
 
 
 checkInterface(Data, Sock, Room) ->
-	D = binary_to_list(Data),
+	gen_tcp:send(Sock, protos:encode_msg({'Syn', 'IMP'})),
+	D = protos:decode_msg(Data, 'Syn'),
+	checkSyn(D, Sock, Room).
 	%Aqui fazer decode da mensagem e verificar o tipo
 	%Enviar para o tipo correspondente
+
+
+checkSyn({_, D}, Sock, Room) ->
+	io:format("AAA:~p~n", [D]),
 	if
-		D =:= "drop\n" ->
+		D =:= 'DROP' ->
 			io:format("User: Entrei no dropwizard~n"),
 			dropwizard:dropwizard(Sock, Room);
-		D =:= "fab\n" ->
+		D =:= 'FAB' ->
+			io:format("User: Entrei no fabricante~n"),
 			fabricante:fabricante(Sock, Room);
-		D =:= "imp\n" ->
+		D =:= 'IMP' ->
+			io:format("User: Entrei no importador~n"),
 			importador:importador(Sock, Room);
 		true ->
-			gen_tcp:send("Errado\n")
+			io:format("Something went"),
+			gen_tcp:send(Sock, "Errado\n")
 	end.

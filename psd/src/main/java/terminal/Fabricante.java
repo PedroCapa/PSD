@@ -9,7 +9,7 @@ import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 
-import main.proto.Protos.Login;
+import main.proto.Protos.Syn;
 
 public class Fabricante{
 
@@ -20,7 +20,17 @@ public class Fabricante{
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 		Scanner scanner = new Scanner(System.in);
 
-		sm.sendServer("fab");
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.FAB).
+						build();
+		byte[] bsyn = syn.toByteArray();
+		sm.sendServer(bsyn);
+		
+		InputStream is = cs.getInputStream();
+        byte[] res = receive(is);
+        Syn b = Syn.parseFrom(res);
+        System.out.println(b);
+
 		String user = authentication(scanner, teclado, sm);
 
 
@@ -39,7 +49,8 @@ public class Fabricante{
 			current = scanner.nextLine();
 			//Criar os objetos deste lado para depois encriptar
 			//Fazer encode dos objetos e enviar
-			sm.sendServer(current);
+			byte[] c = current.getBytes();
+			sm.sendServer(c);
 		}
 
 		System.out.println("Shutdown Output");
@@ -48,17 +59,35 @@ public class Fabricante{
 		teclado.close();
 	}
 
+	public static byte[] receive(InputStream is){
+        
+        try{
+            byte[] tmp = new byte[1024];
+            int count = 0;
+            count = is.read(tmp);
+            byte[] res = new byte[count];
+
+            for(int i = 0; i < count; i++){
+                res[i] = tmp[i];
+            }
+            return res;
+        }
+        catch(IOException exc){
+            exc.printStackTrace();
+        }
+        return (new byte[1]);
+    }
 
 	public static String authentication(Scanner scanner, BufferedReader teclado, SendMessage sm){
 		try{
             //Ler do scanner nome e pass
             System.out.println("Username");
             String username = scanner.nextLine();
-            sm.sendServer(username);
+            sm.sendServer(username.getBytes());
 
             System.out.println("Password");
             String password = scanner.nextLine();
-            sm.sendServer(password);
+            sm.sendServer(password.getBytes());
 
             //Enviar para servidor a autenticação
             String response = teclado.readLine();
@@ -149,9 +178,9 @@ class Notifications implements Runnable{
         	String channel = subscriber.recvStr();
         	System.out.println("Acabou o tempo do produto " + channel);
         	if(importador)
-        		sm.sendServer("over," + channel + "," + username + ",");
+        		sm.sendServer(("over," + channel + "," + username + ",").getBytes());
         	else
-        		sm.sendServer("over," + channel + ",");
+        		sm.sendServer(("over," + channel + ",").getBytes());
         }
     }
 
@@ -161,23 +190,33 @@ class Notifications implements Runnable{
 }
 
 class SendMessage{
-	private PrintWriter out;
+	private OutputStream out;
 
 	public SendMessage(Socket cs){
 		try{
-			this.out = new PrintWriter(cs.getOutputStream(), true);
+			this.out = cs.getOutputStream();
 		}
 		catch(Exception e){
 			System.out.println("Deu exceção no SendMessage: " + e.getMessage());
 		}
 	}
 
-	public synchronized void sendServer(String send){
-		out.println(send);
+	public synchronized void sendServer(byte[] send){
+		try{
+			out.write(send);
+		}
+		catch(IOException e){
+			e.getMessage();
+		}
 	}
 
-	public synchronized void sendSynSeerver(String type, String send){
-		out.println(type);
-		out.println(send);
+	public synchronized void sendSynSeerver(byte[] type, byte[] send){
+		try{
+			out.write(type);
+			out.write(send);
+		}
+		catch(IOException e){
+			e.getMessage();
+		}
 	}
 }

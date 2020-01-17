@@ -5,7 +5,7 @@
 
 server(Port) ->
 		Room = spawn(fun()-> room(#{}, #{}) end),
-		{ok, LSock} = gen_tcp:listen(Port, [binary, {packet, line}, {reuseaddr, true}]),
+		{ok, LSock} = gen_tcp:listen(Port, [binary, {packet, 0}, {reuseaddr, true}, {active, true}]),
 		acceptor(LSock, Room).
 
 acceptor(LSock, Room) ->
