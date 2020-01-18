@@ -101,9 +101,15 @@ message AceptedNegotiation{
 
 //Cliente envia ao servidor a indicar o pedido
 message Dropwizard{
-	required string type = 1;
+	required DropType type = 1;
 	required string username = 2;
 	required string prod = 3;
+
+	enum DropType{
+		PROD = 0;
+		NEG  = 1;
+		IMP  = 2;
+	}
 }
 
 //Resposta do Dropwizard aos Produtos
