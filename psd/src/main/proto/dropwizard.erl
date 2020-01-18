@@ -8,19 +8,60 @@ dropwizard(Sock, Room) ->
 				dropwizard(Sock, Room);
 			{res, Data} ->
 				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
-				sendRes(Sock, Data),
-				io:format("Enviei tudo");
+				SendData = addProductionType(Data),
+				Send = {'ResponseDropProd', SendData},
+				gen_tcp:send(Sock, Send),
 			{tcp, _, Data} ->
 				%Fazer decode aqui
-				List = string: tokens(binary_to_list(Data), ","),
-				io:format("Recebi ~p ~n", [List]),
-				handleDropwizard(List, Room, Sock),
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				Message = protos:decode_msg(Data, 'Dropwizard'),
+				{'Dropwizard', Type, Username, Produto} = Message,
+				handleDropwizard(Type, Username, Produto, Sock, Room),
 				dropwizard(Sock, Room);
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				%List = string: tokens(binary_to_list(Data), ","),
+				%io:format("Recebi ~p ~n", [List]),
+				%handleDropwizard(List, Room, Sock),
+				%dropwizard(Sock, Room);
 			{tcp_closed, _} ->
 				Room ! {leave, self()};
 			{tcp_error, _, _} ->
 				Room ! {leave, self()}
 		end.
+
+
+handleDropwizard(Type, Username, Produto, Sock, Room) ->
+	if
+		Type =:= 'PROD' ->
+			handleDropwizardProd(Username, Produto, Sock, Room);
+		Type =:= 'NEG'  ->
+			handleDropwizardNeg(Username, Produto, Sock, Room);
+		Type =:= 'IMP'  ->
+			handleDropwizardImp(Username, Produto, Sock, Room)
+	end.
+
+handleDropwizardProd(Username, Produto, Sock, Room) ->
+	Room ! {produtores, Username, self()}.
+
+%***É provável que seja necessário acrescentar o Produto na mensagem
+handleDropwizardNeg(Username, Produto, Sock, Room) ->
+	Room ! {negotiations, Username, self()}.
+
+handleDropwizardImp(Username, Produto, Sock, Room) ->
+	Room ! {imp, Username, self()}.
+
+addProductionType([]) ->
+	[].
+
+addProductionType([H | T]) ->
+	Type = addType(H),
+	Res = addProductionType(T),
+	[Type | Res].
+
+addType({Product, Min, Max, Price, Date}) ->
+	{'Production', Product, Min, Max, Price, Date}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 handleDropwizard([H|T], Room, Sock) ->
 	io:format("O pedido foi ~p ~n", [H]),
