@@ -1,17 +1,21 @@
 -module(fabricante).
 -export([fabricante/2]).
 
+-include("protos.hrl").
+
 fabricante(Sock, Room) ->
 	%Em vez de ter dois receive ter apenas um para o login
 	receive
 		{tcp, _, Auth} ->
-			{_, Id, Password} = proto:decode_msg('Login', Auth),
+			Var = protos:decode_msg(Auth, 'Login'),
+			io:format("Recebi ~p~n", [Var]),
+			{_, Id, Password} = Var,
 			Room ! {fab, {Id, Password}, self()}
 	end,
 	receive
 		{aut, {Username, Result}} ->
 			Send = {'LoginConfirmation', Result, Username},
-			Enc = prot:encode_msg(Send),
+			Enc = protos:encode_msg(Send),
 			gen_tcp:send(Sock, Enc),
 			if
 				Result =:= "erro" ->

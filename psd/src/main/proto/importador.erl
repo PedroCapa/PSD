@@ -5,7 +5,7 @@ importador(Sock, Room) ->
 	%Em vez de ter dois receive ter apenas um para o login
 	receive
 		{tcp, _, Auth} ->
-			{_, Id, Password} = protos:decode_msg('Login', Auth),
+			{_, Id, Password} = protos:decode_msg(Auth, 'Login'),
 			Room ! {imp, {Id, Password}, self()}
 	end,
 	receive
