@@ -13,6 +13,26 @@ message Syn{
 	}
 }
 
+//Mensagem utilizada para indicar qual o tipo de operação o importador quer realizar a seguir
+message ImpSyn{
+	required OpType type = 1;
+
+	enum OpType{
+		OFFER = 0;
+		OVER  = 1;
+	}
+}
+
+//Mensagem utilizada para indicar qual o tipo de operação o importador quer realizar a seguir
+message FabSyn{
+	required OpType type = 1;
+
+	enum OpType{
+		PRODUCT = 0;
+		NEWS    = 1;
+	}
+}
+
 //So é usado para a autenticação
 message Login {
     required string name = 1;
@@ -36,7 +56,7 @@ message Production{
 
 //O importador coloca o negocio que pretende adicionar
 message Negotiation{
-	required string importer_offer = 1;
+	required string fabricante = 1;
 	required string product_name = 3;
 	required int32 price = 4;
 	required int32 amount = 5;
