@@ -3,19 +3,19 @@ package main.java.restinterface.representations;
 import com.fasterxml.jackson.annotation.*;
 
 public class Neg {
-    public final String client_offer;
-	public final String fab;
-	public final String prod;
+	public final String username;
 	public final int price;
 	public final int amount;
+	public final String data;
+	public final int state;
     @JsonCreator
-    public Neg(@JsonProperty("fab") String fab, @JsonProperty("client_offer") String client_offer, 
-    	@JsonProperty("prod") String prod, @JsonProperty("price") int price, @JsonProperty("amount") int amount) {
-      	this.fab = fab;
-		this.client_offer = client_offer;
-		this.prod = prod;
+    public Neg(@JsonProperty("username") String username, @JsonProperty("price") int price, 
+    	@JsonProperty("amount") int amount, @JsonProperty("data") String data, @JsonProperty("state") int state) {
+      	this.username = username;
 		this.price = price;
 		this.amount = amount;
+		this.data = data;
+		this.state = state;
     }
 }
 

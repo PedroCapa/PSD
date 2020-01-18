@@ -41,25 +41,92 @@ handleDropwizard(Type, Username, Produto, Sock, Room) ->
 	end.
 
 handleDropwizardProd(Username, Produto, Sock, Room) ->
-	Room ! {produtores, Username, self()}.
+	Room ! {produtores, Username, self()},
+	receive
+			{line, Data} ->
+				gen_tcp:send(Sock, binary_to_list(Data)),
+				dropwizard(Sock, Room);
+			{res, Data} ->
+				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
+				SendData = addProductionType(Data),
+				Send = {'ResponseDropProd', SendData},
+				gen_tcp:send(Sock, Send),
+			{tcp_closed, _} ->
+				Room ! {leave, self()};
+			{tcp_error, _, _} ->
+				Room ! {leave, self()}
+		end.
+
 
 %***É provável que seja necessário acrescentar o Produto na mensagem
 handleDropwizardNeg(Username, Produto, Sock, Room) ->
-	Room ! {negotiations, Username, self()}.
+	Room ! {negotiations, Username, self()},
+	receive
+			{line, Data} ->
+				gen_tcp:send(Sock, binary_to_list(Data)),
+				dropwizard(Sock, Room);
+			{res, Data} ->
+				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
+				SendData = addNegotiationType(Data),
+				Send = {'ResponseNegotiationDropwizard', SendData},
+				gen_tcp:send(Sock, Send),
+			{tcp_closed, _} ->
+				Room ! {leave, self()};
+			{tcp_error, _, _} ->
+				Room ! {leave, self()}
+		end.
 
 handleDropwizardImp(Username, Produto, Sock, Room) ->
-	Room ! {imp, Username, self()}.
+	Room ! {imp, Username, self()},
+	receive
+			{line, Data} ->
+				gen_tcp:send(Sock, binary_to_list(Data)),
+				dropwizard(Sock, Room);
+			{res, Data} ->
+				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
+				SendData = addImporterType(Data),
+				Send = {'ResponseImporterDropwizard', SendData},
+				gen_tcp:send(Sock, Send),
+			{tcp_closed, _} ->
+				Room ! {leave, self()};
+			{tcp_error, _, _} ->
+				Room ! {leave, self()}
+		end.
 
 addProductionType([]) ->
-	[].
+	[];
 
 addProductionType([H | T]) ->
-	Type = addType(H),
+	Type = addProdType(H),
 	Res = addProductionType(T),
 	[Type | Res].
 
-addType({Product, Min, Max, Price, Date}) ->
+addProdType({Product, Min, Max, Price, Date, _}) ->
 	{'Production', Product, Min, Max, Price, Date}.
+
+
+addImporterType([]) ->
+	[];
+
+addImporterType([H | T]) ->
+	Type = addType(H),
+	Res = addImporterType(T),
+	[Type | Res].
+
+addImpType({Username, Fabricante, Prod, Price, Quant, Time, State}) ->
+	{'ImporterDropwizard', Fabricante, Prod, Price, Quant, Time, State}.
+
+
+addNegotiationType([]) ->
+	[];
+
+addNegotiationType([H | T]) ->
+	Type = addNegType(H),
+	Res = addNegotiationType(T),
+	[Type | Res].
+
+addNegType({Username, Price, Amount, Data, State}) ->
+	{'NegotiationDropwizard', Username, Price, Amount, Data, State}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

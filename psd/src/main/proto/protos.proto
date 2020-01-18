@@ -112,7 +112,34 @@ message Dropwizard{
 	}
 }
 
+message NegotiationDropwizard{
+	required string username = 1;
+	required int32 price = 2;
+	required int32 amount = 3;
+	required string data = 4;
+	required int32 state = 5;
+}
+
+message ImporterDropwizard{
+	required string fabricante = 1;
+	required string product_name = 2;
+	required int32 price = 3;
+	required int32 amount = 4;
+	required string data = 5;
+	required int32 state = 6;
+}
+
+
+message ResponseImporterDropwizard{
+	repeated ImporterDropwizard importer = 1;
+}
+
+message ResponseNegotiationDropwizard{
+	repeated  NegotiationDropwizard negotiation = 1;
+
+}
+
 //Resposta do Dropwizard aos Produtos
-message ResponseDropProd{
+message ResponseProdutoDropwizard{
 	repeated Production products = 1;
 }

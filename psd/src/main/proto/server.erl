@@ -158,32 +158,20 @@ getImp(Importador, Map) ->
 	if
 		Exist =:= true ->
 			{ok, {_, Negotiations}} = maps:find(Importador, Map),
-			getNegotiationsText(Negotiations);
+			Negotiations.
 		true ->
-			"\n"
+			[]
 	end.
-
-getNegotiationsText([]) -> "\n";
-getNegotiationsText([{Username, Fabricante, Prod, Price, Quant, Data, Status}|T]) ->
-	Rest = getNegotiationsText(T),
-	Username ++ "," ++ Fabricante ++ "," ++ Prod ++ "," ++ lists:flatten(io_lib:format("~p", [Price])) ++ "," ++ 
-	lists:flatten(io_lib:format("~p", [Quant])) ++ "," ++ Status ++ "," ++ Data ++ "," ++ lists:flatten(io_lib:format("~p", [Status])) ++ ",\n" ++ Rest.
 
 getProdutosFabricante(Fab, Map) ->
 	Exist = maps:is_key(Fab, Map),
 	if
 		Exist =:= true ->
 			{ok, {_, Prod}} = maps:find(Fab, Map),
-			getProdutosText(Prod);
+			Prod.
 		true ->
-			"\n"
+			[]
 	end.
-
-getProdutosText([]) -> "";
-getProdutosText([{Username, Min, Max, Price, Time, State, _} | T]) ->
-	Rest = getProdutosText(T),
-	Username ++ "," ++ lists:flatten(io_lib:format("~p", [Min])) ++ "," ++ lists:flatten(io_lib:format("~p", [Max])) ++ "," ++ 
-	lists:flatten(io_lib:format("~p", [Price])) ++ "," ++ Time ++ "," ++ lists:flatten(io_lib:format("~p", [State])) ++ ",\n" ++ Rest.
 
 %Mudar esta funcão pq vai receber uma lista de produtos e não uma lista de negocios
 %Não mudar para ja porque talvez possa ser utilizado um MAP e não é preciso correr listas
@@ -194,18 +182,10 @@ getNegotiationsProduct(Fab, Produto, Map) ->
 		Exist =:= true ->
 			{ok, {_, Produtos}} = maps:find(Fab, Map),
 			Prod = getProd(Produtos, Produto),
-			Neg = getNeg(Prod),
-			getNegotiationsProductText(Neg);
+			getNeg(Prod).
 		true ->
-			"\n"
+			[]
 	end.
-
-%Vai buscar os negocios de um Produto
-getNegotiationsProductText([]) -> "\n";
-getNegotiationsProductText([{Username, Price, Ammount, Data, Status}|T]) ->
-	Rest = getNegotiationsProductText(T),
-	Username ++ "," ++ lists:flatten(io_lib:format("~p", [Price])) ++ "," ++ lists:flatten(io_lib:format("~p", [Ammount])) ++ 
-	"," ++ Data ++ "," ++ lists:flatten(io_lib:format("~p", [Status])) ++ ",\n" ++ Rest.
 
 getAcceptedOffers(Produto) ->
 	Neg = getNeg(Produto),

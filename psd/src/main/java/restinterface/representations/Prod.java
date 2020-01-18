@@ -3,20 +3,19 @@ package main.java.restinterface.representations;
 import com.fasterxml.jackson.annotation.*;
 
 public class Prod {
-    public final String product_name;
-	public final String negotiator_name;
+    public final String name;
 	public final int min;
 	public final int max;
 	public final int price;
+	public final String data;
     @JsonCreator
-    public Prod(@JsonProperty("content") String product_name, @JsonProperty("description") String negotiator_name,
-    			@JsonProperty("content") int min, @JsonProperty("description") int max,
-    			@JsonProperty("content") int price) {
-      	this.product_name = product_name;
-		this.negotiator_name = negotiator_name;
+    public Prod(@JsonProperty("name") String name, @JsonProperty("min") int min, @JsonProperty("max") int max,
+    			@JsonProperty("price") int price, @JsonProperty("data") String data) {
+      	this.name = name;
 		this.min = min;
 		this.max = max;
 		this.price = price;
+		this.data = data;
     }
 }
 

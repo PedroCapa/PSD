@@ -5,118 +5,133 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-	//Copiar as coisas do askServerProduto para o askServerNegocio pq ainda n verifiquei os negocios
-	//Em vez de estar a enviar desta forma colocar em binario 
-	//Quando receber tranformar em bytes para o Objeto
+import main.java.terminal.ReadMessage;
+import main.proto.Protos.Syn;
+import main.proto.Protos.Dropwizard;
+import main.proto.Protos.ResponseDropProd;
+import main.proto.Protos.Production;
+import main.proto.Protos.ResponseImporterDropwizard;
+import main.proto.Protos.ImporterDropwizard;
+import main.proto.Protos.ResponseNegotiationDropwizard;
+import main.proto.Protos.NegotiationDropwizard;
 
 public class AskServer{
-	public List<Produto> askServerProduto(String name, String request) 
+	public List<Production> askServerProduto(String name) 
 	throws IOException, InterruptedException, SocketException{
 
 		Socket cs = new Socket("127.0.0.1", 9999);
 
-		PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
+		OutputStream out = cs.getOutputStream();
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
-		BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		ReadMessage rm = new ReadMessage(cs);
 
-		//Criar aqui a estrutura que será enviada
-		out.println("drop");
-		out.println(request + "," + name + ",");
+		//Envia o Syn
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.DROP).
+						build();
+		
+		byte[] send = syn.toByteArray();
+		out.write(send);
+		
+		//Envia o pedido
+		Dropwizard drop = Dropwizard.newBuilder().
+							setType(Dropwizard.DropType.PROD).
+							setUsername(name).
+							setProd("PSD").
+							build();
+		
+		byte[] req = drop.toByteArray();
+		out.write(req);
 
-		List<String> elementos = new ArrayList<>();
-
-		String eco = "--";
-		try{
-			while(!eco.equals("") && !eco.equals("\n")){
-				eco = in.readLine();
-				if(!eco.equals("") && !eco.equals("\n")){
-					elementos.add(eco);
-					System.out.println(!eco.equals("\n") + " Adicionei um " + eco);
-				}
-				System.out.println(eco);
-			}
-			System.out.println("Fechei com tamanho" + elementos.size());
-
-			List<Produto> lst = handleRequestProduto(name, elementos);
-
-			System.out.println("Shutdown Output" + lst.size());
-
-			cs.shutdownOutput();
-			teclado.close();
-			out.close();
-
-			return lst;
-		}
-		catch(Exception e){
-			System.out.println("Deu merda " + e.getMessage());
-		}
-
-		List<Produto> lst = handleRequestProduto(name, elementos);
-
-		System.out.println("Shutdown Output" + lst.size());
-
-		cs.shutdownOutput();
-		teclado.close();
-		out.close();
-
-		return lst;
-	}
-
-	public List<Produto> handleRequestProduto(String importador, List<String> elementos){
-		List<Produto> lst = new ArrayList<>();
-		for(String str: elementos){
-			String[] s = str.split(",");
-			System.out.println("Tratei de um produto" + str);
-			Produto p = new Produto(s[0], s[1], Integer.parseInt(s[2]), Integer.parseInt(s[3]), Integer.parseInt(s[4]));
-			lst.add(p);
-		}
-		return lst;
-	}
-
-	public List<Negocio> askServerNegocio(String name, String request) 
-	throws IOException, InterruptedException, SocketException{
-
-		Socket cs = new Socket("127.0.0.1", 9999);
-
-		PrintWriter out = new PrintWriter(cs.getOutputStream(), true);
-		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
-		BufferedReader in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-
-		out.println("drop");
-		out.println("request" + "," + "name");
-
-		List<String> elementos = new ArrayList<>();
-
-		String eco = "\n";
-		try{
-			while(!eco.equals("")){
-				eco = in.readLine();
-				if(eco != null)
-					elementos.add(eco);
-			}
-			System.out.println("Fechei");
-		}
-		catch(Exception e){
-			System.out.println();
-		}
-
-		List<Negocio> lst = handleRequestNegocio(name, elementos);
+		//Recebe o pedido
+		byte[] receive = rm.receiveMessage();
+		ResponseDropProd rdp = ResponseDropProd.parseFrom(receive);
 
 		System.out.println("Shutdown Output");
 
 		cs.shutdownOutput();
 		teclado.close();
-		out.close();
-		return lst;
+
+		return rdp.getProductsList();
+
 	}
 
-	public List<Negocio> handleRequestNegocio(String importador, List<String> elementos){
-		List<Negocio> lst = new ArrayList<>();
-		for(String str: elementos){
-			String[] s = str.split(",");
-			Negocio p = new Negocio(s[0], s[1], s[2], Integer.parseInt(s[3]), Integer.parseInt(s[4]));
-			lst.add(p);
-		}
-		return lst;
+	public List<NegotiationDropwizard> askServerNegocio(String name, String prod) 
+	throws IOException, InterruptedException, SocketException{
+
+		Socket cs = new Socket("127.0.0.1", 9999);
+
+		OutputStream out = cs.getOutputStream();
+		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+		ReadMessage rm = new ReadMessage(cs);
+
+		//Envia o Syn
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.DROP).
+						build();
+		
+		byte[] send = syn.toByteArray();
+		out.write(send);
+		
+		//Envia o pedido
+		Dropwizard drop = Dropwizard.newBuilder().
+							setType(Dropwizard.DropType.NEG).
+							setUsername(name).
+							setProd(prod).
+							build();
+		
+		byte[] req = drop.toByteArray();
+		out.write(req);
+
+		//Recebe o pedido
+		byte[] receive = rm.receiveMessage();
+		ResponseNegotiationDropwizard rdp = ResponseNegotiationDropwizard.parseFrom(receive);
+
+		System.out.println("Shutdown Output");
+
+		cs.shutdownOutput();
+		teclado.close();
+
+		return rdp.getNegotiationList();
+	}
+
+
+	public List<ImporterDropwizard> askServerImportador(String name) 
+	throws IOException, InterruptedException, SocketException{
+
+		Socket cs = new Socket("127.0.0.1", 9999);
+
+		OutputStream out = cs.getOutputStream();
+		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
+		ReadMessage rm = new ReadMessage(cs);
+
+		//Envia o Syn
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.DROP).
+						build();
+		
+		byte[] send = syn.toByteArray();
+		out.write(send);
+		
+		//Envia o pedido
+		Dropwizard drop = Dropwizard.newBuilder().
+							setType(Dropwizard.DropType.IMP).
+							setUsername(name).
+							setProd("").
+							build();
+		
+		byte[] req = drop.toByteArray();
+		out.write(req);
+
+		//Recebe o pedido
+		byte[] receive = rm.receiveMessage();
+		ResponseImporterDropwizard rdp = ResponseImporterDropwizard.parseFrom(receive);
+
+		System.out.println("Shutdown Output");
+
+		cs.shutdownOutput();
+		teclado.close();
+
+		return rdp.getImporterList();
 	}
 }

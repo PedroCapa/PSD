@@ -2,6 +2,7 @@ package main.java.restinterface.resources;
 
 import main.java.restinterface.representations.Prod;
 import main.java.restinterface.representations.Neg;
+import main.java.restinterface.representations.Imp;
 
 import com.google.common.base.Optional;
 
@@ -20,21 +21,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import main.proto.Protos.AceptedNegotiation;
+import main.proto.Protos.ResponseDropProd;
+import main.proto.Protos.Production;
+import main.proto.Protos.ResponseImporterDropwizard;
+import main.proto.Protos.ImporterDropwizard;
+import main.proto.Protos.ResponseNegotiationDropwizard;
+import main.proto.Protos.NegotiationDropwizard;
+
 @Path("/catalogos")
 @Produces(MediaType.APPLICATION_JSON)
 public class Catalogos{
 
     @GET
     @Path("/importador/{name}")
-    public List<Neg> getImportador(@PathParam("name") String name){
+    public List<Imp> getImportador(@PathParam("name") String name){
         System.out.println("Pediu um pedido de um importador");
-        List<Neg> n = new ArrayList<>();
+        List<Imp> n = new ArrayList<>();
         try{
             AskServer ask = new AskServer();
-            List<Negocio> prod = ask.askServerNegocio(name, "imp");        
+            List<ImporterDropwizard> prod = ask.askServerImportador(name);        
             
-            for(Negocio neg: prod){
-                n.add(new Neg(neg.getFab(), neg.getClient_offer(), neg.getProd(), neg.getPrice(), neg.getAmount()));
+            for(ImporterDropwizard neg: prod){
+                n.add(new Imp(neg.getFabricante(), neg.getProductName(), neg.getPrice(), neg.getAmount(), neg.getData(), neg.getState()));
             }
         }
         catch(Exception e){
@@ -52,13 +61,12 @@ public class Catalogos{
         List<Prod> p = new ArrayList<>();
         try{
             AskServer ask = new AskServer();
-            List<Produto> prod = ask.askServerProduto(name, "produtores");        
+            List<Production> prod = ask.askServerProduto(name);        
             
             System.out.println("Recebi tudo");
 
-            for(Produto pro: prod){
-                p.add(new Prod(pro.getProduct_name(), pro.getNegotiator_name(), pro.getMin(), 
-                                                      pro.getMax(), pro.getPrice()));
+            for(Production pro: prod){
+                p.add(new Prod(pro.getProductName(), pro.getMin(), pro.getMax(), pro.getPrice(), pro.getData()));
             }
         }
         catch(Exception e){
@@ -70,16 +78,16 @@ public class Catalogos{
     }
 
     @GET
-    @Path("/negocio/{name}")
-    public List<Neg> getNegocio(@PathParam("name") String name){
+    @Path("/negocio/{fabricante}/{produto}")
+    public List<Neg> getNegocio(@PathParam("fabricante") String fabricante, @PathParam("produto") String produto){
         System.out.println("Pediu um pedido de um negocio");
         List<Neg> n = new ArrayList<>();
         try{
             AskServer ask = new AskServer();
-            List<Negocio> prod = ask.askServerNegocio(name, "negotiations");        
+            List<NegotiationDropwizard> prod = ask.askServerNegocio(fabricante, produto);        
             
-            for(Negocio neg: prod){
-                n.add(new Neg(neg.getFab(), neg.getClient_offer(), neg.getProd(), neg.getPrice(), neg.getAmount()));
+            for(NegotiationDropwizard neg: prod){
+                n.add(new Neg(neg.getUsername(), neg.getPrice(), neg.getAmount(), neg.getData(), neg.getState()));
             }
         }
         catch(Exception e){
