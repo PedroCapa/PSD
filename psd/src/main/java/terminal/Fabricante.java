@@ -14,6 +14,9 @@ import main.proto.Protos.Login;
 import main.proto.Protos.LoginConfirmation;
 import main.proto.Protos.Production;
 import main.proto.Protos.Notification;
+import main.proto.Protos.FabSyn;
+import main.proto.Protos.BusinessConfirmation;
+import main.proto.Protos.ConfirmNegotiations;
 
 public class Fabricante{
 
@@ -24,11 +27,7 @@ public class Fabricante{
 		ReadMessage rm = new ReadMessage(cs);
 		Scanner scanner = new Scanner(System.in);
 
-		Syn syn = Syn.newBuilder().
-						setType(Syn.Type.FAB).
-						build();
-		byte[] bsyn = syn.toByteArray();
-		sm.sendServer(bsyn);
+		sendSyn(sm);
 		
 		String user = authentication(scanner, rm, sm);
 
@@ -47,21 +46,7 @@ public class Fabricante{
 			String[] arrOfStr = current.split(",");
 
 			if(arrOfStr.length >= 5 && isNumeric(arrOfStr[1]) && isNumeric(arrOfStr[2]) && isNumeric(arrOfStr[3])){
-				int min = Integer.parseInt(arrOfStr[1]);	
-				int max = Integer.parseInt(arrOfStr[2]);	
-				int price = Integer.parseInt(arrOfStr[3]);	
-				Production product = Production.newBuilder().
-												setProductName(arrOfStr[0]).
-												setMin(min).
-												setMax(max).
-												setPrice(price).
-												setData(arrOfStr[4]).
-												build();
-
-				//Talvez ter o Syn
-				//Colocar o Syn em bytes
-				byte[] prod = product.toByteArray();
-				sm.sendServer(prod);//Enviar duas mensagens em vez de uma
+				sendProduct(sm, arrOfStr);
 			}
 		}
 
@@ -80,6 +65,34 @@ public class Fabricante{
 	        return false;
 	    }
 	    return true;
+	}
+
+	public static void sendSyn(SendMessage sm){
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.FAB).
+						build();
+		byte[] bsyn = syn.toByteArray();
+		sm.sendServer(bsyn);
+	}
+
+	public static void sendProduct(SendMessage sm, String[] arrOfStr){
+		int min = Integer.parseInt(arrOfStr[1]);	
+		int max = Integer.parseInt(arrOfStr[2]);	
+		int price = Integer.parseInt(arrOfStr[3]);	
+		Production product = Production.newBuilder().
+										setProductName(arrOfStr[0]).
+										setMin(min).
+										setMax(max).
+										setPrice(price).
+										setData(arrOfStr[4]).
+										build();
+
+		FabSyn fabsyn = FabSyn.newBuilder().
+							setType(FabSyn.OpType.PRODUCT).
+							build();
+		byte[] fs = fabsyn.toByteArray();
+		byte[] prod = product.toByteArray();
+		sm.sendServer(fs, prod);
 	}
 
 	public static String authentication(Scanner scanner, ReadMessage rm, SendMessage sm){
@@ -109,16 +122,10 @@ public class Fabricante{
                 System.out.println("Palavra passe incorreta");
                 return authentication(scanner, rm, sm);
             }
-            else if(lc.getResponse()){
+            else{
                 System.out.println("Entrou com sucesso");
             	return lc.getUsername();
             }
-            /*
-            else{
-                System.out.println("Sessão iniciada com sucesso");
-            	return ;
-            }
-            */
         }
         catch(IOException exc){
         	System.out.println("Deu asneira");
@@ -148,22 +155,23 @@ class LeitorFabricante implements Runnable{
 			this.socket.connect("tcp://localhost:5555");
 			while(!this.cs.isClosed()){
 				byte[] res = rm.receiveMessage();
-		        Syn syn = Syn.parseFrom(res);
-		        /*
-				if(syn.get){
-					//No caso de ser um finish receber a lista de Negocios
-					//----Passar de byte[] para Lista de Negocios
-					System.out.println(); //Imprimir a lista de negocios
+		        FabSyn syn = FabSyn.parseFrom(res);
+		        
+				if(syn.getType().equals("OVER")){
+					byte[] negotiation = rm.receiveMessage();
+					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
+					System.out.println(nc);
 				}
-				else if(syn.get){
-					//No caso de ser apenas a resposta a um Produto se foi confirmada
-					//byte[] b = rm.receiveMessage();
-					//----Transformar os bytes numa estrutura
-					//this.notifications.subscribe(Estrutura.getQQ() + "," + Estrutura.getQQ());
-					//this.socket.send(Estrutura.getQQ() + "," + Estrutura.getQQ());
-					byte[] b = socket.recv();
+				else if(syn.getType().equals("PRODUCT")){
+					byte[] bus = rm.receiveMessage();
+					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
+					if(bc.getResponse()){
+						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
+						this.socket.send(bc.getFabricante() + "," + bc.getProduto());
+						byte[] b = socket.recv();
+					}
 				}
-				*/
+				
 			}
 			System.out.println("Fechei");
 		}

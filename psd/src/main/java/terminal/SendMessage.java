@@ -25,9 +25,9 @@ public class SendMessage{
 		}
 	}
 
-	public synchronized void sendSynSeerver(byte[] type, byte[] send){
+	public synchronized void sendServer(byte[] syn, byte[] send){
 		try{
-			out.write(type);
+			out.write(syn);
 			out.write(send);
 		}
 		catch(IOException e){

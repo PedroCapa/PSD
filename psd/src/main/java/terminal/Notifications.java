@@ -9,6 +9,8 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 
 import main.proto.Protos.Notification;
+import main.proto.Protos.FabSyn;
+import main.proto.Protos.ImpSyn;
 
 public class Notifications implements Runnable{
 
@@ -35,24 +37,30 @@ public class Notifications implements Runnable{
         	System.out.println("Acabou o tempo do produto " + channel);
         	String[] arrOfStr = channel.split(",");
         	if(importador){
-				//-----Criar o Syn
+				ImpSyn impsyn = ImpSyn.newBuilder().
+                                       setType(ImpSyn.OpType.OVER).
+                                       build();
 				Notification notification = Notification.newBuilder().
 														setFabricante(arrOfStr[0]).
 														setProduto(arrOfStr[1]).
 														setUsername(this.username).
 														build();
+                byte[] syn = impsyn.toByteArray();
         		byte[] bytes = notification.toByteArray();
-        		sm.sendServer(bytes);//----Enviar duas mensagens
+        		sm.sendServer(syn, bytes);
         	}
         	else{
-				//-----Criar o Syn
+				FabSyn fabsyn = FabSyn.newBuilder().
+                                       setType(FabSyn.OpType.OVER).
+                                       build();
         		Notification notification = Notification.newBuilder().
 														setFabricante(arrOfStr[0]).
 														setProduto(arrOfStr[1]).
 														setUsername("").
 														build();
         		byte[] bytes = notification.toByteArray();
-        		sm.sendServer(bytes);//----Enviar duas mensagens
+                byte[] syn = fabsyn.toByteArray();
+        		sm.sendServer(syn, bytes);
         	}
         }
     }

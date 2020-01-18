@@ -10,6 +10,9 @@ import main.proto.Protos.Syn;
 import main.proto.Protos.Login;
 import main.proto.Protos.LoginConfirmation;
 import main.proto.Protos.Negotiation;
+import main.proto.Protos.ImpSyn;
+import main.proto.Protos.ConfirmNegotiations;
+import main.proto.Protos.BusinessConfirmation;
 
 public class Importador{
 
@@ -20,11 +23,7 @@ public class Importador{
 		ReadMessage rm = new ReadMessage(cs);
 		Scanner scanner = new Scanner(System.in);
 
-		Syn syn = Syn.newBuilder().
-						setType(Syn.Type.IMP).
-						build();
-		byte[] bsyn = syn.toByteArray();
-		sm.sendServer(bsyn);
+		sendSyn(sm);
 		
 		String user = authentication(scanner, rm, sm);
 
@@ -43,19 +42,7 @@ public class Importador{
 			String[] arrOfStr = current.split(",");
 			
 			if(arrOfStr.length >= 5 && isNumeric(arrOfStr[2]) && isNumeric(arrOfStr[3])){
-				int price = Integer.parseInt(arrOfStr[2]);	
-				int amount = Integer.parseInt(arrOfStr[3]);	
-				Negotiation neg = Negotiation.newBuilder().
-												setImporterOffer(arrOfStr[0]).
-												setProductName(arrOfStr[1]).
-												setPrice(price).
-												setAmount(amount).
-												setData(LocalDate.now().toString()).
-												build();
-
-			//Criar o Syn e converter para Bytes
-			byte[] c = neg.toByteArray();
-			sm.sendServer(c);//Enviar duas mensagens
+				sendNegotiation(sm, arrOfStr);
 			}
 		}
 		System.out.println("Shutdown Output");
@@ -74,6 +61,34 @@ public class Importador{
 	        return false;
 	    }
 	    return true;
+	}
+
+	public static void sendSyn(SendMessage sm){
+		Syn syn = Syn.newBuilder().
+						setType(Syn.Type.IMP).
+						build();
+		byte[] bsyn = syn.toByteArray();
+		sm.sendServer(bsyn);
+	}
+
+	public static void sendNegotiation(SendMessage sm, String[] arrOfStr){
+		int price = Integer.parseInt(arrOfStr[2]);
+		int amount = Integer.parseInt(arrOfStr[3]);
+		Negotiation neg = Negotiation.newBuilder().
+										setFabricante(arrOfStr[0]).
+										setProductName(arrOfStr[1]).
+										setPrice(price).
+										setAmount(amount).
+										setData(LocalDate.now().toString()).
+										build();
+
+		ImpSyn impsyn = ImpSyn.newBuilder().
+							  setType(ImpSyn.OpType.OFFER).
+							  build();
+
+		byte[] ims = impsyn.toByteArray();
+		byte[] c = neg.toByteArray();
+		sm.sendServer(ims, c);
 	}
 
 	public static String authentication(Scanner scanner, ReadMessage rm, SendMessage sm){
@@ -136,22 +151,23 @@ class LeitorImportador implements Runnable{
 			ReadMessage rm = new ReadMessage(cs);
 			while(!this.cs.isClosed()){
 				byte[] res = rm.receiveMessage();
-				Syn syn = Syn.parseFrom(res);
-				/*
-				if(syn.get){
-					//No caso de enviar uma lista de Negocios
-					//Ir buscar os bytes
-					//Converter para Lista de Negocios
-					//System.out.println(); //Da lista de Mensagens
+				ImpSyn syn = ImpSyn.parseFrom(res);
+
+				if(syn.getType().equals("OVER")){
+					byte[] negotiation = rm.receiveMessage();
+					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
+					System.out.println(nc);
+					System.out.println();
 				}
 
-				else if(syn.getQQ){
-					//No caso de ser uma resposta ao negocio ou seja se foi valido
-					//Caso seja valido subscrever
-					//this.notifications.subscribe(this.QQ + "," + this.QQ);
-					System.out.println("Recebi coisas e foram aceites");
+				else if(syn.getType().equals("OFFER")){
+					byte[] bus = rm.receiveMessage();
+					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
+					if(bc.getResponse()){
+						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
+						System.out.println("Recebi coisas e foram aceites");
+					}
 				}
-				*/
 			}
 			System.out.println("Fechei");
 		}
