@@ -4,7 +4,7 @@ import java.net.Socket;
 import java.io.InputStream;
 import java.io.IOException;
 
-class ReadMessage{
+public class ReadMessage{
 	private InputStream is;
 
 	public ReadMessage(Socket cs){
@@ -19,6 +19,7 @@ class ReadMessage{
 	public byte[] receiveMessage(){
 		try{
             byte[] res = receive(is);
+            return res;
         }
         catch(IOException exc){
             exc.printStackTrace();

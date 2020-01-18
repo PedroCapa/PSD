@@ -7,9 +7,7 @@ fabricante(Sock, Room) ->
 	%Em vez de ter dois receive ter apenas um para o login
 	receive
 		{tcp, _, Auth} ->
-			Var = protos:decode_msg(Auth, 'Login'),
-			io:format("Recebi ~p~n", [Var]),
-			{_, Id, Password} = Var,
+			{_, Id, Password} = protos:decode_msg(Auth, 'Login'),
 			Room ! {fab, {Id, Password}, self()}
 	end,
 	receive
@@ -18,7 +16,7 @@ fabricante(Sock, Room) ->
 			Enc = protos:encode_msg(Send),
 			gen_tcp:send(Sock, Enc),
 			if
-				Result =:= "erro" ->
+				Result =:= false ->
 					io:format("Enviei: ~p~n", [Result]),
 					fabricante(Sock, Room);
 				true ->
@@ -43,14 +41,17 @@ handleFabricante(Sock, Room, Username) ->
 			gen_tcp:send(Sock, Send),
 			io:format("Os dados que recebi foram: ~p~n", [Data]),
 			handleFabricante(Sock, Room, Username);
-		{deal, Data} ->
+		{deal, Data, Produto} ->
 			%Recebe a resposta do Room por causa do ZeroMQ aqui so vai ser realizado encode e enviado um de cada vez
 			Syn = {'FabSyn', 'OVER'},
 			SendSyn = protos:encode_msg(Syn),
 			gen_tcp:send(Sock, SendSyn),
-			Data = {'ConfirmNegotiations', Data},
-			Send = protos:encode_msg(Data),
-			gen_tcp:send(Sock, Send),
+			io:format("Vou enviar ~p~n", [Data]),
+			List = addType(Data, Produto),
+			Send = {'ConfirmNegotiations', List},
+			io:format("Send:~p~n", [Send]),
+			End = protos:encode_msg(Send),
+			gen_tcp:send(Sock, End),
 			handleFabricante(Sock, Room, Username);
 		{tcp, _, Data} ->
 			%Aqui vai ser enviado o Syn para saber qual era a função usada
@@ -86,8 +87,8 @@ handleRequestProduct(Sock, Room, Username) ->
 		{tcp, _, Data} ->
 			Message = protos:decode_msg(Data, 'Production'),
 			io:format("~p~n", [Message]),
-			{'Production', ProdName, Min, Max, Price, Data} = Message,
-			Room ! {new, Username, ProdName, Min, Max, Price, Data, self()};
+			{'Production', ProdName, Min, Max, Price, Time} = Message,
+			Room ! {new, Username, ProdName, Min, Max, Price, Time, self()};
 		{tcp_closed} ->
 			Room ! {leave, self()};
 		{tcp_error, _, _} ->
@@ -107,6 +108,11 @@ handleRequestOver(Sock, Room) ->
 			Room ! {leave, self()}
 	end.
 
+addType([], _) ->
+	[];
+addType([{A, B, C, D, E}|T], Produto) ->
+	Rest = addType(T, Produto),
+	[{'AceptedNegotiation' , A, Produto, B, C, D, E} | Rest].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %handleRequest([H | T], Username, Room, Sock) ->

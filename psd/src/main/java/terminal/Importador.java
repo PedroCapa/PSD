@@ -41,7 +41,7 @@ public class Importador{
 			current = scanner.nextLine();
 			String[] arrOfStr = current.split(",");
 			
-			if(arrOfStr.length >= 5 && isNumeric(arrOfStr[2]) && isNumeric(arrOfStr[3])){
+			if(arrOfStr.length >= 4 && isNumeric(arrOfStr[2]) && isNumeric(arrOfStr[3])){
 				sendNegotiation(sm, arrOfStr);
 			}
 		}
@@ -74,6 +74,7 @@ public class Importador{
 	public static void sendNegotiation(SendMessage sm, String[] arrOfStr){
 		int price = Integer.parseInt(arrOfStr[2]);
 		int amount = Integer.parseInt(arrOfStr[3]);
+
 		Negotiation neg = Negotiation.newBuilder().
 										setFabricante(arrOfStr[0]).
 										setProductName(arrOfStr[1]).
@@ -111,22 +112,15 @@ public class Importador{
 			//Receber aqui
 	        byte[] res = rm.receiveMessage();
 	        LoginConfirmation lc = LoginConfirmation.parseFrom(res);
-	        System.out.println(lc);
 
             if(!lc.getResponse()){
                 System.out.println("Palavra passe incorreta");
                 return authentication(scanner, rm, sm);
             }
-            else if(lc.getResponse()){
+            else{
                 System.out.println("Entrou com sucesso");
             	return lc.getUsername();
             }
-            /*
-            else{
-                System.out.println("Sessão iniciada com sucesso");
-            	return ;
-            }
-            */
         }
         catch(IOException exc){
         	System.out.println("Deu asneira");
@@ -153,19 +147,22 @@ class LeitorImportador implements Runnable{
 				byte[] res = rm.receiveMessage();
 				ImpSyn syn = ImpSyn.parseFrom(res);
 
-				if(syn.getType().equals("OVER")){
+				if(syn.getType().equals(ImpSyn.OpType.OVER)){
 					byte[] negotiation = rm.receiveMessage();
 					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
 					System.out.println(nc);
 					System.out.println();
 				}
 
-				else if(syn.getType().equals("OFFER")){
+				else if(syn.getType().equals(ImpSyn.OpType.OFFER)){
 					byte[] bus = rm.receiveMessage();
 					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
 					if(bc.getResponse()){
 						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
-						System.out.println("Recebi coisas e foram aceites");
+						System.out.println("O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() + " foi adicionado com sucesso");
+					}
+					else{
+						System.out.println("O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() + " não foi adicionado");
 					}
 				}
 			}

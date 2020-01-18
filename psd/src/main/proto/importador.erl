@@ -1,6 +1,8 @@
 -module(importador).
 -export([importador/2]).
 
+-include("protos.hrl").
+
 importador(Sock, Room) ->
 	%Em vez de ter dois receive ter apenas um para o login
 	receive
@@ -14,7 +16,7 @@ importador(Sock, Room) ->
 			Enc = protos:encode_msg(Send),
 			gen_tcp:send(Sock, Enc),
 			if
-				Result =:= "erro" ->
+				Result =:= false ->
 					io:format("Enviei: ~p~n", [Result]),
 					importador(Sock, Room);
 				true ->
@@ -38,14 +40,17 @@ handleImportador(Sock, Room, Username) ->
 			Send = protos:encode_msg(Data),
 			gen_tcp:send(Sock, Send),
 			handleImportador(Sock, Room, Username);
-		{deal, Data} -> 			
+		{deal, Data, Produto} -> 			
 			%Recebe a resposta do Room por causa do ZeroMQ aqui so vai ser realizado encode e enviado um de cada vez
 			Syn = {'ImpSyn', 'OVER'},
 			SendSyn = protos:encode_msg(Syn),
 			gen_tcp:send(Sock, SendSyn),
-			Data = {'ConfirmNegotiations', Data},
-			Send = protos:encode_msg(Data),
-			gen_tcp:send(Sock, Send),
+			io:format("Vou enviar ~p~n", [Data]),
+			List = addType(Data, Produto),
+			Send = {'ConfirmNegotiations', List},
+			io:format("Send:~p~n", [Send]),
+			Enc = protos:encode_msg(Send),
+			gen_tcp:send(Sock, Enc),
 			handleImportador(Sock, Room, Username);
 		{tcp, _, Data} ->
 			%Talvez seja necessário substituir pela receção de um syn
@@ -78,8 +83,9 @@ handleRequestOffer(Sock, Room, Username) ->
 	receive
 		{tcp, _, Data} ->
 			Message = protos:decode_msg(Data, 'Negotiation'),
-			{'Negotiation', Fabricante, Product, Price, Amount, Data} = Message,
-			Room ! {neg, Username, Fabricante, Product, Amount, Price, Data, self()};
+			{'Negotiation', Fabricante, Product, Price, Amount, Time} = Message,
+			io:format("Message: ~p~n", [Message]),
+			Room ! {neg, Username, Fabricante, Product, Amount, Price, Time, self()};
 		{tcp_closed} ->
 			Room ! {leave, self()};
 		{tcp_error, _, _} ->
@@ -98,10 +104,15 @@ handleRequestOver(Sock, Room, Username) ->
 			Room ! {leave, self()}
 	end.
 
+addType([],_) ->
+	[];
+addType([{A, B, C, D, E}|T], Produto) ->
+	Rest = addType(T, Produto),
+	[{'AceptedNegotiation' , A, Produto, B, C, D, E} | Rest].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %handleRequest([H | T], Username, Room, Sock) ->
-%	%Receber o pacote com os dados
+%	%Receber o pacohandleRequestOverte com os dados
 %	%Decode Aqui e entrar no if de acordo com a variavel obtida anteriormente
 %	if 
 %		H =:= "offer"->

@@ -157,18 +157,24 @@ class LeitorFabricante implements Runnable{
 				byte[] res = rm.receiveMessage();
 		        FabSyn syn = FabSyn.parseFrom(res);
 		        
-				if(syn.getType().equals("OVER")){
+		        System.out.println("Recebi o syn");
+
+				if(syn.getType().equals(FabSyn.OpType.OVER)){
 					byte[] negotiation = rm.receiveMessage();
 					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
 					System.out.println(nc);
 				}
-				else if(syn.getType().equals("PRODUCT")){
+				else if(syn.getType().equals(FabSyn.OpType.PRODUCT)){
 					byte[] bus = rm.receiveMessage();
 					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
 					if(bc.getResponse()){
+						System.out.println("O produto " + bc.getProduto() + " foi adicionado com sucesso");
 						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
 						this.socket.send(bc.getFabricante() + "," + bc.getProduto());
 						byte[] b = socket.recv();
+					}
+					else{
+						System.out.println("O produto " + bc.getProduto() + " não foi adicionado com sucesso");
 					}
 				}
 				

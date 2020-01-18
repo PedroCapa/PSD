@@ -57,10 +57,10 @@ message Production{
 //O importador coloca o negocio que pretende adicionar
 message Negotiation{
 	required string fabricante = 1;
-	required string product_name = 3;
-	required int32 price = 4;
-	required int32 amount = 5;
-	required string data = 6;
+	required string product_name = 2;
+	required int32 price = 3;
+	required int32 amount = 4;
+	required string data = 5;
 }
 
 //O server envia a indicar qual é o resultado da inserção do produto/negocio
@@ -87,11 +87,11 @@ message ConfirmNegotiations{
 //Negocio envolvido. No final
 message AceptedNegotiation{
 	required string importer_offer = 1;
-	required string product_name = 3;
-	required int32 price = 4;
-	required int32 amount = 5;
-	required string data = 6;
-	required string state = 7;
+	required string product_name = 2;
+	required int32 price = 3;
+	required int32 amount = 4;
+	required string data = 5;
+	required int32 state = 6;
 }
 
 

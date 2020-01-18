@@ -56,7 +56,7 @@ public class Notifications implements Runnable{
         		Notification notification = Notification.newBuilder().
 														setFabricante(arrOfStr[0]).
 														setProduto(arrOfStr[1]).
-														setUsername("").
+														setUsername("PSD").
 														build();
         		byte[] bytes = notification.toByteArray();
                 byte[] syn = fabsyn.toByteArray();

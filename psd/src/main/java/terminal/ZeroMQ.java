@@ -52,8 +52,8 @@ class AlertSubscriber implements Runnable{
         try{
             ZonedDateTime zdt = this.tempo.atZone(ZoneId.of("Europe/Lisbon"));
             long falta = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
-            System.out.println("AlertSubscriber:Daqui a uns segundos vou enviar para todos os subscritores");
-            Thread.sleep(20000);
+            System.out.println("AlertSubscriber: Daqui a uns segundos vou enviar para todos os subscritores");
+            Thread.sleep(15000);
             //Enviar qual o topico que vai escrever
             publisher.send(this.channel);
             //Enviar qual o produto que acabou de ser vendido

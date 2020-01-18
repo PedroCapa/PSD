@@ -5,11 +5,11 @@ ZeroMq
 
 Acrescentar um Produto
 
-	new,Prod,50,100,500,2020/12/31,
+	Product,50,100,500,2020-12-31,
 
 Realizar uma Negociacao
 	
-	offer,Pedro,Prod,60,500,
+	Pedro,Product,500,60,
 
 Para o dropwizard
 	
