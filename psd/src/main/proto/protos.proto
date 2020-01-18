@@ -29,7 +29,7 @@ message FabSyn{
 
 	enum OpType{
 		PRODUCT = 0;
-		NEWS    = 1;
+		OVER    = 1;
 	}
 }
 
@@ -80,7 +80,7 @@ message Notification{
 
 //Comentario a indicar as listas de coisas que vai enviar
 //Tambem pode ser usado no Dropwizard para 
-message NegotiationsConfirmatio{
+message ConfirmNegotiations{
 	repeated AceptedNegotiation acepted = 1;
 }
 

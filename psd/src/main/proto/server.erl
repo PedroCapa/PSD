@@ -73,15 +73,15 @@ room(Importadores, Fabricantes) ->
 				Contains = findUserProd(Fab, Prod, Fabricantes),
 				if
 					Contains =:= true ->
-						Msg = "Ja contem esse produto a venda\n",
-						PID ! {res, list_to_binary(Msg)},
+						Confirmation = false, %%%---
+						PID ! {res, Confirmation, Fab, Prod}, %%%---
 						room(Importadores, Fabricantes);
 					true ->
-						Msg = Fab ++ "," ++ Prod ++ "," ++ Time ++ ",\n",
+						Confirmation = true, %%%---
 						Update = addProduct(Fab, Prod, Min, Max, Price, Time, Fabricantes),
 						Res = maps:update(Fab, Update, Fabricantes),
 						io:format("Adicionei o produto Fabricantes: ~p~nImportadores: ~p~n", [Res, Importadores]),
-						PID ! {res, Msg},
+						PID ! {res, Confirmation, Fab, Prod}, %%%---
 						room(Importadores, Res)
 				end;
 			%Em principio vai ser para manter pq é so para acrescentar uma negociação
@@ -90,17 +90,17 @@ room(Importadores, Fabricantes) ->
 				Contains = findUserOffer(Fab, Prod, Price, Ammount, Time, Fabricantes),
 				if
 					Contains =:= true ->
-						Msg = Fab ++ "," ++ Prod ++ "," ++ "\n",
+						Confirmation = true, %%%---
 						Update = addNegocioFabricante(Fab, Username, Prod, Price, Ammount, Time, Fabricantes),
 						Res = maps:update(Fab, Update, Fabricantes),
 						Up = addNegocioImportador(Username, Fab, Prod, Price, Ammount, Time, Importadores),
 						Imp = maps:update(Username, Up, Importadores),
 						io:format("Adicionei o Negocio: Fabricantes: ~p~nImportadores: ~p~n", [Res, Imp]),
-						PID ! {res, list_to_binary(Msg)},
+						PID ! {res, Confirmation, Fab, Prod}, %%%---
 						room(Imp, Res);
 					true ->
-						Msg = "Oferta não foi realizada com sucesso\n",
-						PID ! {res, Msg},
+						Confirmation = false, %%%---
+						PID ! {res, Confirmation, Fab, Prod}, %%%---
 						room(Importadores, Fabricantes)
 				end;
 
