@@ -49,7 +49,7 @@ public class Importador{
 				sendNegotiation(sm, arrOfStr);
 			}
 		}
-		System.out.println("Shutdown Output");
+		System.out.println("Importador: Shutdown Output");
 
 		cs.shutdownOutput();
 
@@ -98,10 +98,10 @@ public class Importador{
 
 	public static String authentication(Scanner scanner, ReadMessage rm, SendMessage sm){
 		try{
-           System.out.println("Username");
+           System.out.println("Importador: Username");
             String username = scanner.nextLine();
 
-            System.out.println("Password");
+            System.out.println("Importador: Password");
             String password = scanner.nextLine();
 
             //enviar aqui em baixo
@@ -118,16 +118,16 @@ public class Importador{
 	        LoginConfirmation lc = LoginConfirmation.parseFrom(res);
 
             if(!lc.getResponse()){
-                System.out.println("Palavra passe incorreta");
+                System.out.println("Importador: Palavra passe incorreta");
                 return authentication(scanner, rm, sm);
             }
             else{
-                System.out.println("Entrou com sucesso");
+                System.out.println("Importador: Entrou com sucesso");
             	return lc.getUsername();
             }
         }
         catch(IOException exc){
-        	System.out.println("Deu asneira");
+        	System.out.println("Importador: Deu asneira");
         }
         
         return null;
@@ -151,15 +151,15 @@ class LeitorImportador implements Runnable{
 	public void run(){
 		try{
 			ReadMessage rm = new ReadMessage(cs);
+			this.socket.connect("tcp://localhost:5555");
 			while(!this.cs.isClosed()){
 				byte[] res = rm.receiveMessage();
 				ImpSyn syn = ImpSyn.parseFrom(res);
 
-		        System.out.println("Recebi o syn" + syn.getType());
-
 				if(syn.getType().equals(ImpSyn.OpType.FINISH)){
 					byte[] negotiation = rm.receiveMessage();
 					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
+					System.out.println("Importador: Recebi todos os produtos que fiz oferta");
 					System.out.println(nc);
 				}
 
@@ -167,20 +167,24 @@ class LeitorImportador implements Runnable{
 					byte[] bus = rm.receiveMessage();
 					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
 					if(bc.getResponse()){
-						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
-						this.socket.send("Importador," + bc.getFabricante() + "," + bc.getProduto());
+						String str = bc.getFabricante() + "," + bc.getProduto();
+						System.out.println(str);
+						this.notifications.subscribe(str);
+						this.socket.send("Importador," + str);
 						byte[] b = socket.recv();
-						System.out.println("O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() + " foi adicionado com sucesso");
+						System.out.println("Importador: O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() 
+							+ " foi adicionado com sucesso");
 					}
 					else{
-						System.out.println("O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() + " não foi adicionado");
+						System.out.println("Importador: O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() + " não foi adicionado");
 					}
 				}
 			}
-			System.out.println("Fechei");
+			System.out.println("Importador: Fechei");
 		}
 		catch(Exception e){
-			System.out.println("Deu Exceção no LeitorImportador " + e.getMessage());
+			System.out.println("Importador: Deu Exceção no LeitorImportador ");
+			e.printStackTrace();
 		}
 	}
 }

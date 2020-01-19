@@ -50,7 +50,7 @@ public class Fabricante{
 			}
 		}
 
-		System.out.println("Shutdown Output");
+		System.out.println("Fabricante: Shutdown Output");
 
 		cs.shutdownOutput();
 	}
@@ -98,10 +98,10 @@ public class Fabricante{
 	public static String authentication(Scanner scanner, ReadMessage rm, SendMessage sm){
 		try{
             //Ler do scanner nome e pass
-            System.out.println("Username");
+            System.out.println("Fabricante: Username");
             String username = scanner.nextLine();
 
-            System.out.println("Password");
+            System.out.println("Fabricante: Password");
             String password = scanner.nextLine();
 
             //enviar aqui em baixo
@@ -119,16 +119,16 @@ public class Fabricante{
 	        System.out.println(lc);
 
             if(!lc.getResponse()){
-                System.out.println("Palavra passe incorreta");
+                System.out.println("Fabricante: Palavra passe incorreta");
                 return authentication(scanner, rm, sm);
             }
             else{
-                System.out.println("Entrou com sucesso");
+                System.out.println("Fabricante: Entrou com sucesso");
             	return lc.getUsername();
             }
         }
         catch(IOException exc){
-        	System.out.println("Deu asneira");
+        	System.out.println("Fabricante: Deu asneira");
         }
         
         return null;
@@ -157,8 +157,6 @@ class LeitorFabricante implements Runnable{
 				byte[] res = rm.receiveMessage();
 		        FabSyn syn = FabSyn.parseFrom(res);
 		        
-		        System.out.println("Recebi o syn" + syn);
-
 				if(syn.getType().equals(FabSyn.OpType.OVER)){
 					byte[] negotiation = rm.receiveMessage();
 					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
@@ -168,21 +166,22 @@ class LeitorFabricante implements Runnable{
 					byte[] bus = rm.receiveMessage();
 					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
 					if(bc.getResponse()){
-						System.out.println("O produto " + bc.getProduto() + " foi adicionado com sucesso");
-						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
-						this.socket.send("Fabricante," + bc.getFabricante() + "," + bc.getProduto());
+						System.out.println("Fabricante: O produto " + bc.getProduto() + " foi adicionado com sucesso");
+						String str = bc.getFabricante() + "," + bc.getProduto();
+						this.notifications.subscribe(str);
+						this.socket.send("Fabricante," + str);
 						byte[] b = socket.recv();
 					}
 					else{
-						System.out.println("O produto " + bc.getProduto() + " não foi adicionado com sucesso");
+						System.out.println("Fabricante: O produto " + bc.getProduto() + " não foi adicionado com sucesso");
 					}
 				}
 				
 			}
-			System.out.println("Fechei");
+			System.out.println("Fabricante: Fechei");
 		}
 		catch(Exception e){
-			System.out.println("Deu Exceção no Leitor " + e.getMessage());
+			System.out.println("Fabricante: Deu Exceção no Leitor " + e.getMessage());
 		}
 	}
 }

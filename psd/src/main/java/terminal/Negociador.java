@@ -180,7 +180,7 @@ class Sistema{
 		this.importers = new HashMap<>();
 	}
 
-	public boolean addProduct(ProdutoNegociador product){
+	public synchronized boolean addProduct(ProdutoNegociador product){
 		if(!this.producers.containsKey(product.getUsername())){
 			System.out.println("O utilizador vai ser criado");
 			this.producers.put(product.getUsername(), new Produtor(product.getUsername()));
@@ -200,7 +200,7 @@ class Sistema{
 		return false;
 	}
 
-	public boolean addOffer(OfertaNegociador offer){
+	public synchronized boolean addOffer(OfertaNegociador offer){
 		String producer = offer.getProducer();
 		String product  = offer.getProduct();
 		boolean flag = containsProduct(producer, product);
@@ -220,7 +220,7 @@ class Sistema{
 		return false;
 	}
 
-	public Oferta generateOffer(OfertaNegociador offer){
+	public synchronized Oferta generateOffer(OfertaNegociador offer){
 		String producer = offer.getProducer();
 		String importer = offer.getOffer().getImportador();
 		String product = offer.getProduct();
@@ -231,7 +231,7 @@ class Sistema{
 		return new Oferta(producer, importer, product, quantity, price, date, state);
 	}
 
-	public void sortOffers(Produto prod, Oferta offer){
+	public synchronized void sortOffers(Produto prod, Oferta offer){
 		List<Oferta> ofertas = prod.getOffersList();
 		int i = 0;
 		for(; i < ofertas.size(); i++){
@@ -247,7 +247,7 @@ class Sistema{
 		}
 	}
 
-	public boolean containsProduct(String producer, String product){
+	public synchronized boolean containsProduct(String producer, String product){
 		if(this.producers.containsKey(producer)){
 			Map<String, Produto> products = this.producers.get(producer).getProducts();
 			if(products.containsKey(product)){
@@ -258,7 +258,7 @@ class Sistema{
 		return false;
 	}
 
-	public ConfirmNegotiations getAceptedOffers(String producer, String product_name){
+	public synchronized ConfirmNegotiations getAceptedOffers(String producer, String product_name){
 		Produto prod = this.producers.get(producer).getProducts().get(product_name);
 		System.out.println("Vou ver as ofertas que foram aceites");
 		if(prod.getState() == -1){
@@ -269,8 +269,10 @@ class Sistema{
 				prod.setState(0);
 				prod.setOffers();
 			}
-			else
+			else{
+				prod.setState(1);
 				prod.changeStatus();
+			}
 		}
 		List<Oferta> ofertas = prod.getOffersList();
 		List<Oferta> accepted = new ArrayList<>();
@@ -298,7 +300,7 @@ class Sistema{
 		return cn;
 	}
 
-	public ConfirmNegotiations getPublishedOffers(String producer, String product_name, String importador){
+	public synchronized ConfirmNegotiations getPublishedOffers(String producer, String product_name, String importador){
 		Produto prod = this.producers.get(producer).getProducts().get(product_name);
 		if(prod.getState() == -1){
 			System.out.println("Vou mudar o estado dos produtos");
@@ -308,13 +310,15 @@ class Sistema{
 				prod.setState(0);
 				prod.setOffers();
 			}
-			else
+			else{
+				prod.setState(1);
 				prod.changeStatus();
+			}
 		}
 		List<Oferta> ofertas = prod.getOffersList();
 		List<Oferta> accepted = new ArrayList<>();
 		for(Oferta of: ofertas){
-			if(of.getState() == 1 && of.getImportador().equals(importador)){
+			if(of.getImportador().equals(importador)){
 				accepted.add(of);
 			}
 		}
@@ -337,7 +341,7 @@ class Sistema{
 		return cn;
 	}
 
-	public ResponseProdutoDropwizard getProdutosUser(String username){
+	public synchronized ResponseProdutoDropwizard getProdutosUser(String username){
 		if(!this.producers.containsKey(username)){
 			return ResponseProdutoDropwizard.newBuilder().
 				   addAllProducts(new ArrayList<>()).
@@ -363,7 +367,7 @@ class Sistema{
 		return rpd;
 	}
 
-	public ResponseNegotiationDropwizard getNegociosProdutoUser(String username, String product_name){
+	public synchronized ResponseNegotiationDropwizard getNegociosProdutoUser(String username, String product_name){
 		if(!this.producers.containsKey(username) || !!this.producers.get(product_name).getProducts().containsKey(product_name)){
 			return ResponseNegotiationDropwizard.newBuilder().
 				   addAllNegotiation(new ArrayList<>()).
@@ -389,7 +393,7 @@ class Sistema{
 		return rpd;
 	}
 
-	public ResponseImporterDropwizard getNegociosImportador(String username){
+	public synchronized ResponseImporterDropwizard getNegociosImportador(String username){
 		if(!this.importers.containsKey(username)){
 			List<ImporterDropwizard> res = new ArrayList<>();
 			return ResponseImporterDropwizard.newBuilder()
@@ -412,7 +416,7 @@ class Sistema{
 		return rid.addAllImporter(res).build();
 	}
 
-	public String toString(){
+	public synchronized String toString(){
 		String s = "\n";
 		for(String str: this.producers.keySet()){
 			s = s + str + "		Tamanho: " + this.producers.get(str).getProducts().keySet().size() +"\n";
@@ -434,7 +438,7 @@ class Oferta{
 	private String date;
 	private int state;
 
-	public Oferta(String producer, String importador, String prodduct, int quantity, int price, String date, int state){
+	public Oferta(String producer, String importador, String product, int quantity, int price, String date, int state){
 		this.producer = producer;
 		this.importador = importador;
 		this.product = product;
