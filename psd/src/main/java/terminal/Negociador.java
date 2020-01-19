@@ -9,6 +9,9 @@ import main.proto.Protos.ResponseProdutoDropwizard;
 import main.proto.Protos.Production;
 import main.proto.Protos.ResponseNegotiationDropwizard;
 import main.proto.Protos.NegotiationDropwizard;
+import main.proto.Protos.ResponseImporterDropwizard;
+import main.proto.Protos.ImporterDropwizard;
+
 
 public class Negociador{
 
@@ -22,9 +25,11 @@ public class Negociador{
 class System{
 
 	private Map<String, Produtor> producers;
+	private Map<String, List<Oferta>> importers;
 
 	public System(){
 		this.producers = new HashMap<>();
+		this.importers = new HashMap<>();
 	}
 
 	public boolean addProdutor(Produtor producer){
@@ -177,6 +182,29 @@ class System{
 
 		return rpd;
 	}
+
+	public ResponseImporterDropwizard getNegociosImportador(String username){
+		if(!this.importers.containsKey(username)){
+			List<ImporterDropwizard> res = new ArrayList<>();
+			return ResponseImporterDropwizard.newBuilder()
+											 .addAllImporter(res)
+											 .build();
+		}
+		ResponseImporterDropwizard.Builder rid = ResponseImporterDropwizard.newBuilder();
+		List<ImporterDropwizard> res = new ArrayList<>();
+		for(Oferta of: this.importers.get(username)){
+			ImporterDropwizard importer = ImporterDropwizard.newBuilder()
+															.setFabricante(of.getProducer())
+															.setProductName(of.getImportador())
+															.setPrice(of.getPrice())
+															.setAmount(of.getQuantity())
+															.setData(of.getDate())
+															.setState(of.getState())
+															.build();
+			res.add(importer);
+		}
+		return rid.addAllImporter(res).build();
+	}	
 }
 
 
