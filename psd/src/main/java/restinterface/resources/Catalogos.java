@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import main.proto.Protos.AceptedNegotiation;
-import main.proto.Protos.ResponseDropProd;
 import main.proto.Protos.Production;
 import main.proto.Protos.ResponseImporterDropwizard;
 import main.proto.Protos.ImporterDropwizard;

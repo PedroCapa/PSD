@@ -8,7 +8,7 @@ import java.util.List;
 import main.java.terminal.ReadMessage;
 import main.proto.Protos.Syn;
 import main.proto.Protos.Dropwizard;
-import main.proto.Protos.ResponseDropProd;
+import main.proto.Protos.ResponseProdutoDropwizard;
 import main.proto.Protos.Production;
 import main.proto.Protos.ResponseImporterDropwizard;
 import main.proto.Protos.ImporterDropwizard;
@@ -45,7 +45,7 @@ public class AskServer{
 
 		//Recebe o pedido
 		byte[] receive = rm.receiveMessage();
-		ResponseDropProd rdp = ResponseDropProd.parseFrom(receive);
+		ResponseProdutoDropwizard rdp = ResponseProdutoDropwizard.parseFrom(receive);
 
 		System.out.println("Shutdown Output");
 

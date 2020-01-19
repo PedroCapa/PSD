@@ -97,6 +97,33 @@ message AceptedNegotiation{
 
 
 
+message Produtor{
+	map<string, Produto> products = 1;
+	required string username = 2;
+}
+
+message Produto{
+	required string name = 1;
+	required string producer = 2;
+	required int32 min = 3;
+	required int32 max = 4;
+	required int32 price = 5;
+	required int32 state = 6;
+	required string date = 7;
+	repeated Oferta offers = 8;
+}
+
+message Oferta{
+	required string producer = 1;
+	required string importador = 2;
+	required string product = 3;
+	required int32 quantity = 4;
+	required int32 price = 5;
+	required string date = 6;
+	required int32 state = 7;
+}
+
+
 
 
 //Cliente envia ao servidor a indicar o pedido
