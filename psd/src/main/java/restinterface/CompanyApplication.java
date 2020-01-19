@@ -21,7 +21,6 @@ public class CompanyApplication extends Application<CompanyConfiguration> {
     @Override
     public void run(CompanyConfiguration configuration,
                     Environment environment) {
-        //Colocar ai em vez de Departments as Productions
         environment.jersey().register(
             new Catalogos());
         environment.healthChecks().register("template",
