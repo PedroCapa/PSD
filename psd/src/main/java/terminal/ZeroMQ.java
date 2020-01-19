@@ -25,10 +25,11 @@ public class ZeroMQ{
             String s = new String(b);
             String[] arrOfStr = s.split(",");
             System.out.println("ZeroMQ: Received " + s + "  and send");
+            String channel = arrOfStr[1] + "," + arrOfStr[2];
 
             if(arrOfStr[0].equals("Fabricante")){
                 //Falta converter o tempo da mensagem para o LocalDateTime
-                AlertSubscriber as = new AlertSubscriber(LocalDateTime.now(), s, publisher);
+                AlertSubscriber as = new AlertSubscriber(LocalDateTime.now(), channel, publisher);
                 Thread t = new Thread(as);
                 t.start();
             }
@@ -60,7 +61,7 @@ class AlertSubscriber implements Runnable{
             ZonedDateTime zdt = this.tempo.atZone(ZoneId.of("Europe/Lisbon"));
             long falta = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
             System.out.println("AlertSubscriber: Daqui a uns segundos vou enviar para todos os subscritores");
-            Thread.sleep(15000);
+            Thread.sleep(20000);
             //Enviar qual o topico que vai escrever
             publisher.sendMore(this.channel);
             publisher.send("Over");

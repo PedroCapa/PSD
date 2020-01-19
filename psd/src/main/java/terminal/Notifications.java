@@ -28,45 +28,52 @@ public class Notifications implements Runnable{
 	}
 
 	public void run(){
-        
-        System.out.println("Ready to receive notifications");
-        this.subscriber.connect("tcp://localhost:6666");
+        try{
 
-        while(!Thread.currentThread().isInterrupted()){
-        	String channel = subscriber.recvStr();
-        	System.out.println("Acabou o tempo do produto " + channel);
-        	String[] arrOfStr = channel.split(",");
-            String cont = subscriber.recvStr();
-            
-        	if(importador && cont.equals("Over")){
-				ImpSyn impsyn = ImpSyn.newBuilder().
-                                       setType(ImpSyn.OpType.FINISH).
-                                       build();
-				Notification notification = Notification.newBuilder().
-														setFabricante(arrOfStr[0]).
-														setProduto(arrOfStr[1]).
-														setUsername(this.username).
-														build();
-                byte[] syn = impsyn.toByteArray();
-        		byte[] bytes = notification.toByteArray();
-        		sm.sendServer(syn, bytes);
-        	}
-        	else if(!importador && cont.equals("Over")){
-				FabSyn fabsyn = FabSyn.newBuilder().
-                                       setType(FabSyn.OpType.OVER).
-                                       build();
-        		Notification notification = Notification.newBuilder().
-														setFabricante(arrOfStr[0]).
-														setProduto(arrOfStr[1]).
-														setUsername("PSD").
-														build();
-        		byte[] bytes = notification.toByteArray();
-                byte[] syn = fabsyn.toByteArray();
-        		sm.sendServer(syn, bytes);
-        	}
-            else{
-                System.out.println("Fizeram uma oferta no Produtor: " + arrOfStr[1] + " Produto: " + arrOfStr[2]);
+           System.out.println("Notification: Ready to receive notifications");
+            this.subscriber.connect("tcp://localhost:6666");
+
+            while(!Thread.currentThread().isInterrupted()){
+            	String channel = subscriber.recvStr();
+            	String[] arrOfStr = channel.split(",");
+                String cont = subscriber.recvStr();
+            	System.out.println("Recebi notificação do canal: " + channel + " com conteúdo" + cont);
+
+            	if(importador && cont.equals("Over")){
+                    Thread.sleep(500);
+    				ImpSyn impsyn = ImpSyn.newBuilder().
+                                           setType(ImpSyn.OpType.FINISH).
+                                           build();
+    				Notification notification = Notification.newBuilder().
+    														setFabricante(arrOfStr[0]).
+    														setProduto(arrOfStr[1]).
+    														setUsername(this.username).
+    														build();
+                    byte[] syn = impsyn.toByteArray();
+            		byte[] bytes = notification.toByteArray();
+            		sm.sendServer(syn, bytes);
+            	}
+            	else if(!importador && cont.equals("Over")){
+    				FabSyn fabsyn = FabSyn.newBuilder().
+                                           setType(FabSyn.OpType.OVER).
+                                           build();
+            		Notification notification = Notification.newBuilder().
+    														setFabricante(arrOfStr[0]).
+    														setProduto(arrOfStr[1]).
+    														setUsername("PSD").
+    														build();
+            		byte[] bytes = notification.toByteArray();
+                    byte[] syn = fabsyn.toByteArray();
+            		sm.sendServer(syn, bytes);
+            	}
+                else{
+                   System.out.println("Notification: Fizeram uma oferta no Produtor: " + arrOfStr[0] + " Produto: " + arrOfStr[1]);
+                }
             }
+        }
+        catch(Exception e){
+           System.out.println("Notification: Exceção nas notificações");
+            e.printStackTrace();
         }
     }
 
