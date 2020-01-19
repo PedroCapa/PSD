@@ -33,6 +33,19 @@ message FabSyn{
 	}
 }
 
+//Mensagem utilizada para indicar o tipo de operação no negociador
+message NegSyn{
+	required OpType type = 1;
+
+	enum OpType{
+		IMP_OFFER = 0;
+		IMP_OVER  = 1;
+		FAB_PROD  = 2;
+		FAB_OVER  = 3;
+		DROP      = 4;
+	}
+}
+
 //So é usado para a autenticação
 message Login {
     required string name = 1;
