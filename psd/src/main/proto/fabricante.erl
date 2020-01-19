@@ -161,9 +161,8 @@ handleRequestProduct(Sock, Neg1, Neg2, Neg3, Room, Username) ->
 			NegSyn = {'NegSyn', 'FAB_PROD'},
 			SendNegSyn = protos:encode_msg(NegSyn),
 			gen_tcp:send(SendSock, SendNegSyn),
-			{ok, Syn} = gen_tcp:recv(SendSock, 0),
 			%Enviar Pedido e receber resposta
-			SendData = {'ProdutoNegociador', Username, {'Produto', ProdName, Min, Max, Price, Time}},
+			SendData = {'ProdutoNegociador', Username, {'ProdutoFab', ProdName, Min, Max, Price, Time}},
 			Enc = protos:encode_msg(SendData),
 			gen_tcp:send(SendSock, Enc),
 			{ok, Response} = gen_tcp:recv(SendSock, 0),
@@ -186,7 +185,6 @@ handleRequestOver(Sock, Neg1, Neg2, Neg3, Room) ->
 			NegSyn = {'NegSyn', 'FAB_OVER'},
 			SendNegSyn = protos:encode_msg(NegSyn),
 			gen_tcp:send(SendSock, SendNegSyn),
-			{ok, Syn} = gen_tcp:recv(SendSock, 0),
 			%Enviar Pedido e receber resposta
 			gen_tcp:send(SendSock, Data),
 			{ok, Response} = gen_tcp:recv(SendSock, 0),

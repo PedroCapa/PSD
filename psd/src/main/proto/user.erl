@@ -28,9 +28,11 @@ checkSyn({_, D}, Sock, Room) ->
 			dropwizard:dropwizard(Sock, Room);
 		D =:= 'FAB' ->
 			io:format("User: Entrei no fabricante~n"),
+			%fabricante:fabricante(Sock, Port1, Port2, Port3, Room);
 			fabricante:fabricante(Sock, Room);
 		D =:= 'IMP' ->
 			io:format("User: Entrei no importador~n"),
+			%importador:importador(Sock, Port1, Port2, Port3, Room);
 			importador:importador(Sock, Room);
 		true ->
 			io:format("Something went"),

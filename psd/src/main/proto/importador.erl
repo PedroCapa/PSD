@@ -156,9 +156,10 @@ handleRequestOffer(Sock, Neg1, Neg2, Neg3, Room, Username) ->
 			NegSyn = {'NegSyn', 'IMP_OFFER'},
 			SendNegSyn = protos:encode_msg(NegSyn),
 			gen_tcp:send(SendSock, SendNegSyn),
-			{ok, Syn} = gen_tcp:recv(SendSock, 0),
 			%Enviar Pedido e receber resposta
-			gen_tcp:send(SendSock, Data),
+			SendData = {'OfertaNegociador', Username, Product, {'OfertaImp', Username, Amount, Price, Time, -1}},
+			Enc = protos:encode_msg(SendData),
+			gen_tcp:send(SendSock, Enc),
 			{ok, Response} = gen_tcp:recv(SendSock, 0),
 			gen_tcp:send(Sock, Response);
 		{tcp_closed} ->
@@ -178,7 +179,6 @@ handleRequestOver(Sock, Neg1, Neg2, Neg3, Room, Username) ->
 			NegSyn = {'NegSyn', 'IMP_OVER'},
 			SendNegSyn = protos:encode_msg(NegSyn),
 			gen_tcp:send(SendSock, SendNegSyn),
-			{ok, Syn} = gen_tcp:recv(SendSock, 0),
 			%Enviar Pedido e receber resposta
 			gen_tcp:send(SendSock, Data),
 			{ok, Response} = gen_tcp:recv(SendSock, 0),
