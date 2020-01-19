@@ -1,16 +1,13 @@
 -module(dropwizard).
 -export([dropwizard/2, sendRes/2]).
 
+-include("protos.hrl").
+
 dropwizard(Sock, Room) ->
 	receive
 			{line, Data} ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
 				dropwizard(Sock, Room);
-			{res, Data} ->
-				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
-				SendData = addProductionType(Data),
-				Send = {'ResponseDropProd', SendData},
-				gen_tcp:send(Sock, Send),
 			{tcp, _, Data} ->
 				%Fazer decode aqui
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,8 +46,10 @@ handleDropwizardProd(Username, Produto, Sock, Room) ->
 			{res, Data} ->
 				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
 				SendData = addProductionType(Data),
-				Send = {'ResponseDropProd', SendData},
-				gen_tcp:send(Sock, Send),
+				Send = {'ResponseProdutoDropwizard', SendData},
+				io:format("O que vou enviar é: ~p~n", [Send]),
+				S = protos:encode_msg(Send),
+				gen_tcp:send(Sock, S);
 			{tcp_closed, _} ->
 				Room ! {leave, self()};
 			{tcp_error, _, _} ->
@@ -60,7 +59,7 @@ handleDropwizardProd(Username, Produto, Sock, Room) ->
 
 %***É provável que seja necessário acrescentar o Produto na mensagem
 handleDropwizardNeg(Username, Produto, Sock, Room) ->
-	Room ! {negotiations, Username, self()},
+	Room ! {negotiations, Username, Produto, self()},
 	receive
 			{line, Data} ->
 				gen_tcp:send(Sock, binary_to_list(Data)),
@@ -69,7 +68,8 @@ handleDropwizardNeg(Username, Produto, Sock, Room) ->
 				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
 				SendData = addNegotiationType(Data),
 				Send = {'ResponseNegotiationDropwizard', SendData},
-				gen_tcp:send(Sock, Send),
+				S = protos:encode_msg(Send),
+				gen_tcp:send(Sock, S);
 			{tcp_closed, _} ->
 				Room ! {leave, self()};
 			{tcp_error, _, _} ->
@@ -86,7 +86,8 @@ handleDropwizardImp(Username, Produto, Sock, Room) ->
 				io:format("Recebi a resposta que pretendia ~p~n", [Data]),
 				SendData = addImporterType(Data),
 				Send = {'ResponseImporterDropwizard', SendData},
-				gen_tcp:send(Sock, Send),
+				S = protos:encode_msg(Send),
+				gen_tcp:send(Sock, S);
 			{tcp_closed, _} ->
 				Room ! {leave, self()};
 			{tcp_error, _, _} ->
@@ -101,7 +102,7 @@ addProductionType([H | T]) ->
 	Res = addProductionType(T),
 	[Type | Res].
 
-addProdType({Product, Min, Max, Price, Date, _}) ->
+addProdType({Product, Min, Max, Price, Date, State, _}) ->
 	{'Production', Product, Min, Max, Price, Date}.
 
 
@@ -109,7 +110,7 @@ addImporterType([]) ->
 	[];
 
 addImporterType([H | T]) ->
-	Type = addType(H),
+	Type = addImpType(H),
 	Res = addImporterType(T),
 	[Type | Res].
 

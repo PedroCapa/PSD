@@ -4,6 +4,7 @@
 -include("protos.hrl").
 
 importador(Sock, Room) ->
+%importador(Sock, Port1, Port2, Port3, Room) ->
 	%Em vez de ter dois receive ter apenas um para o login
 	receive
 		{tcp, _, Auth} ->
@@ -20,6 +21,10 @@ importador(Sock, Room) ->
 					io:format("Enviei: ~p~n", [Result]),
 					importador(Sock, Room);
 				true ->
+					%{ok, Neg1} = gen_tcp:connect("127.0.0.1", Port1, [binary, {active,false}]),
+					%{ok, Neg2} = gen_tcp:connect("127.0.0.1", Port2, [binary, {active,false}]),
+					%{ok, Neg3} = gen_tcp:connect("127.0.0.1", Port3, [binary, {active,false}]),
+					%handleImportador(Sock, Neg1, Neg2, Neg3, Room, Username)
 					handleImportador(Sock, Room, Username)
 			end
 	end.
@@ -85,6 +90,11 @@ handleRequestOffer(Sock, Room, Username) ->
 			Message = protos:decode_msg(Data, 'Negotiation'),
 			{'Negotiation', Fabricante, Product, Price, Amount, Time} = Message,
 			io:format("Message: ~p~n", [Message]),
+			%[H | T] = ProdName,
+			%SendSock = chooseSock(H, Neg1, Neg2, Neg3),
+			%gen_tcp:send(SendSock, Data),
+			%{ok, Response} = gen_tcp:recv(SendSock, 0),
+			%gen_tcp:send(Sock, Response);
 			Room ! {neg, Username, Fabricante, Product, Amount, Price, Time, self()};
 		{tcp_closed} ->
 			Room ! {leave, self()};
@@ -109,6 +119,86 @@ addType([],_) ->
 addType([{A, B, C, D, E}|T], Produto) ->
 	Rest = addType(T, Produto),
 	[{'AceptedNegotiation' , A, Produto, B, C, D, E} | Rest].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+handleImportador(Sock, Neg1, Neg2, Neg3, Room, Username) ->
+	receive
+		{tcp, _, Data} ->
+			Message = protos:decode_msg(Data, 'ImpSyn'),
+			{'ImpSyn', Type} = Message,
+			io:format("Recebi do importador: ~p~n", [Message]),
+			handleRequest(Sock, Neg1, Neg2, Neg3, Room, Type, Username),
+			handleImportador(Sock, Neg1, Neg2, Neg3, Room, Username);
+		{tcp_closed, _} ->
+			Room ! {leave, self()};
+		{tcp_error, _, _} ->
+			Room ! {leave, self()}
+	end.
+
+handleRequest(Sock, Neg1, Neg2, Neg3, Room, Type, Username) ->
+	if
+		Type =:= 'OFFER' ->
+			handleRequestOffer(Sock, Neg1, Neg2, Neg3, Room, Username);
+		Type =:= 'OVER'  ->
+			handleRequestOver(Sock, Neg1, Neg2, Neg3, Room, Username)
+	end.		
+
+handleRequestOffer(Sock, Neg1, Neg2, Neg3, Room, Username) ->
+	receive
+		{tcp, _, Data} ->
+			Message = protos:decode_msg(Data, 'Negotiation'),
+			{'Negotiation', Fabricante, Product, Price, Amount, Time} = Message,
+			io:format("Message: ~p~n", [Message]),
+			[H | T] = Fabricante,
+			SendSock = chooseSock(H, Neg1, Neg2, Neg3),
+			%Criar e enviar Syn
+			NegSyn = {'NegSyn', 'IMP_OFFER'},
+			SendNegSyn = protos:encode_msg(NegSyn),
+			gen_tcp:send(SendSock, SendNegSyn),
+			{ok, Syn} = gen_tcp:recv(SendSock, 0),
+			%Enviar Pedido e receber resposta
+			gen_tcp:send(SendSock, Data),
+			{ok, Response} = gen_tcp:recv(SendSock, 0),
+			gen_tcp:send(Sock, Response);
+		{tcp_closed} ->
+			Room ! {leave, self()};
+		{tcp_error, _, _} ->
+			Room ! {leave, self()}
+	end.
+
+handleRequestOver(Sock, Neg1, Neg2, Neg3, Room, Username) ->
+	receive
+		{tcp, _, Data} ->
+			Message = protos:decode_msg(Data, 'Notification'),
+			{'Notification', Fabricante, Produto, Username} = Message,
+			[H | T] = Fabricante,
+			SendSock = chooseSock(H, Neg1, Neg2, Neg3),
+			%Criar e enviar Syn
+			NegSyn = {'NegSyn', 'IMP_OVER'},
+			SendNegSyn = protos:encode_msg(NegSyn),
+			gen_tcp:send(SendSock, SendNegSyn),
+			{ok, Syn} = gen_tcp:recv(SendSock, 0),
+			%Enviar Pedido e receber resposta
+			gen_tcp:send(SendSock, Data),
+			{ok, Response} = gen_tcp:recv(SendSock, 0),
+			gen_tcp:send(Sock, Response);
+		{tcp_closed} ->
+			Room ! {leave, self()};
+		{tcp_error, _, _} ->
+			Room ! {leave, self()}
+	end.
+
+chooseSock(H, Neg1, Neg2, Neg3) ->
+	if
+		H >= 65, H =< 90 ->
+			Res = Neg1;
+		H >= 97, H =< 122 ->
+			Res = Neg2;
+		true ->
+			Res = Neg3
+	end,
+	Res.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %handleRequest([H | T], Username, Room, Sock) ->
