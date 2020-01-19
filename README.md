@@ -15,6 +15,10 @@ Para o dropwizard
 	
 	http://localhost:12345/catalogos/produtor/Pedro
 
+	mvn package
+
+	java -jar target/psd-1.0-SNAPSHOT.jar server Server.yml
+
 Criar o protoc.java
 	
 	protoc --java_out=psd/src/main/proto/ psd/src/main/proto/protos.proto
