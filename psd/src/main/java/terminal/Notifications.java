@@ -36,9 +36,11 @@ public class Notifications implements Runnable{
         	String channel = subscriber.recvStr();
         	System.out.println("Acabou o tempo do produto " + channel);
         	String[] arrOfStr = channel.split(",");
-        	if(importador){
+            String cont = subscriber.recvStr();
+            
+        	if(importador && cont.equals("Over")){
 				ImpSyn impsyn = ImpSyn.newBuilder().
-                                       setType(ImpSyn.OpType.OVER).
+                                       setType(ImpSyn.OpType.FINISH).
                                        build();
 				Notification notification = Notification.newBuilder().
 														setFabricante(arrOfStr[0]).
@@ -49,7 +51,7 @@ public class Notifications implements Runnable{
         		byte[] bytes = notification.toByteArray();
         		sm.sendServer(syn, bytes);
         	}
-        	else{
+        	else if(!importador && cont.equals("Over")){
 				FabSyn fabsyn = FabSyn.newBuilder().
                                        setType(FabSyn.OpType.OVER).
                                        build();
@@ -62,6 +64,9 @@ public class Notifications implements Runnable{
                 byte[] syn = fabsyn.toByteArray();
         		sm.sendServer(syn, bytes);
         	}
+            else{
+                System.out.println("Fizeram uma oferta no Produtor: " + arrOfStr[1] + " Produto: " + arrOfStr[2]);
+            }
         }
     }
 

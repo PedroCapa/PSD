@@ -1,4 +1,5 @@
-import com.google.protobuf.MapField;
+package main.java.terminal;
+
 
 import java.util.Map;
 import java.util.HashMap;
@@ -56,13 +57,16 @@ public class Negociador{
 
 class Leitor implements Runnable{
 	private Sistema sys;
-	private	ReadMessage rm = new ReadMessage(this.cs);
-	private SendMessage sm = new SendMessage(this.cs);
+	private	ReadMessage rm;
+	private SendMessage sm;
 	private Socket cs;
 
 	public Leitor(Sistema system, Socket sock){
 		this.sys = system;
 		this.cs  = sock;
+		this.rm = new ReadMessage(this.cs);
+		this.sm = new SendMessage(this.cs);
+
 	}
 
 	public void run(){
@@ -70,9 +74,10 @@ class Leitor implements Runnable{
 
 		try{
 			while(flag){
+				System.out.println("Vou receber coisas " + this.sys + "\n");
 				byte[] syn = this.rm.receiveMessage();
 				NegSyn negsyn = NegSyn.parseFrom(syn);
-
+				System.out.println("Recebi o Syn " + negsyn.getType());
 				receiveCont(negsyn);
 			}
 		}
@@ -88,6 +93,7 @@ class Leitor implements Runnable{
 			//ProdutoNegociador -> BusinessConfirmation
 			if(negsyn.getType().equals(NegSyn.OpType.FAB_PROD)){
 				ProdutoNegociador pn = ProdutoNegociador.parseFrom(cont);
+				System.out.println("Entrei no FAB_PROD com " + pn);
 				boolean res = sys.addProduct(pn);
 				BusinessConfirmation bc = BusinessConfirmation.newBuilder().
 																setResponse(res).
@@ -98,18 +104,19 @@ class Leitor implements Runnable{
 				this.sm.sendServer(bytes);
 			}
 			//Notification -> ConfirmNegotiations
-			if(negsyn.getType().equals(NegSyn.OpType.FAB_OVER)){
+			else if(negsyn.getType().equals(NegSyn.OpType.FAB_OVER)){
 				Notification notification = Notification.parseFrom(cont);
+				System.out.println("Entrei no FAB_OVER com " + notification);
 				ConfirmNegotiations cn = sys.getAceptedOffers(notification.getFabricante(), notification.getProduto());
 				byte[] bytes = cn.toByteArray();
 				this.sm.sendServer(bytes);
+				System.out.println(cn);
 			}
 			//OfertaImp -> BusinessConfirmation
-			if(negsyn.getType().equals(NegSyn.OpType.IMP_OFFER)){
+			else if(negsyn.getType().equals(NegSyn.OpType.IMP_OFFER)){
 				OfertaNegociador neg = OfertaNegociador.parseFrom(cont);
-				Oferta oferta = new Oferta(neg.getProducer(), neg.getOffer().getImportador(), neg.getProduct(), neg.getOffer().getQuantity(), 
-									neg.getOffer().getPrice(),neg.getOffer().getDate(), neg.getOffer().getState());
-				boolean res = sys.addOffer(oferta);
+				System.out.println("Entrei no IMP_OFFER com " + neg);
+				boolean res = sys.addOffer(neg);
 				BusinessConfirmation bc = BusinessConfirmation.newBuilder().
 																setResponse(res).
 																setFabricante(neg.getProducer()).
@@ -119,16 +126,21 @@ class Leitor implements Runnable{
 				this.sm.sendServer(bytes);
 			}
 
-			if(negsyn.getType().equals(NegSyn.OpType.IMP_OVER)){
+			else if(negsyn.getType().equals(NegSyn.OpType.IMP_OVER)){
 				Notification notification = Notification.parseFrom(cont);
+				System.out.println("Entrei no IMP_OVER com " + notification);
 				ConfirmNegotiations cn = sys.getPublishedOffers(notification.getFabricante(), notification.getProduto(), notification.getUsername());
 				byte[] bytes = cn.toByteArray();
 				this.sm.sendServer(bytes);
+				System.out.println(cn);
 			}
 			//Depende do DROP a seguir
-			if(negsyn.getType().equals(NegSyn.OpType.DROP)){
+			else if(negsyn.getType().equals(NegSyn.OpType.DROP)){
 				Dropwizard drop = Dropwizard.parseFrom(cont);
 				handleDropwizard(drop);
+			}
+			else {
+				System.out.println("O tipo da mensagem não corresponde com nenhuma condição");
 			}
 
 		}
@@ -140,17 +152,21 @@ class Leitor implements Runnable{
 	public void handleDropwizard(Dropwizard drop){
 		if(drop.getType().equals(Dropwizard.DropType.PROD)){
 			ResponseProdutoDropwizard rpd = sys.getProdutosUser(drop.getUsername());
+			byte[] bytes = rpd.toByteArray();
+			this.sm.sendServer(bytes);
 		}
 
-		if(drop.getType().equals(Dropwizard.DropType.NEG)){
-
-		}
-
-		if(drop.getType().equals(Dropwizard.DropType.IMP)){
+		else if(drop.getType().equals(Dropwizard.DropType.NEG)){
 			ResponseNegotiationDropwizard rpd = sys.getNegociosProdutoUser(drop.getUsername(), drop.getProd());
+			byte[] bytes = rpd.toByteArray();
+			this.sm.sendServer(bytes);
 		}
 
-
+		else if(drop.getType().equals(Dropwizard.DropType.IMP)){
+			ResponseImporterDropwizard rpd = sys.getNegociosImportador(drop.getUsername());
+			byte[] bytes = rpd.toByteArray();
+			this.sm.sendServer(bytes);
+		}
 	}
 }
 
@@ -166,32 +182,53 @@ class Sistema{
 
 	public boolean addProduct(ProdutoNegociador product){
 		if(!this.producers.containsKey(product.getUsername())){
+			System.out.println("O utilizador vai ser criado");
 			this.producers.put(product.getUsername(), new Produtor(product.getUsername()));
 		}
+		System.out.println("O utilizador existe");
 		String producer = product.getUsername();
 		String product_name = product.getProduct().getName();
 		boolean flag = containsProduct(producer, product_name);
+		System.out.println("O produto " + product_name + " existe: " + flag);
 		if(!flag){
 			Map<String, Produto> products = producers.get(producer).getProducts();
 			Produto p = new Produto(product.getUsername(), product.getProduct().getName(), product.getProduct().getMin(), product.getProduct().getMax(),
 						product.getProduct().getPrice(), -1, product.getProduct().getDate());
 			products.put(product_name, p);
+			return true;
 		}
 		return false;
 	}
 
-	public boolean addOffer(Oferta offer){
+	public boolean addOffer(OfertaNegociador offer){
 		String producer = offer.getProducer();
 		String product  = offer.getProduct();
 		boolean flag = containsProduct(producer, product);
+		System.out.println("O produto " + product + " existe: " + flag);
 		if(flag){
 			Produto prod = this.producers.get(producer).getProducts().get(product);
-			if(prod.getMax() >= offer.getQuantity() && prod.getPrice() <= offer.getPrice() && prod.getDate().compareTo(offer.getDate()) > 0){
-				sortOffers(prod, offer);
+			if(prod.getMax() >= offer.getOffer().getQuantity() && prod.getPrice() <= offer.getOffer().getPrice() && 
+				prod.getDate().compareTo(offer.getOffer().getDate()) > 0){
+				System.out.println("O negocio vai ser adicionado");
+				Oferta oferta = generateOffer(offer);
+				sortOffers(prod, oferta);
 				return true;
 			}
+			System.out.println("O produto " + product + " não foi adicionado porque " + (prod.getMax() >= offer.getOffer().getQuantity()) + 
+				(prod.getPrice() <= offer.getOffer().getPrice()) + (prod.getDate().compareTo(offer.getOffer().getDate()) > 0));
 		}
 		return false;
+	}
+
+	public Oferta generateOffer(OfertaNegociador offer){
+		String producer = offer.getProducer();
+		String importer = offer.getOffer().getImportador();
+		String product = offer.getProduct();
+		String date = offer.getOffer().getDate();
+		int quantity = offer.getOffer().getQuantity();
+		int price = offer.getOffer().getPrice();
+		int state = offer.getOffer().getState();
+		return new Oferta(producer, importer, product, quantity, price, date, state);
 	}
 
 	public void sortOffers(Produto prod, Oferta offer){
@@ -201,6 +238,7 @@ class Sistema{
 			Oferta of = ofertas.get(i);
 			if(of.getPrice() < offer.getPrice()){
 				ofertas.add(i, offer);
+				this.importers.get(of.getImportador()).add(offer);
 				break;
 			}
 		}
@@ -222,9 +260,12 @@ class Sistema{
 
 	public ConfirmNegotiations getAceptedOffers(String producer, String product_name){
 		Produto prod = this.producers.get(producer).getProducts().get(product_name);
+		System.out.println("Vou ver as ofertas que foram aceites");
 		if(prod.getState() == -1){
+			System.out.println("Vou mudar o estado dos produtos");
 			List<Oferta> ofertas = prod.getOffersList();
 			if(!prod.canProduce()){
+				System.out.println("Não existem ofertas suficientes");
 				prod.setState(0);
 				prod.setOffers();
 			}
@@ -250,6 +291,7 @@ class Sistema{
 												build();
 			an.add(acn);
 		}
+		System.out.println("O numero de pedidos aceites foram " + accepted.size());
 		ConfirmNegotiations cn = ConfirmNegotiations.newBuilder().
 												addAllAcepted(an).
 												build();
@@ -259,8 +301,10 @@ class Sistema{
 	public ConfirmNegotiations getPublishedOffers(String producer, String product_name, String importador){
 		Produto prod = this.producers.get(producer).getProducts().get(product_name);
 		if(prod.getState() == -1){
+			System.out.println("Vou mudar o estado dos produtos");
 			List<Oferta> ofertas = prod.getOffersList();
 			if(!prod.canProduce()){
+				System.out.println("Não existem ofertas suficientes");
 				prod.setState(0);
 				prod.setOffers();
 			}
@@ -286,6 +330,7 @@ class Sistema{
 												build();
 			an.add(acn);
 		}
+		System.out.println("O numero de pedidos aceites foram " + accepted.size());
 		ConfirmNegotiations cn = ConfirmNegotiations.newBuilder().
 												addAllAcepted(an).
 												build();
@@ -365,7 +410,18 @@ class Sistema{
 			res.add(importer);
 		}
 		return rid.addAllImporter(res).build();
-	}	
+	}
+
+	public String toString(){
+		String s = "\n";
+		for(String str: this.producers.keySet()){
+			s = s + str + "		Tamanho: " + this.producers.get(str).getProducts().keySet().size() +"\n";
+			for(Produto prod: this.producers.get(str).getProducts().values()){
+				s = s + prod.toString() + "\n";
+			}
+		}
+		return s;
+	}
 }
 
 
@@ -485,6 +541,10 @@ class Produto{
 		}
 	}
 
+	public String toString(){
+		return "	Nome: " + this.name + " Producer: " + this.producer + " estado: " + this.state;
+	}
+
 	public boolean canProduce(){
 		for (Oferta of: this.offers) {
 			this.min = this.min - of.getQuantity();
@@ -500,8 +560,10 @@ class Produto{
 		for(Oferta of: this.offers){
 			if (value - of.getQuantity() < 0)
 				of.setState(0);
-			else
+			else{
+				value = value - of.getQuantity();
 				of.setState(1);
+			}
 		}
 	}
 }

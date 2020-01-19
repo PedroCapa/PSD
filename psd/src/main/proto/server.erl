@@ -1,18 +1,18 @@
 -module(server).
--export([server/1, room/2]).
+-export([server/4, room/2]).
 
 %-include("protos.hrl").
 
-server(Port) ->
+server(Port, Port1, Port2, Port3) ->
 		Room = spawn(fun()-> room(#{}, #{}) end),
 		{ok, LSock} = gen_tcp:listen(Port, [binary, {packet, 0}, {reuseaddr, true}, {active, true}]),
-		acceptor(LSock, Room).
+		acceptor(LSock, Port1, Port2, Port3, Room).
 
-acceptor(LSock, Room) ->
+acceptor(LSock, Port1, Port2, Port3, Room) ->
 		{ok, Sock} = gen_tcp:accept(LSock),
-		spawn(fun() -> acceptor(LSock, Room) end),
+		spawn(fun() -> acceptor(LSock, Port1, Port2, Port3, Room) end),
 		Room ! {enter, self()},
-		user:user(Sock, Room).
+		user:user(Sock, Port1, Port2, Port3, Room).
 
 %Dependendo daquilo que será feito talvez seja para guardar os PID para realizar notificações
 

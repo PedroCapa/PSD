@@ -23,6 +23,10 @@ Criar o protoc.java
 	
 	protoc --java_out=psd/src/main/proto/ psd/src/main/proto/protos.proto
 
+Servidor Erlang
+
+	server:server(9999, 9998, 9997, 9996).
+
 Correr ficheiro java
 
 	javac -cp psd/src/main/proto/protobuf-java-3.6.1.jar psd/src/main/java/terminal/*.java

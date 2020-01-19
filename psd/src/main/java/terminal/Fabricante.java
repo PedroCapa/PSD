@@ -157,7 +157,7 @@ class LeitorFabricante implements Runnable{
 				byte[] res = rm.receiveMessage();
 		        FabSyn syn = FabSyn.parseFrom(res);
 		        
-		        System.out.println("Recebi o syn");
+		        System.out.println("Recebi o syn" + syn);
 
 				if(syn.getType().equals(FabSyn.OpType.OVER)){
 					byte[] negotiation = rm.receiveMessage();
@@ -170,7 +170,7 @@ class LeitorFabricante implements Runnable{
 					if(bc.getResponse()){
 						System.out.println("O produto " + bc.getProduto() + " foi adicionado com sucesso");
 						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
-						this.socket.send(bc.getFabricante() + "," + bc.getProduto());
+						this.socket.send("Fabricante," + bc.getFabricante() + "," + bc.getProduto());
 						byte[] b = socket.recv();
 					}
 					else{
