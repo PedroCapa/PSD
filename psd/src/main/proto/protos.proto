@@ -18,8 +18,8 @@ message ImpSyn{
 	required OpType type = 1;
 
 	enum OpType{
-		OFFER = 0;
-		OVER  = 1;
+		OFFER  = 0;
+		FINISH = 1;
 	}
 }
 

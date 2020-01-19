@@ -6,6 +6,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.time.LocalDate;
 
+import org.zeromq.SocketType;
+import org.zeromq.ZMQ;
+import org.zeromq.ZContext;
+
 import main.proto.Protos.Syn;
 import main.proto.Protos.Login;
 import main.proto.Protos.LoginConfirmation;
@@ -133,10 +137,14 @@ public class Importador{
 
 class LeitorImportador implements Runnable{
 	private Socket cs;
+	private ZMQ.Context context;
+	private ZMQ.Socket socket;
 	private Notifications notifications;
 
 	public LeitorImportador(Socket s, Notifications n){
 		this.cs = s;
+		this.context = ZMQ.context(2);
+    	this.socket = context.socket(ZMQ.REQ);
     	this.notifications = n;
 	}
 
@@ -147,11 +155,12 @@ class LeitorImportador implements Runnable{
 				byte[] res = rm.receiveMessage();
 				ImpSyn syn = ImpSyn.parseFrom(res);
 
-				if(syn.getType().equals(ImpSyn.OpType.OVER)){
+		        System.out.println("Recebi o syn" + syn.getType());
+
+				if(syn.getType().equals(ImpSyn.OpType.FINISH)){
 					byte[] negotiation = rm.receiveMessage();
 					ConfirmNegotiations nc = ConfirmNegotiations.parseFrom(negotiation);
 					System.out.println(nc);
-					System.out.println();
 				}
 
 				else if(syn.getType().equals(ImpSyn.OpType.OFFER)){
@@ -159,6 +168,8 @@ class LeitorImportador implements Runnable{
 					BusinessConfirmation bc = BusinessConfirmation.parseFrom(bus);
 					if(bc.getResponse()){
 						this.notifications.subscribe(bc.getFabricante() + "," + bc.getProduto());
+						this.socket.send("Importador," + bc.getFabricante() + "," + bc.getProduto());
+						byte[] b = socket.recv();
 						System.out.println("O produto " + bc.getProduto() + " do fabricante " + bc.getFabricante() + " foi adicionado com sucesso");
 					}
 					else{

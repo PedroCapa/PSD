@@ -19,8 +19,9 @@ public class SendMessage{
 	public synchronized void sendServer(byte[] send){
 		try{
 			out.write(send);
+			System.out.println("Enviei uma mensagem: ");
 		}
-		catch(IOException e){
+		catch(Exception e){
 			e.getMessage();
 		}
 	}
@@ -28,9 +29,12 @@ public class SendMessage{
 	public synchronized void sendServer(byte[] syn, byte[] send){
 		try{
 			out.write(syn);
+			Thread.sleep(200);
 			out.write(send);
+			System.out.println("Enviei uma mensagem com Syn: ");
+
 		}
-		catch(IOException e){
+		catch(Exception e){
 			e.getMessage();
 		}
 	}

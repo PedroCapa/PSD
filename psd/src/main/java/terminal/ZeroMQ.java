@@ -23,12 +23,19 @@ public class ZeroMQ{
             byte[] b = socket.recv();
             socket.send(new String(b));
             String s = new String(b);
+            String[] arrOfStr = s.split(",");
             System.out.println("ZeroMQ: Received " + s + "  and send");
 
-            //Falta converter o tempo da mensagem para o LocalDateTime
-            AlertSubscriber as = new AlertSubscriber(LocalDateTime.now(), s, publisher);
-            Thread t = new Thread(as);
-            t.start();
+            if(arrOfStr[0].equals("Fabricante")){
+                //Falta converter o tempo da mensagem para o LocalDateTime
+                AlertSubscriber as = new AlertSubscriber(LocalDateTime.now(), s, publisher);
+                Thread t = new Thread(as);
+                t.start();
+            }
+            else{
+                publisher.sendMore(arrOfStr[1] + "," + arrOfStr[2]);
+                publisher.send("Offer");
+            }
         }
         System.out.println("Acabei");
     }
@@ -55,12 +62,13 @@ class AlertSubscriber implements Runnable{
             System.out.println("AlertSubscriber: Daqui a uns segundos vou enviar para todos os subscritores");
             Thread.sleep(15000);
             //Enviar qual o topico que vai escrever
-            publisher.send(this.channel);
+            publisher.sendMore(this.channel);
+            publisher.send("Over");
             //Enviar qual o produto que acabou de ser vendido
         }
         catch(Exception e){
             System.out.println("AlertSubscriber:Deu barraca " + e.getMessage());
         }
-        System.out.println("AlertSubscriber:Acabei de enviar para toda a gente");
+        System.out.println("AlertSubscriber: Acabei de enviar para toda a gente");
     }
 }
