@@ -97,13 +97,19 @@ public class AskServer{
 		return rdp.getNegotiationList();
 	}
 
-	public List<ImporterDropwizard> askServersImportador(String name){
+	public List<ImporterDropwizard> askServersImportador(String name) throws IOException{
 		List<ImporterDropwizard> res = new ArrayList<>();
-		int []ports = {9998, 9997, 9996};
-		for(int i: ports){
-			List<ImporterDropwizard> askServer = askServerImportador(name, i);
-			res.addAll(askServer);
+		int []ports = new int[3];
+		ports[0] = 9998;
+		ports[1] = 9997;
+		ports[2] = 9996;
+		try{
+			for(int i: ports){
+				List<ImporterDropwizard> askServer = askServerImportador(name, i);
+				res.addAll(askServer);
+			}
 		}
+		catch(Exception exc){}
 		return res;
 	}
 
@@ -149,7 +155,7 @@ public class AskServer{
 	public int getPort(String name){
 		char first = name.charAt(0);
 		int ascii = (int) first;
-		int port = 9998
+		int port = 9998;
 
 		if(ascii >= 60 && ascii <= 90){
 			port = 9998;
