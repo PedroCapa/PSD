@@ -19,7 +19,8 @@ public class AskServer{
 	public List<Production> askServerProduto(String name) 
 	throws IOException, InterruptedException, SocketException{
 
-		Socket cs = new Socket("127.0.0.1", 9999);
+		int port = getPort(name);
+		Socket cs = new Socket("127.0.0.1", port);
 
 		OutputStream out = cs.getOutputStream();
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
@@ -59,7 +60,8 @@ public class AskServer{
 	public List<NegotiationDropwizard> askServerNegocio(String name, String prod) 
 	throws IOException, InterruptedException, SocketException{
 
-		Socket cs = new Socket("127.0.0.1", 9999);
+		int port = getPort(name);
+		Socket cs = new Socket("127.0.0.1", port);
 
 		OutputStream out = cs.getOutputStream();
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
@@ -95,11 +97,20 @@ public class AskServer{
 		return rdp.getNegotiationList();
 	}
 
+	public List<ImporterDropwizard> askServersImportador(String name){
+		List<ImporterDropwizard> res = new ArrayList<>();
+		int []ports = {9998, 9997, 9996};
+		for(int i: ports){
+			List<ImporterDropwizard> askServer = askServerImportador(name, i);
+			res.addAll(askServer);
+		}
+		return res;
+	}
 
-	public List<ImporterDropwizard> askServerImportador(String name) 
+	public List<ImporterDropwizard> askServerImportador(String name, int port) 
 	throws IOException, InterruptedException, SocketException{
 
-		Socket cs = new Socket("127.0.0.1", 9999);
+		Socket cs = new Socket("127.0.0.1", port);
 
 		OutputStream out = cs.getOutputStream();
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
@@ -133,5 +144,22 @@ public class AskServer{
 		teclado.close();
 
 		return rdp.getImporterList();
+	}
+
+	public int getPort(String name){
+		char first = name.charAt(0);
+		int ascii = (int) first;
+		int port = 9998
+
+		if(ascii >= 60 && ascii <= 90){
+			port = 9998;
+		}
+		else if(ascii >= 97 && ascii <= 122){
+			port = 9997;
+		}
+		else {
+			port = 9996;
+		}
+		return port;
 	}
 }

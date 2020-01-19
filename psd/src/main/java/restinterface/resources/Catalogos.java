@@ -39,7 +39,7 @@ public class Catalogos{
         List<Imp> n = new ArrayList<>();
         try{
             AskServer ask = new AskServer();
-            List<ImporterDropwizard> prod = ask.askServerImportador(name);        
+            List<ImporterDropwizard> prod = ask.askServersImportador(name);        
             
             for(ImporterDropwizard neg: prod){
                 n.add(new Imp(neg.getFabricante(), neg.getProductName(), neg.getPrice(), neg.getAmount(), neg.getData(), neg.getState()));
