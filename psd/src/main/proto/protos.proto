@@ -111,11 +111,11 @@ message AceptedNegotiation{
 
 
 message ProdutoNegociador{
-	required Produto product = 1;
-	required string username = 2;
+	required string username = 1;
+	required ProdutoFab product = 2;
 }
 
-message Produto{
+message ProdutoFab{
 	required string name = 1;
 	required int32 min = 2;
 	required int32 max = 3;
@@ -126,10 +126,10 @@ message Produto{
 message OfertaNegociador{
 	required string producer = 1;
 	required string product  = 2;
-	required Oferta offer    = 3;
+	required OfertaImp offer = 3;
 }
 
-message Oferta{
+message OfertaImp{
 	required string importador = 1;
 	required int32 quantity = 2;
 	required int32 price = 3;
