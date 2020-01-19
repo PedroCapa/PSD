@@ -97,30 +97,31 @@ message AceptedNegotiation{
 
 
 
-message Produtor{
-	map<string, Produto> products = 1;
+message ProdutoNegociador{
+	required Produto product = 1;
 	required string username = 2;
 }
 
 message Produto{
 	required string name = 1;
-	required string producer = 2;
-	required int32 min = 3;
-	required int32 max = 4;
-	required int32 price = 5;
-	required int32 state = 6;
-	required string date = 7;
-	repeated Oferta offers = 8;
+	required int32 min = 2;
+	required int32 max = 3;
+	required int32 price = 4;
+	required string date = 5;
+}
+
+message OfertaNegociador{
+	required string producer = 1;
+	required string product  = 2;
+	required Oferta offer    = 3;
 }
 
 message Oferta{
-	required string producer = 1;
-	required string importador = 2;
-	required string product = 3;
-	required int32 quantity = 4;
-	required int32 price = 5;
-	required string date = 6;
-	required int32 state = 7;
+	required string importador = 1;
+	required int32 quantity = 2;
+	required int32 price = 3;
+	required string date = 4;
+	required int32 state = 5;
 }
 
 

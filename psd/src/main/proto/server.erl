@@ -158,7 +158,7 @@ getImp(Importador, Map) ->
 	if
 		Exist =:= true ->
 			{ok, {_, Negotiations}} = maps:find(Importador, Map),
-			Negotiations.
+			Negotiations;
 		true ->
 			[]
 	end.
@@ -168,7 +168,7 @@ getProdutosFabricante(Fab, Map) ->
 	if
 		Exist =:= true ->
 			{ok, {_, Prod}} = maps:find(Fab, Map),
-			Prod.
+			Prod;
 		true ->
 			[]
 	end.
@@ -182,7 +182,7 @@ getNegotiationsProduct(Fab, Produto, Map) ->
 		Exist =:= true ->
 			{ok, {_, Produtos}} = maps:find(Fab, Map),
 			Prod = getProd(Produtos, Produto),
-			getNeg(Prod).
+			getNeg(Prod);
 		true ->
 			[]
 	end.
