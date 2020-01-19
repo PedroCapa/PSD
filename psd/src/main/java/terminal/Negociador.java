@@ -37,6 +37,7 @@ public class Negociador{
 		try{
 			ServerSocket ss = new ServerSocket(port);
 			Sistema system = new Sistema();
+			system.initial();
 		
 			while(true){
 				try{
@@ -137,6 +138,7 @@ class Leitor implements Runnable{
 			//Depende do DROP a seguir
 			else if(negsyn.getType().equals(NegSyn.OpType.DROP)){
 				Dropwizard drop = Dropwizard.parseFrom(cont);
+				System.out.println("Entrei no dropwizard com " + drop.getUsername() + " prod: " + drop.getProd());
 				handleDropwizard(drop);
 			}
 			else {
@@ -151,18 +153,21 @@ class Leitor implements Runnable{
 
 	public void handleDropwizard(Dropwizard drop){
 		if(drop.getType().equals(Dropwizard.DropType.PROD)){
+			System.out.println("Entrei no dropwizard com produtos");
 			ResponseProdutoDropwizard rpd = sys.getProdutosUser(drop.getUsername());
 			byte[] bytes = rpd.toByteArray();
 			this.sm.sendServer(bytes);
 		}
 
 		else if(drop.getType().equals(Dropwizard.DropType.NEG)){
+			System.out.println("Entrei no dropwizard com negocios " + drop.getUsername() + " " + drop.getProd());
 			ResponseNegotiationDropwizard rpd = sys.getNegociosProdutoUser(drop.getUsername(), drop.getProd());
 			byte[] bytes = rpd.toByteArray();
 			this.sm.sendServer(bytes);
 		}
 
 		else if(drop.getType().equals(Dropwizard.DropType.IMP)){
+			System.out.println("Entrei no dropwizard com importador");
 			ResponseImporterDropwizard rpd = sys.getNegociosImportador(drop.getUsername());
 			byte[] bytes = rpd.toByteArray();
 			this.sm.sendServer(bytes);
@@ -338,12 +343,15 @@ class Sistema{
 	}
 
 	public ResponseProdutoDropwizard getProdutosUser(String username){
+		System.out.println("Vou verificar os pordutos do: " + username);
 		if(!this.producers.containsKey(username)){
+			System.out.println("Não existe: " + username);
 			return ResponseProdutoDropwizard.newBuilder().
 				   addAllProducts(new ArrayList<>()).
+				   setUsername(username).
 				   build();
 		}
-
+		System.out.println("O utilizador existe" + username);
 		List<Produto> produtos = new ArrayList<>(this.producers.get(username).getProducts().values());
 		List<Production> market = new ArrayList<>();
 		for(Produto p: produtos){
@@ -358,20 +366,26 @@ class Sistema{
 		}
 		ResponseProdutoDropwizard rpd = ResponseProdutoDropwizard.newBuilder().
 												addAllProducts(market).
+												setUsername(username).
 												build();
 
 		return rpd;
 	}
 
 	public ResponseNegotiationDropwizard getNegociosProdutoUser(String username, String product_name){
-		if(!this.producers.containsKey(username) || !!this.producers.get(product_name).getProducts().containsKey(product_name)){
+		System.out.println("Entrei na função ");
+		if(!this.producers.containsKey(username) || !this.producers.get(username).getProducts().containsKey(product_name)){
+			System.out.println("O produto ou o utilizador não existem");
 			return ResponseNegotiationDropwizard.newBuilder().
 				   addAllNegotiation(new ArrayList<>()).
+				   setProducer(username).
+				   setProduct(product_name).
 				   build();
 		}
-
-		List<Oferta> ofertas = new ArrayList<>(this.producers.get(username).getProducts().get(product_name).getOffersList());
+		System.out.println("O produto e o utilizador existem com ofertas de tamanho ");
+		List<Oferta> ofertas = this.producers.get(username).getProducts().get(product_name).getOffersList();
 		List<NegotiationDropwizard> market = new ArrayList<>();
+		System.out.println(ofertas.size());
 		for(Oferta of: ofertas){
 			NegotiationDropwizard production = NegotiationDropwizard.newBuilder().
 												setUsername(of.getImportador()).
@@ -382,26 +396,34 @@ class Sistema{
 												build();
 			market.add(production);
 		}
+		System.out.println("O tamanho do market" + ofertas.size());
 		ResponseNegotiationDropwizard rpd = ResponseNegotiationDropwizard.newBuilder().
 												addAllNegotiation(market).
+												setProducer(username).
+				   								setProduct(product_name).
 												build();
 
 		return rpd;
 	}
 
 	public ResponseImporterDropwizard getNegociosImportador(String username){
+		System.out.println("Entrei na função");
 		if(!this.importers.containsKey(username)){
+			System.out.println("O username " + username + " nao existe");
 			List<ImporterDropwizard> res = new ArrayList<>();
 			return ResponseImporterDropwizard.newBuilder()
 											 .addAllImporter(res)
+											 .setUsername(username)
 											 .build();
 		}
+		System.out.println("O username " + username + " existe");
 		ResponseImporterDropwizard.Builder rid = ResponseImporterDropwizard.newBuilder();
 		List<ImporterDropwizard> res = new ArrayList<>();
 		for(Oferta of: this.importers.get(username)){
+			System.out.println(of.getProducer() + " " + of.getProduct() + " " + of.getPrice());
 			ImporterDropwizard importer = ImporterDropwizard.newBuilder()
 															.setFabricante(of.getProducer())
-															.setProductName(of.getImportador())
+															.setProductName(of.getProduct())
 															.setPrice(of.getPrice())
 															.setAmount(of.getQuantity())
 															.setData(of.getDate())
@@ -409,7 +431,8 @@ class Sistema{
 															.build();
 			res.add(importer);
 		}
-		return rid.addAllImporter(res).build();
+		System.out.println("O tamanho dos negocios e: " + res.size());
+		return rid.addAllImporter(res).setUsername(username).build();
 	}
 
 	public String toString(){
@@ -421,6 +444,31 @@ class Sistema{
 			}
 		}
 		return s;
+	}
+
+	public void initial(){
+		Produtor produtor1 = new Produtor("Luis");
+		Produtor produtor2 = new Produtor("PMCC");
+		Produto prod1 = new Produto("bolo", "Luis", 20, 50, 100, -1, "2020-12-31");
+		Produto prod2 = new Produto("Chocolate", "Luis", 35, 100, 25, -1, "2020-12-31");
+		Produto prod3 = new Produto("chuteiras", "PMCC", 35, 100, 50, -1, "2020-12-31");
+		Oferta off1 = new Oferta("Luis", "Lucas", "bolo", 15, 200, "2020-01-21", -1);
+		Oferta off2 = new Oferta("Luis", "Lucas", "bolo", 15, 100, "2020-01-21", -1);
+		Oferta off3 = new Oferta("Luis", "Lucas", "Chocolate", 60, 500, "2020-01-21", -1);
+		prod1.addOffer(off1);
+		prod1.addOffer(off2);
+		prod2.addOffer(off3);
+		produtor1.addProduct(prod1);
+		produtor1.addProduct(prod2);
+		produtor2.addProduct(prod3);
+		this.producers.put(produtor1.getUsername(), produtor1);
+		this.producers.put(produtor2.getUsername(), produtor2);
+		List<Oferta> imp1 = new ArrayList<>();
+		imp1.add(off1);
+		imp1.add(off2);
+		imp1.add(off3);
+		this.importers.put("Lucas", imp1);
+
 	}
 }
 
@@ -434,7 +482,7 @@ class Oferta{
 	private String date;
 	private int state;
 
-	public Oferta(String producer, String importador, String prodduct, int quantity, int price, String date, int state){
+	public Oferta(String producer, String importador, String product, int quantity, int price, String date, int state){
 		this.producer = producer;
 		this.importador = importador;
 		this.product = product;
@@ -566,6 +614,10 @@ class Produto{
 			}
 		}
 	}
+
+	public void addOffer(Oferta offer){
+		this.offers.add(offer);
+	}
 }
 
 class Produtor{
@@ -583,6 +635,10 @@ class Produtor{
 
 	public Map<String, Produto> getProducts(){
 		return this.products;
+	}
+
+	public void addProduct(Produto prod){
+		this.products.put(prod.getName(), prod);
 	}
 
 	public Produto getProduto(String product_name){

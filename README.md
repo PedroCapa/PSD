@@ -13,8 +13,15 @@ Realizar uma Negociacao
 
 Para o dropwizard
 	
-	http://localhost:12345/catalogos/produtor/Pedro
+	http://localhost:12345/catalogos/produtor/PMCC
 
+	http://localhost:12345/catalogos/negocio/PMCC/chuteiras
+	http://localhost:12345/catalogos/negocio/Luis/bolo
+
+	
+	
+Para correr o dropwizard
+	
 	mvn package
 
 	java -jar target/psd-1.0-SNAPSHOT.jar server Server.yml

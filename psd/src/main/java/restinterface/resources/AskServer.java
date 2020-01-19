@@ -7,6 +7,7 @@ import java.util.List;
 
 import main.java.terminal.ReadMessage;
 import main.proto.Protos.Syn;
+import main.proto.Protos.NegSyn;
 import main.proto.Protos.Dropwizard;
 import main.proto.Protos.ResponseProdutoDropwizard;
 import main.proto.Protos.Production;
@@ -19,21 +20,25 @@ public class AskServer{
 	public List<Production> askServerProduto(String name) 
 	throws IOException, InterruptedException, SocketException{
 
+        System.out.println("Entrei no askServerProduto");
 		int port = getPort(name);
+		System.out.println(port);
 		Socket cs = new Socket("127.0.0.1", port);
+		System.out.println("Liguei-me à porta " + port);
+
 
 		OutputStream out = cs.getOutputStream();
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 		ReadMessage rm = new ReadMessage(cs);
 
 		//Envia o Syn
-		Syn syn = Syn.newBuilder().
-						setType(Syn.Type.DROP).
+		NegSyn syn = NegSyn.newBuilder().
+						setType(NegSyn.OpType.DROP).
 						build();
 		
 		byte[] send = syn.toByteArray();
 		out.write(send);
-		
+		System.out.println("Enviei o Syn");
 		//Envia o pedido
 		Dropwizard drop = Dropwizard.newBuilder().
 							setType(Dropwizard.DropType.PROD).
@@ -43,7 +48,7 @@ public class AskServer{
 		
 		byte[] req = drop.toByteArray();
 		out.write(req);
-
+		System.out.println("Enviei tudo " + name);
 		//Recebe o pedido
 		byte[] receive = rm.receiveMessage();
 		ResponseProdutoDropwizard rdp = ResponseProdutoDropwizard.parseFrom(receive);
@@ -63,18 +68,22 @@ public class AskServer{
 		int port = getPort(name);
 		Socket cs = new Socket("127.0.0.1", port);
 
+		System.out.println("Liguei-me à porta " + port);
+
 		OutputStream out = cs.getOutputStream();
 		BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 		ReadMessage rm = new ReadMessage(cs);
 
+		System.out.println("Vou enviar o syn");
 		//Envia o Syn
-		Syn syn = Syn.newBuilder().
-						setType(Syn.Type.DROP).
+		NegSyn syn = NegSyn.newBuilder().
+						setType(NegSyn.OpType.DROP).
 						build();
 		
 		byte[] send = syn.toByteArray();
 		out.write(send);
 		
+		System.out.println("Vou enviar o pedido");
 		//Envia o pedido
 		Dropwizard drop = Dropwizard.newBuilder().
 							setType(Dropwizard.DropType.NEG).
@@ -85,6 +94,7 @@ public class AskServer{
 		byte[] req = drop.toByteArray();
 		out.write(req);
 
+		System.out.println("Estou à espera");
 		//Recebe o pedido
 		byte[] receive = rm.receiveMessage();
 		ResponseNegotiationDropwizard rdp = ResponseNegotiationDropwizard.parseFrom(receive);
@@ -123,8 +133,8 @@ public class AskServer{
 		ReadMessage rm = new ReadMessage(cs);
 
 		//Envia o Syn
-		Syn syn = Syn.newBuilder().
-						setType(Syn.Type.DROP).
+		NegSyn syn = NegSyn.newBuilder().
+						setType(NegSyn.OpType.DROP).
 						build();
 		
 		byte[] send = syn.toByteArray();

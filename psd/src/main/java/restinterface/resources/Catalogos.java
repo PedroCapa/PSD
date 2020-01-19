@@ -56,9 +56,10 @@ public class Catalogos{
     @GET
     @Path("/produtor/{name}")
     public List<Prod> getProdutor(@PathParam("name") String name){
-        System.out.println("Pediu um pedido de um produto");
+        System.out.println("Pediu um pedido de um produto: " + name);
         List<Prod> p = new ArrayList<>();
         try{
+            System.out.println("Vou pedir");
             AskServer ask = new AskServer();
             List<Production> prod = ask.askServerProduto(name);        
             
@@ -69,7 +70,7 @@ public class Catalogos{
             }
         }
         catch(Exception e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         finally{
             return p;
@@ -79,7 +80,7 @@ public class Catalogos{
     @GET
     @Path("/negocio/{fabricante}/{produto}")
     public List<Neg> getNegocio(@PathParam("fabricante") String fabricante, @PathParam("produto") String produto){
-        System.out.println("Pediu um pedido de um negocio");
+        System.out.println("Pediu um pedido de um negocio de um produto");
         List<Neg> n = new ArrayList<>();
         try{
             AskServer ask = new AskServer();
