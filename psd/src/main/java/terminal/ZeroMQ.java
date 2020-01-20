@@ -19,7 +19,6 @@ public class ZeroMQ{
         publisher.bind("tcp://*:6666");
 
         while (!Thread.currentThread().isInterrupted()) {
-            //Receb dos subbscritores. Significa que eles criaram um produto
             byte[] b = socket.recv();
             socket.send(new String(b));
             String s = new String(b);
